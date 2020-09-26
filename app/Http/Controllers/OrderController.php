@@ -5,34 +5,39 @@ use App\Http\Resources\OrderCollection;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use DB;
 
 class OrderController extends Controller
 {
+
+  
     public function createOrder(Request $request)
     {
         $post = new Order;
         $data=$request->all();
-        $post->customersName = $data['name'];
-        $post->address = $data['address'];
-        $post->contactNumber = $data['contactNumber'];
-        $post->orderQuantity = $data['orderQuantity']; 
-        $post->deliveryDate = $data['deliveryDate'];
-        $post->orderStatus = $data['orderStatus'];
+        $post->customer_name = $data['name'];
+        $post->customer_address = $data['address'];
+        $post->contact_number = $data['contactNumber'];
+        $post->order_quantity = $data['orderQuantity']; 
+        $post->delivery_date = $data['deliveryDate'];
+        $post->order_status = $data['orderStatus'];
         $post->save();
-
         return response()->json([
             'message' => 'New post created'
         ]);
     }
+  
 
    public function fetchOrder()
     {
-      return new OrderCollection(Order::where('orderStatus', 'On order')->get());
+      
+      return new OrderCollection(Order::where('order_status', 'On order')
+      ->orderBy('delivery_date', 'asc')->get());
     }
 
     public function fetchDelivered()
     {
-      return new OrderCollection(Order::where('orderStatus', 'Delivered')->get());
+      return new OrderCollection(Order::where('order_status', 'Delivered')->get());
     }
 
 
@@ -47,11 +52,11 @@ class OrderController extends Controller
     {
       $newItem =  $request->all();
       $post = Order::firstOrCreate(['id' => $request->id]);
-      $post->customersName = $request['customersName'];
-      $post->address = $request['address'];
-      $post->contactNumber = $request['contactNumber'];
-      $post->deliveryDate = $request['deliveryDate'];
-      $post->orderQuantity = $request['orderQuantity'];
+      $post->customer_name = $request['customer_name'];
+      $post->customer_address = $request['customer_address'];
+      $post->contact_number = $request['contact_number'];
+      $post->delivery_date = $request['delivery_date'];
+      $post->order_quantity = $request['order_quantity'];
       $post->save();
       return response()->json(compact('post'));
     }
@@ -60,17 +65,12 @@ class OrderController extends Controller
     {
       $newItem =  $request->all();
       $post = Order::firstOrCreate(['id' => $request->id]);
-      $post->orderStatus = 'Delivered';
-
+      $post->order_status = 'Delivered';
       $post->update();
       return response()->json(compact('post'));
     }
     
-    
-    
-
-
-
+  
     public function deleteOrder($id)
     {
       $post = Order::find($id);

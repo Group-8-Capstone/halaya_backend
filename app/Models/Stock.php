@@ -5,16 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Order extends Model
+class Stock extends Model
 {
     protected $guarded = [];
-
-    protected $table = 'orders';
+    protected $table = 'stocks';
     protected $fillable = [
-        'customer_name', 'customer_address','contact_number', 'order_quantity', 'delivery_date','order_status'
+        'ube_kilo', 'delivery_date','expected_output','stock_status'
     ];
     
-
 }
-
-
