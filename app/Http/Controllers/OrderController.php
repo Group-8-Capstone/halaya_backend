@@ -9,7 +9,6 @@ use DB;
 
 class OrderController extends Controller
 {
-
   
     public function createOrder(Request $request)
     {
@@ -22,12 +21,8 @@ class OrderController extends Controller
         $post->delivery_date = $data['deliveryDate'];
         $post->order_status = $data['orderStatus'];
         $post->save();
-        return response()->json([
-            'message' => 'New post created'
-        ]);
     }
   
-
    public function fetchOrder()
     {
       

@@ -5,12 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Stock extends Model
+class Product extends Model
 {
     protected $guarded = [];
-    protected $table = 'stocks';
+    protected $table = 'products';
     protected $fillable = [
-        'ube_kilo', 'delivery_date','expected_output','stock_status'
+        'expected_product_output', 'total_product_order','product_status'
     ];
-    
 }
