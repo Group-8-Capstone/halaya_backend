@@ -43,3 +43,4 @@ Route::get('/post/editStock/{id}',[IngredientsController::class,'editStockIngred
 
 
 
+
