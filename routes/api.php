@@ -46,3 +46,4 @@ Route::post('/post/addStockAmount',[IngredientsController::class,'updateStockAmo
 
 
 
+
