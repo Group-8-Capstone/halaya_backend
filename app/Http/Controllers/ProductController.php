@@ -17,19 +17,9 @@ class ProductController extends Controller
         ->select('ingredients_unit')
         ->where('ingredients_name', '=', 'Ube')
         ->get();
-        $array = array(
-            25  => '1',
-            50  => '2',
-            75  => '3',
-            100 => '4',
-            150 => '5',   
-            160 => '6', 
-        );
-        $expected_output=null;
-        $data=$request->all();
         $key = $getUbeKilo[0]->ingredients_unit;
-        $value =  array_search($key, $array );
-        $expected_output=$value;
+        $expect = $key*10;
+        $expected_output=$expect;
         return $expected_output;
   
     }
@@ -69,3 +59,15 @@ class ProductController extends Controller
 // $post->expected_product_output = $value;
 // $post->save();
 // return response()->json($value);
+
+ // $array = array(
+        //     25  => '1',
+        //     50  => '2',
+        //     75  => '3',
+        //     100 => '4',
+        //     150 => '5',   
+        //     160 => '6', 
+        // );
+             // $value =  array_search($key, $array );
+        // $expected_output=null;
+        // $data=$request->all();
