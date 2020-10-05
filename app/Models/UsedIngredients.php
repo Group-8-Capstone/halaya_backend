@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class UsedIngredients extends Model
 {
     protected $guarded = [];
-    protected $table = 'UseIngredients';
+    protected $table = 'used_ingredients';
     protected $fillable = [
         'ingredients_id', 'use_ingredients_amount'
     ];

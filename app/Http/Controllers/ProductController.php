@@ -12,7 +12,13 @@ use DB;
 
 class ProductController extends Controller
 {
-<<<<<<< HEAD
+    //Estimated amount of ingredients per jar
+    private $ube = 100;  //grams
+    private $condensed = 12.48; //grams
+    private $evap = 11.84; //ml
+    private $butter = 3.6; //grams
+    private $sugar = 20; //grams
+
     public function fetchExpectedProd(request $request){
         $getUbeKilo = DB::table('ingredients')
         ->select('ingredients_unit')
@@ -22,16 +28,8 @@ class ProductController extends Controller
         $expect = $key*10;
         $expected_output=$expect;
         return $expected_output;
-=======
 
-    //Estimated amount of ingredients per jar
-    private $ube = 100;  //grams
-    private $condensed = 12.48; //grams
-    private $evap = 11.84; //ml
-    private $butter = 3.6; //grams
-    private $sugar = 20; //grams
-
-
+    }
     // public function fetchExpectedProd(request $request){
     //     $getUbeKilo = DB::table('ingredients')
     //     ->select('ingredients_unit')
@@ -51,7 +49,6 @@ class ProductController extends Controller
     //     $value =  array_search($key, $array );
     //     $expected_output=$value;
     //     return $expected_output;
->>>>>>> 85a5cd6693d19bf3c49e66d2ccf7d3252340925d
   
     // }
 

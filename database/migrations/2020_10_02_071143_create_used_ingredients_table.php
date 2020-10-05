@@ -16,7 +16,7 @@ class CreateUsedIngredientsTable extends Migration
         Schema::create('used_ingredients', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('ingredients_id');
-            $table->decimal('used_ingredients_amount', 5, 2);
+            $table->float('used_ingredients_amount');
             $table->timestamps();
         });
     }

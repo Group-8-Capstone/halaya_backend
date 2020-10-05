@@ -42,3 +42,5 @@ Route::post('/post/updateStock',[IngredientsController::class,'updateStockIngred
 Route::post('/post/fetchName',[IngredientsController::class,'fetchIngredientsName']);
 Route::post('/post/addStockAmount',[IngredientsController::class,'updateStockAmount']);
 
+Route::get('/fetch/fetchUsedIng',[IngredientsController::class,'fetchUsedIngredients']);
+
