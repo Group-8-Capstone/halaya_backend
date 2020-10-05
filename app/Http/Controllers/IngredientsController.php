@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers; 
 use App\Http\Resources\IngredientsCollection;
+use Illuminate\Support\Arr;
 
 use Illuminate\Http\Request;
 use App\Models\Ingredients;
+use App\Models\UsedIngredients;
 use DB;
 
 class IngredientsController extends Controller
@@ -53,6 +55,8 @@ class IngredientsController extends Controller
         $post->ingredients_name= $data['availableIngredients'];
         $post->ingredients_status= 'Enough';
         $post->ingredients_unit= $data['usedIngredientsAmount'];
+
+
        
      $isExist = Ingredients::select("*")
                         ->where("ingredients_name",$data['availableIngredients'])
@@ -62,16 +66,25 @@ class IngredientsController extends Controller
             ->select('id')
             ->where('ingredients_name', '=', $data['availableIngredients'])
             ->get();
+            
             $post = Ingredients::find($findId[0]->id);
             $newAdded = intval($data['usedIngredientsAmount']);
             $post->ingredients_unit -= $newAdded;
             $post->save();
+
+            $id = DB::table('ingredients')
+            ->select('id')
+            ->where('ingredients_name', '=', $data['availableIngredients'])
+            ->first()->id;
+            $this->saveUsedIngredients($id,$data['usedIngredientsAmount']);
+
             return response()->json($post);
         }else{
             return response()->json([
                 'message' => 'not existed'
             ]);
         }
+
     }
     public function postOrdered($date){
         $posts = DB::table('orders')
@@ -121,6 +134,54 @@ class IngredientsController extends Controller
         foreach ($posts as $key) {
             return response()->json($key->ingredients_name);
         }
+    }
+
+    public function saveUsedIngredients($id,$amount){
+        $ing = new UsedIngredients;
+        // $data = $request->all();
+
+        // $findId = DB::table('ingredients')->select('id')
+        //     ->where('ingredients_name','=', $data['availableIngredients'])
+        //     ->first()->id;
+            
+        $ing->ingredients_id = $id;
+        $ing->used_ingredients_amount = $amount;
+        $ing->save();
+    }
+
+    public function fetchUsedIngredients(Request $request){
+        $data = DB::table('used_ingredients')->select('used_ingredients_amount','ingredients_id',
+        DB::raw('sum(used_ingredients_amount) as total'))
+        ->groupBy('ingredients_id','used_ingredients_amount')
+        ->get();
+        $results= array();
+        $i = 0;
+    
+        foreach($data as $item){
+            $key=(string)$item->ingredients_id;
+
+            if(array_key_exists($key, $results)){
+                $results[$i][$item->ingredients_id] = $this->total($item->ingredients_id);
+                $i++;
+                continue;
+            } 
+            
+          dd($results);
+        }
+        return $results;
+        return response()->json($results);
+    }
+
+    public function total($id) {
+        $data = DB::table('used_ingredients')->where('ingredients_id', $id)->get();
+        $results= array();
+        $i = 0;
+        $total = 0;
+        foreach($data as $item){
+            $total += $item->used_ingredients_amount;
+            $i++;
+        }
+        return $total;
     }
 }
 
