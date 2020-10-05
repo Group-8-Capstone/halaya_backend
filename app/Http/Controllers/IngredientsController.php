@@ -23,12 +23,6 @@ class IngredientsController extends Controller
     {
         $post = new Ingredients;
         $data = $request->all();
-        $array = array(
-            50 => '1',
-            100 => '2',
-            150 => '3'
-                
-        );
         $post->ingredients_name = $data['ingredientsName'];
         $post->ingredients_status = $data['stockStatus'];
         $post->ingredients_unit = $data['ingredientsUnit'];
@@ -41,10 +35,6 @@ class IngredientsController extends Controller
             ->select('id')
             ->where('ingredients_name', '=', $data['ingredientsName'])
             ->get();
-            $post = Ingredients::find($findId[0]->id);
-            $newAdded = intval($data['ingredientsUnit']);
-            $post->ingredients_unit += $newAdded;
-            $post->save();
             return response()->json([
                 'message' => 'existed'
             ]);
@@ -56,15 +46,33 @@ class IngredientsController extends Controller
         }
     }
 
-    public function addOrder(Request $request, $id)
+    public function updateStockAmount(Request $request)
     {
-      $newItem =  $request->all();
-      $post = Order::firstOrCreate(['id' => $request->id]);
-      $post->order_status = 'Delivered';
-      $post->update();
-      return response()->json(compact('post'));
+        $post = new Ingredients;
+        $data = $request->all();
+        $post->ingredients_name= $data['availableIngredients'];
+        $post->ingredients_status= 'Enough';
+        $post->ingredients_unit= $data['usedIngredientsAmount'];
+       
+     $isExist = Ingredients::select("*")
+                        ->where("ingredients_name",$data['availableIngredients'])
+                        ->exists();
+        if ($isExist) {
+            $findId = DB::table('ingredients')
+            ->select('id')
+            ->where('ingredients_name', '=', $data['availableIngredients'])
+            ->get();
+            $post = Ingredients::find($findId[0]->id);
+            $newAdded = intval($data['usedIngredientsAmount']);
+            $post->ingredients_unit -= $newAdded;
+            $post->save();
+            return response()->json($post);
+        }else{
+            return response()->json([
+                'message' => 'not existed'
+            ]);
+        }
     }
-
     public function postOrdered($date){
         $posts = DB::table('orders')
         ->select('delivery_date', DB::raw('count(*) as countOrder'), 
@@ -84,15 +92,35 @@ class IngredientsController extends Controller
       return response()->json($post);
     }
 
+    public function updateStockIngredients(Request $request)
+    {
+   
+      $post = Ingredients::firstOrCreate(['id' => $request->id]);
+      $post->ingredients_name= $request['ingredients_name'];
+      $post->ingredients_unit= $request['ingredients_unit'];
+      $post->ingredients_status = $request['ingredients_status'];
+      $post->save();
+      return response()->json(compact('post'));
+    }
+
 
     public function fetchStock(Request $request)
     {
-        $post = new Ingredients;
         $posts = Ingredients::orderBy('created_at', 'asc')->get();
         return response()->json($posts);
         return response()->json([
             'message' => 'New post created'
         ]);
+    }
+
+     public function fetchIngredientsName(Request $request)
+    {
+        $post = new Ingredients;
+        $post = $request->all();
+        $posts = Ingredients::gBy('created_at', 'asc')->get();
+        foreach ($posts as $key) {
+            return response()->json($key->ingredients_name);
+        }
     }
 }
 
@@ -107,3 +135,17 @@ class IngredientsController extends Controller
         //              ->groupBy('delivery_date')
         //              ->get();
         // return response()->json($posts);
+
+                    // $post = Ingredients::find($findId[0]->id);
+            // $newAdded = intval($data['ingredientsUnit']);
+            // $post->ingredients_unit += $newAdded;
+            // $post->save();
+
+    // public function addOrder(Request $request, $id)
+    // {
+    //   $newItem =  $request->all();
+    //   $post = Order::firstOrCreate(['id' => $request->id]);
+    //   $post->order_status = 'Delivered';
+    //   $post->update();
+    //   return response()->json(compact('post'));
+    // }
