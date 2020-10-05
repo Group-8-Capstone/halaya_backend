@@ -12,6 +12,17 @@ use DB;
 
 class ProductController extends Controller
 {
+<<<<<<< HEAD
+    public function fetchExpectedProd(request $request){
+        $getUbeKilo = DB::table('ingredients')
+        ->select('ingredients_unit')
+        ->where('ingredients_name', '=', 'Ube')
+        ->get();
+        $key = $getUbeKilo[0]->ingredients_unit;
+        $expect = $key*10;
+        $expected_output=$expect;
+        return $expected_output;
+=======
 
     //Estimated amount of ingredients per jar
     private $ube = 100;  //grams
@@ -40,6 +51,7 @@ class ProductController extends Controller
     //     $value =  array_search($key, $array );
     //     $expected_output=$value;
     //     return $expected_output;
+>>>>>>> 85a5cd6693d19bf3c49e66d2ccf7d3252340925d
   
     // }
 
@@ -145,3 +157,15 @@ class ProductController extends Controller
 // $post->expected_product_output = $value;
 // $post->save();
 // return response()->json($value);
+
+ // $array = array(
+        //     25  => '1',
+        //     50  => '2',
+        //     75  => '3',
+        //     100 => '4',
+        //     150 => '5',   
+        //     160 => '6', 
+        // );
+             // $value =  array_search($key, $array );
+        // $expected_output=null;
+        // $data=$request->all();

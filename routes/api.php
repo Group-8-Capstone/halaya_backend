@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\IngredientsController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SalesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,11 +37,8 @@ Route::get('/fetch/sumOrder',[ProductController::class,'orderSum']);
 Route::get('/fetch/expectedProduct',[ProductController::class,'fetchExpectedProd']);
 Route::get('/fetch/stockStatus',[ProductController::class,'stockStatus']);
 Route::get('/post/editStock/{id}',[IngredientsController::class,'editStockIngredients']);
-
-
-
-
-
-
-
+Route::get('/sales',[SalesController::class,'index']);
+Route::post('/post/updateStock',[IngredientsController::class,'updateStockIngredients']);
+Route::post('/post/fetchName',[IngredientsController::class,'fetchIngredientsName']);
+Route::post('/post/addStockAmount',[IngredientsController::class,'updateStockAmount']);
 
