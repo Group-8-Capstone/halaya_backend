@@ -27,12 +27,22 @@ class OrderController extends Controller
     {
       
       return new OrderCollection(Order::where('order_status', 'On order')
+      ->orWhere('order_status', 'Canceled')
       ->orderBy('delivery_date', 'asc')->get());
     }
 
     public function fetchDelivered()
     {
       return new OrderCollection(Order::where('order_status', 'Delivered')->get());
+    }
+
+    public function updateCancelledStatus(Request $request, $id)
+    {
+      $newItem =  $request->all();
+      $post = Order::firstOrCreate(['id' => $request->id]);
+      $post->order_status = 'Canceled';
+      $post->update();
+      return response()->json(compact('post'));
     }
 
 
