@@ -159,14 +159,20 @@ class IngredientsController extends Controller
     
         foreach($data as $item){
             $key=(string)$item->ingredients_id;
-
+            // dd()
             if(array_key_exists($key, $results)){
                 $results[$i][$item->ingredients_id] = $this->total($item->ingredients_id);
                 $i++;
+                // continue;
+                echo("balik na");
+                // continue;
+            } else {
+                // $results[$i][$item->ingredients_id] = $this->total($item->ingredients_id);
+                // $i++;
                 continue;
-            } 
+            }
             
-          dd($results);
+        //   dd($results);
         }
         return $results;
         return response()->json($results);
