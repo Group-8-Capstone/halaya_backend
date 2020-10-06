@@ -31,6 +31,7 @@ Route::get('/post/edit/{id}',[OrderController::class,'editOrder']);
 Route::post('/post/update',[OrderController::class,'updateOrder']);
 Route::delete('/post/delete/{id}',[OrderController::class,'deleteOrder']);
 Route::put('/post/updateStat/{id}',[OrderController::class,'updateStatus']);
+Route::put('/post/updateCanceledStat/{id}',[OrderController::class,'updateCancelledStatus']);
 Route::post('/create/stock/',[IngredientsController::class,'createStock']);
 Route::get('/fetch/stock',[IngredientsController::class,'fetchStock']);
 Route::get('/fetch/sumOrder',[ProductController::class,'orderSum']);
@@ -41,6 +42,5 @@ Route::get('/sales',[SalesController::class,'index']);
 Route::post('/post/updateStock',[IngredientsController::class,'updateStockIngredients']);
 Route::post('/post/fetchName',[IngredientsController::class,'fetchIngredientsName']);
 Route::post('/post/addStockAmount',[IngredientsController::class,'updateStockAmount']);
-
 Route::get('/fetch/fetchUsedIng',[IngredientsController::class,'fetchUsedIngredients']);
 

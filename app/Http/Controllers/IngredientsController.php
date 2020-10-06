@@ -154,22 +154,24 @@ class IngredientsController extends Controller
         DB::raw('sum(used_ingredients_amount) as total'))
         ->groupBy('ingredients_id','used_ingredients_amount')
         ->get();
-        $results= array();
+        $results = array();
         $i = 0;
     
         foreach($data as $item){
             $key=(string)$item->ingredients_id;
-
             if(array_key_exists($key, $results)){
+                return response()->json([
+                    'message' => 'New post created'
+                ]);
+            }else{
                 $results[$i][$item->ingredients_id] = $this->total($item->ingredients_id);
-                $i++;
-                continue;
-            } 
-            
-          dd($results);
+            }
+            continue;
+            dd($results);
+            $i++;
         }
         return $results;
-        return response()->json($results);
+        // return response()->json($results);
     }
 
     public function total($id) {
