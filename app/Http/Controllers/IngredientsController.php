@@ -128,14 +128,11 @@ class IngredientsController extends Controller
     {
         $posts = DB::table('ingredients')
             ->leftjoin('used_ingredients', 'ingredients.id', '=', 'used_ingredients.ingredients_id')
-            ->select('ingredients.*','used_ingredients.used_ingredients_amount','used_ingredients.ingredients_id',
+            ->select('ingredients.*','used_ingredients.used_ingredients_amount',
             DB::raw('sum(used_ingredients.used_ingredients_amount)as total'))
-            // ->orderBy('created_at', 'asc')
-            // ->where('ingredients.id', '=', $this->getId('ingredients.id'))
             ->groupBy(
                     'ingredients.id',
                     'used_ingredients.used_ingredients_amount',
-                    'used_ingredients.ingredients_id',
                     'ingredients.ingredients_name',
                     'ingredients.ingredients_unit',
                     'ingredients.ingredients_status',
@@ -159,8 +156,6 @@ class IngredientsController extends Controller
                 continue;
                 $i++;
             }
-            // return $posts;
-
         return response()->json($posts);
         return response()->json([
             'message' => 'New post created'
@@ -184,34 +179,6 @@ class IngredientsController extends Controller
         $ing->save();
     }
 
-    public function fetchUsedIngredients(Request $request){
-        // $data = DB::table('used_ingredients')->select('used_ingredients_amount','ingredients_id',
-        // DB::raw('sum(used_ingredients_amount) as total'))
-        // ->groupBy('ingredients_id','used_ingredients_amount')
-        // ->get();
-        // $results = array();
-        // $arr = array();
-        // $i = 0;
-    
-        // foreach($data as $item){
-        //     $key=(string)$item->ingredients_id;
-        //     if(array_key_exists($key, $results)){
-        //         return response()->json([
-        //             'message' => 'New post created'
-        //         ]);
-        //     } else{
-        //         $results[$i][$item->ingredients_id] = $this->total($item->ingredients_id);
-        //         // $results[$i]['ingredients_id'] = $item->ingredients_id;
-        //         // $arr = $results;
-        //     }
-        //     continue;
-        //     $i++;
-        // }
-        // return $results;
-
-        // $data = DB::table('ingredients')->select('id','ingredients_')
-    }
-
     public function total($id) {
         $data = DB::table('used_ingredients')->where('ingredients_id', $id)->get();
         $results= array();
@@ -224,42 +191,20 @@ class IngredientsController extends Controller
         return $total;
     }
 
-    public function getId($id){
-        $data = DB::table('used_ingredients')->where('ingredients_id', $id)->get();
-        $results= array();
-        $i = 0;
-        // $total = 0;
-        foreach($data as $item){
-            // $total += $item->used_ingredients_amount;
-            $results[$i] = $item->ingredients_id;
-            $i++;
-        }
-        return $i;
-    }
+    // public function stockStatus(Request $request){
+    //     //Estimated ingredients amount for two weeks
+    //     $ube = 200;             //kilos
+    //     $condensed = 18720;     //grams 48 cans
+    //     $evap = 17760;          //grams 48 cans
+    //     $butter = 5.4;          //kilos
+    //     $sugar = 30;            //kilos
+
+    //     $data = DB::table('ingredients')
+    //     ->join('used_ingredients', 'ingredients.id', '=', 'used_ingredients.ingredients_id')
+    //     ->select('ingredients_name', 'ingredients_unit');
+
+    //     print_r($data);
+    //     if()
+    // }
 }
 
-
-
-
-// return response()->json($sum);
-                // $posts = DB::table('orders')
-        //             ->select('delivery_date', DB::raw('count(*) as orders'), 
-        //              DB::raw('sum(order_quantity) as total'))
-        //              ->where('order_status', 'On order')
-        //              ->groupBy('delivery_date')
-        //              ->get();
-        // return response()->json($posts);
-
-                    // $post = Ingredients::find($findId[0]->id);
-            // $newAdded = intval($data['ingredientsUnit']);
-            // $post->ingredients_unit += $newAdded;
-            // $post->save();
-
-    // public function addOrder(Request $request, $id)
-    // {
-    //   $newItem =  $request->all();
-    //   $post = Order::firstOrCreate(['id' => $request->id]);
-    //   $post->order_status = 'Delivered';
-    //   $post->update();
-    //   return response()->json(compact('post'));
-    // }
