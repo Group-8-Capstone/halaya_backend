@@ -30,27 +30,6 @@ class ProductController extends Controller
         return $expected_output;
 
     }
-    // public function fetchExpectedProd(request $request){
-    //     $getUbeKilo = DB::table('ingredients')
-    //     ->select('ingredients_unit')
-    //     ->where('ingredients_name', '=', 'Ube')
-    //     ->get();
-    //     $array = array(
-    //         25  => '1',
-    //         50  => '2',
-    //         75  => '3',
-    //         100 => '4',
-    //         150 => '5',   
-    //         160 => '6', 
-    //     );
-    //     $expected_output=null;
-    //     $data=$request->all();
-    //     $key = $getUbeKilo[0]->ingredients_unit;
-    //     $value =  array_search($key, $array );
-    //     $expected_output=$value;
-    //     return $expected_output;
-  
-    // }
 
     public function expectedUbeOutput(Request $request){
         $ubeAmount = DB::table('ingredients')
@@ -129,17 +108,17 @@ class ProductController extends Controller
     }
 
     // public function stockStatus(Request $request){
-        //Estimated ingredients amount for two weeks
-        // $ube = 150;             //kilos
-        // $condensed = 18720;     //grams 48 cans
-        // $evap = 17760;          //grams 48 cans
-        // $butter = 5.4;          //kilos
-        // $sugar = 30;            //kilos
+    //     //Estimated ingredients amount for two weeks
+    //     $ube = 150;             //kilos
+    //     $condensed = 18720;     //grams 48 cans
+    //     $evap = 17760;          //grams 48 cans
+    //     $butter = 5.4;          //kilos
+    //     $sugar = 30;            //kilos
 
-        // $data = DB::table('ingredients')->select('ingredients_name', 'ingredients_unit');
+    //     $data = DB::table('ingredients')->select('ingredients_name', 'ingredients_unit');
 
-        // print_r($data);
-        // if()
+    //     print_r($data);
+    //     if()
     // }
 }
 
