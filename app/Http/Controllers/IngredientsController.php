@@ -116,10 +116,51 @@ class IngredientsController extends Controller
       return response()->json(compact('post'));
     }
 
-
+    // public function fetchStock(Request $request)
+    // {
+    //     $posts = Ingredients::orderBy('created_at', 'asc')->get();
+    //     return response()->json($posts);
+    //     return response()->json([
+    //         'message' => 'New post created'
+    //     ]);
+    // }
     public function fetchStock(Request $request)
     {
-        $posts = Ingredients::orderBy('created_at', 'asc')->get();
+        $posts = DB::table('ingredients')
+            ->leftjoin('used_ingredients', 'ingredients.id', '=', 'used_ingredients.ingredients_id')
+            ->select('ingredients.*','used_ingredients.used_ingredients_amount','used_ingredients.ingredients_id',
+            DB::raw('sum(used_ingredients.used_ingredients_amount)as total'))
+            // ->orderBy('created_at', 'asc')
+            // ->where('ingredients.id', '=', $this->getId('ingredients.id'))
+            ->groupBy(
+                    'ingredients.id',
+                    'used_ingredients.used_ingredients_amount',
+                    'used_ingredients.ingredients_id',
+                    'ingredients.ingredients_name',
+                    'ingredients.ingredients_unit',
+                    'ingredients.ingredients_status',
+                    'ingredients.created_at',
+                    'ingredients.updated_at'
+                    )
+            ->get();
+
+            $results = array();
+            $i = 0; 
+        
+            foreach($posts as $item){
+                if(array_key_exists('id', $posts->toArray())){
+                    return response()->json([
+                        'message' => 'New post created'
+                    ]);
+                } else{
+                    $item->total = $this->total($item->id);
+                }
+                
+                continue;
+                $i++;
+            }
+            // return $posts;
+
         return response()->json($posts);
         return response()->json([
             'message' => 'New post created'
@@ -138,40 +179,37 @@ class IngredientsController extends Controller
 
     public function saveUsedIngredients($id,$amount){
         $ing = new UsedIngredients;
-        // $data = $request->all();
-
-        // $findId = DB::table('ingredients')->select('id')
-        //     ->where('ingredients_name','=', $data['availableIngredients'])
-        //     ->first()->id;
-            
         $ing->ingredients_id = $id;
         $ing->used_ingredients_amount = $amount;
         $ing->save();
     }
 
     public function fetchUsedIngredients(Request $request){
-        $data = DB::table('used_ingredients')->select('used_ingredients_amount','ingredients_id',
-        DB::raw('sum(used_ingredients_amount) as total'))
-        ->groupBy('ingredients_id','used_ingredients_amount')
-        ->get();
-        $results = array();
-        $i = 0;
+        // $data = DB::table('used_ingredients')->select('used_ingredients_amount','ingredients_id',
+        // DB::raw('sum(used_ingredients_amount) as total'))
+        // ->groupBy('ingredients_id','used_ingredients_amount')
+        // ->get();
+        // $results = array();
+        // $arr = array();
+        // $i = 0;
     
-        foreach($data as $item){
-            $key=(string)$item->ingredients_id;
-            if(array_key_exists($key, $results)){
-                return response()->json([
-                    'message' => 'New post created'
-                ]);
-            }else{
-                $results[$i][$item->ingredients_id] = $this->total($item->ingredients_id);
-            }
-            continue;
-            dd($results);
-            $i++;
-        }
-        return $results;
-        // return response()->json($results);
+        // foreach($data as $item){
+        //     $key=(string)$item->ingredients_id;
+        //     if(array_key_exists($key, $results)){
+        //         return response()->json([
+        //             'message' => 'New post created'
+        //         ]);
+        //     } else{
+        //         $results[$i][$item->ingredients_id] = $this->total($item->ingredients_id);
+        //         // $results[$i]['ingredients_id'] = $item->ingredients_id;
+        //         // $arr = $results;
+        //     }
+        //     continue;
+        //     $i++;
+        // }
+        // return $results;
+
+        // $data = DB::table('ingredients')->select('id','ingredients_')
     }
 
     public function total($id) {
@@ -184,6 +222,19 @@ class IngredientsController extends Controller
             $i++;
         }
         return $total;
+    }
+
+    public function getId($id){
+        $data = DB::table('used_ingredients')->where('ingredients_id', $id)->get();
+        $results= array();
+        $i = 0;
+        // $total = 0;
+        foreach($data as $item){
+            // $total += $item->used_ingredients_amount;
+            $results[$i] = $item->ingredients_id;
+            $i++;
+        }
+        return $i;
     }
 }
 

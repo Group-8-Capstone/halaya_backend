@@ -115,32 +115,32 @@ class ProductController extends Controller
       
     }
 
-    // public function stockStatus(Request $request){
-    //     $sumTotal = $this->orderSum($request);
-    //     $expectedUbe = $this->expectedUbeOutput($request);
-    //     if($expectedUbe >= $sumTotal){
-    //          $status = 'Enough';
-    //          return $status;
-    //     } else{
-    //         $status = 'Not enough';
-    //         return $status;
-    //     }
-        
-    // }
-
     public function stockStatus(Request $request){
-        //Estimated ingredients amount for two weeks
-        $ube = 150;             //kilos
-        $condensed = 18720;     //grams 48 cans
-        $evap = 17760;          //grams 48 cans
-        $butter = 5.4;          //kilos
-        $sugar = 30;            //kilos
-
-        $data = DB::table('ingredients')->select('ingredients_name', 'ingredients_unit');
-
-        print_r($data);
-        // if()
+        $sumTotal = $this->orderSum($request);
+        $expectedUbe = $this->expectedUbeOutput($request);
+        if($expectedUbe >= $sumTotal){
+             $status = 'Enough';
+             return $status;
+        } else{
+            $status = 'Not enough';
+            return $status;
+        }
+        
     }
+
+    // public function stockStatus(Request $request){
+        //Estimated ingredients amount for two weeks
+        // $ube = 150;             //kilos
+        // $condensed = 18720;     //grams 48 cans
+        // $evap = 17760;          //grams 48 cans
+        // $butter = 5.4;          //kilos
+        // $sugar = 30;            //kilos
+
+        // $data = DB::table('ingredients')->select('ingredients_name', 'ingredients_unit');
+
+        // print_r($data);
+        // if()
+    // }
 }
 
 
