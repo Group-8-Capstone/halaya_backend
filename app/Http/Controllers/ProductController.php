@@ -59,7 +59,6 @@ class ProductController extends Controller
 
         $Ube  = $ubeAmount[0]->ingredients_unit;
         $expected_ube = ($Ube * 1000) / $this->ube;
-        // echo($expected_ube);
         return $expected_ube;
         
     }
