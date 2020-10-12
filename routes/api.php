@@ -32,7 +32,7 @@ Route::post('/post/update',[OrderController::class,'updateOrder']);
 Route::delete('/post/delete/{id}',[OrderController::class,'deleteOrder']);
 Route::put('/post/updateStat/{id}',[OrderController::class,'updateStatus']);
 Route::put('/post/updateCanceledStat/{id}',[OrderController::class,'updateCancelledStatus']);
-Route::post('/create/stock',[IngredientsController::class,'createStock']); 
+// Route::post('/create/stock',[IngredientsController::class,'createStock']); 
 Route::get('/fetch/stock',[IngredientsController::class,'fetchStock']);
 Route::get('/fetch/sumOrder',[ProductController::class,'orderSum']);
 // Route::get('/fetch/expectedProduct',[ProductController::class,'fetchExpectedProd']);
@@ -52,4 +52,5 @@ Route::post('/post/addStockAmount',[IngredientsController::class,'updateStockAmo
 Route::get('/fetch/checkStatus',[IngredientsController::class,'checkStatus']);
 Route::post('/fetch/updateStatus',[IngredientsController::class,'updateStatus']);
 Route::post('/posts/newIngredients',[IngredientsController::class,'newIngredients']);
+Route::post('/post/saveRealNumbers',[IngredientsController::class,'saveRealAmount']);
 

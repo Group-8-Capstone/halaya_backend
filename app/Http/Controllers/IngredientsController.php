@@ -158,14 +158,26 @@ class IngredientsController extends Controller
     }
 
     public function saveRealAmount(Request $request){
-        $posts = new IngredientsAmount;
+        $message = '';
         $data = $request->all();
-        $result = DB::table('ingredients')->select('id')
-            ->where('ingredients_name',$data['ingredients_name'])
-            ->get();
-        $posts->ingredients_id = $result;
-        $posts->ingredients_amount = $data['ingredients_amount'];
-        $posts->save();
+        dd($data);       
+        try {
+            $posts = new IngredientsAmount;
+            $data = $request->all();
+            dd($data);
+            $result = DB::table('ingredients')->select('id')
+                ->where('ingredients_name',$data[''])
+                ->get();
+            $posts->ingredients_id = $result;
+            $posts->ingredients_amount = $data['ingredients_amount'];
+            // dd($result);
+            $posts->save();
+            $message = 'success';
+        } catch( \Exception $e) {
+            $message = 'failed';
+            return response()->json(['error'=>$e]);
+        }
+        return $message;
     }
 
     // public function ubeStatus($remainingAmount,$budgetAmount){
