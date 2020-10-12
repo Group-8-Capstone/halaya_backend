@@ -38,12 +38,18 @@ Route::get('/fetch/sumOrder',[ProductController::class,'orderSum']);
 // Route::get('/fetch/expectedProduct',[ProductController::class,'fetchExpectedProd']);
 // Route::get('/fetch/stockStatus',[ProductController::class,'stockStatus']);
 Route::get('/post/editStock/{id}',[IngredientsController::class,'editStockIngredients']);
-Route::get('/sales',[SalesController::class,'index']);
+Route::post('/sales/daily',[SalesController::class,'index']);
+Route::post('/sales/weekly',[SalesController::class,'indexWeekly']);
+Route::post('/sales/monthly',[SalesController::class,'indexMonthly']);
+Route::get('/sales/filterYear',[SalesController::class,'selectYear']);
+Route::get('/sales/yearly',[SalesController::class,'indexYearly']);
 Route::post('/post/updateStock',[IngredientsController::class,'updateStockIngredients']);
 Route::post('/post/fetchName',[IngredientsController::class,'fetchIngredientsName']);
 Route::post('/post/addStockAmount',[IngredientsController::class,'updateStockAmount']);
+
 // Route::get('/fetch/fetchUsedIng',[IngredientsController::class,'fetchUsedIngredients']);
 
 Route::get('/fetch/checkStatus',[IngredientsController::class,'checkStatus']);
 Route::post('/fetch/updateStatus',[IngredientsController::class,'updateStatus']);
 Route::post('/posts/newIngredients',[IngredientsController::class,'newIngredients']);
+
