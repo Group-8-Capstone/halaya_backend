@@ -5,12 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Ingredients extends Model
+class UsedIngredients extends Model
 {
     protected $guarded = [];
-    protected $table = 'ingredients';
+    protected $table = 'used_ingredients';
     protected $fillable = [
-        'ingredients_name', 'ingredients_amount','ingredients_status'
+        'ingredients_id', 'use_ingredients_amount'
     ];
-    
 }
