@@ -32,11 +32,11 @@ Route::post('/post/update',[OrderController::class,'updateOrder']);
 Route::delete('/post/delete/{id}',[OrderController::class,'deleteOrder']);
 Route::put('/post/updateStat/{id}',[OrderController::class,'updateStatus']);
 Route::put('/post/updateCanceledStat/{id}',[OrderController::class,'updateCancelledStatus']);
-Route::post('/create/stock/',[IngredientsController::class,'createStock']);
+Route::post('/create/stock',[IngredientsController::class,'createStock']); 
 Route::get('/fetch/stock',[IngredientsController::class,'fetchStock']);
 Route::get('/fetch/sumOrder',[ProductController::class,'orderSum']);
-Route::get('/fetch/expectedProduct',[ProductController::class,'fetchExpectedProd']);
-Route::get('/fetch/stockStatus',[ProductController::class,'stockStatus']);
+// Route::get('/fetch/expectedProduct',[ProductController::class,'fetchExpectedProd']);
+// Route::get('/fetch/stockStatus',[ProductController::class,'stockStatus']);
 Route::get('/post/editStock/{id}',[IngredientsController::class,'editStockIngredients']);
 Route::get('/sales',[SalesController::class,'index']);
 Route::post('/post/updateStock',[IngredientsController::class,'updateStockIngredients']);
@@ -44,3 +44,6 @@ Route::post('/post/fetchName',[IngredientsController::class,'fetchIngredientsNam
 Route::post('/post/addStockAmount',[IngredientsController::class,'updateStockAmount']);
 // Route::get('/fetch/fetchUsedIng',[IngredientsController::class,'fetchUsedIngredients']);
 
+Route::get('/fetch/checkStatus',[IngredientsController::class,'checkStatus']);
+Route::post('/fetch/updateStatus',[IngredientsController::class,'updateStatus']);
+Route::post('/posts/newIngredients',[IngredientsController::class,'newIngredients']);
