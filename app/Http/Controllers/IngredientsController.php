@@ -29,8 +29,6 @@ class IngredientsController extends Controller
         $post->ingredients_status= 'Enough';                        //usbunon
         $post->ingredients_unit= $data['usedIngredientsAmount'];
 
-
-       
      $isExist = Ingredients::select("*")
                         ->where("ingredients_name",$data['availableIngredients'])
                         ->exists();
@@ -143,6 +141,7 @@ class IngredientsController extends Controller
         $ing->ingredients_id = $id;
         $ing->used_ingredients_amount = $amount;
         $ing->save();
+        // $this.checkStatus();
     }
 
     public function total($id) {
@@ -157,37 +156,25 @@ class IngredientsController extends Controller
         return $total;
     }
 
-    public function saveRealAmount(Request $request){
-        $message = '';
-        $data = $request->all();
-        dd($data);       
-        try {
-            $posts = new IngredientsAmount;
-            $data = $request->all();
-            dd($data);
-            $result = DB::table('ingredients')->select('id')
-                ->where('ingredients_name',$data[''])
-                ->get();
-            $posts->ingredients_id = $result;
-            $posts->ingredients_amount = $data['ingredients_amount'];
-            // dd($result);
-            $posts->save();
-            $message = 'success';
-        } catch( \Exception $e) {
-            $message = 'failed';
-            return response()->json(['error'=>$e]);
-        }
-        return $message;
-    }
-
-    // public function ubeStatus($remainingAmount,$budgetAmount){
-    //     if(($remainingAmount) > $budgetAmount + 20){
-    //         return 'Good Level of Stock';
-    //     }else if(($remainingAmount) == ($budgetAmount + 20)){
-    //         return 'Warning! Stock level is almost running out low';
-    //     }else{
-    //         return 'Alert! Stock is Very Low';
+    // public function saveRealAmount(Request $request){
+    //     $message = '';     
+    //     try {
+    //         $posts = new IngredientsAmount;
+    //         $data = $request->all();
+    //         // dd($data);
+    //         $result = DB::table('ingredients')->select('id')
+    //             ->where('ingredients_name',$data[''])
+    //             ->get();
+    //         $posts->ingredients_id = $result;
+    //         $posts->ingredients_amount = $data['ingredients_amount'];
+    //         // dd($result);
+    //         $posts->save();
+    //         $message = 'success';
+    //     } catch( \Exception $e) {
+    //         $message = 'failed';
+    //         return response()->json(['error'=>$e]);
     //     }
+    //     return $message;
     // }
 
     public function checkStatus(){
@@ -231,6 +218,7 @@ class IngredientsController extends Controller
     public function newIngredients(Request $request){
         $data = $request->all();
         $message = '';
+        // dd($this->checkStatus());
         try {
             $test = DB::table('ingredients')
             ->select('*')
