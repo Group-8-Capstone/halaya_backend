@@ -49,7 +49,7 @@ Route::post('/post/addStockAmount',[IngredientsController::class,'updateStockAmo
 
 // Route::get('/fetch/fetchUsedIng',[IngredientsController::class,'fetchUsedIngredients']);
 
-Route::get('/fetch/checkStatus',[IngredientsController::class,'checkStatus']);
+// Route::get('/fetch/checkStatus',[IngredientsController::class,'checkStatus']);
 Route::post('/fetch/updateStatus',[IngredientsController::class,'updateStatus']);
 Route::post('/posts/newIngredients',[IngredientsController::class,'newIngredients']);
 Route::post('/post/saveRealNumbers',[IngredientsController::class,'saveRealAmount']);
