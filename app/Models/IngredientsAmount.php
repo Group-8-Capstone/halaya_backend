@@ -10,6 +10,6 @@ class IngredientsAmount extends Model
     protected $guarded = [];
     protected $table = 'ingredients_amount';
     protected $fillable = [
-        'ingredients_id', 'ingredients_amount'
+        'ingredients_name', 'ingredients_need_amount'
     ]; 
 }
