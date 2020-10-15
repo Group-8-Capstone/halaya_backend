@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class IngredientsAmount extends Migration
+class CreateProfilesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class IngredientsAmount extends Migration
      */
     public function up()
     {
-        Schema::create('ingredients_amount', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            // $table->bigInteger('ingredients_id');
-            $table->string('ingredients_name');
-            $table->float('ingredients_need_amount');
+        Schema::create('profiles', function (Blueprint $table) {
+            $table->id();
+            $table->string('username')->unique();
+            $table->string('avatar');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class IngredientsAmount extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('profiles');
     }
 }
