@@ -44,13 +44,13 @@ Route::post('/sales/monthly',[SalesController::class,'indexMonthly']);
 Route::get('/sales/filterYear',[SalesController::class,'selectYear']);
 Route::get('/sales/yearly',[SalesController::class,'indexYearly']);
 Route::post('/post/updateStock',[IngredientsController::class,'updateStockIngredients']);
-Route::post('/post/fetchName',[IngredientsController::class,'fetchIngredientsName']);
 Route::post('/post/addStockAmount',[IngredientsController::class,'updateStockAmount']);
-
-// Route::get('/fetch/fetchUsedIng',[IngredientsController::class,'fetchUsedIngredients']);
-
 Route::get('/fetch/checkStatus',[IngredientsController::class,'checkStatus']);
 Route::post('/fetch/updateStatus',[IngredientsController::class,'updateStatus']);
-Route::post('/posts/newIngredients',[IngredientsController::class,'newIngredients']);
+Route::post('/posts/ingredients',[IngredientsController::class,'newIngredients']);
 Route::post('/post/saveRealNumbers',[IngredientsController::class,'saveRealAmount']);
+Route::post('/post/neededValue',[IngredientsController::class,'addEstimatedAmount']);
+Route::get('/fetch/estimatedValue',[IngredientsController::class,'fetchEstimatedValue']);
+Route::get('/post/updateEstimatedValue/{id}',[IngredientsController::class,'editEstimatedValue']);
+Route::post('/post/updateNewEstimatedValue',[IngredientsController::class,'updateEstimatedValue']);
 

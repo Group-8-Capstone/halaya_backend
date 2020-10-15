@@ -12,24 +12,13 @@ use DB;
 
 class IngredientsController extends Controller
 {
-    private function exist(Request $request){
-        $data=$request->all();
-        $post = Ingredients::where('ingredients_name',Input::get('ingredients_name'))->first();
-        if (is_null($post)) {
-        print_r("ingredients_name is exists");
-        }
-        print_r("ingredients_name is not exists");
-    }
 
     public function updateStockAmount(Request $request)
     {
         $post = new Ingredients;
         $data = $request->all();
         $post->ingredients_name= $data['availableIngredients'];
-        $post->ingredients_status= 'Enough';                        //usbunon
-        $post->ingredients_unit= $data['usedIngredientsAmount'];
-
-
+        $post->ingredients_remaining= $data['usedIngredientsAmount'];
        
      $isExist = Ingredients::select("*")
                         ->where("ingredients_name",$data['availableIngredients'])
@@ -42,7 +31,7 @@ class IngredientsController extends Controller
             
             $post = Ingredients::find($findId[0]->id);
             $newAdded = intval($data['usedIngredientsAmount']);
-            $post->ingredients_unit -= $newAdded;
+            $post->ingredients_remaining -= $newAdded;
             $post->save();
 
             $id = DB::table('ingredients')
@@ -83,7 +72,7 @@ class IngredientsController extends Controller
    
       $post = Ingredients::firstOrCreate(['id' => $request->id]);
       $post->ingredients_name= $request['ingredients_name'];
-      $post->ingredients_unit= $request['ingredients_unit'];
+      $post->ingredients_remaining= $request['ingredients_remaining'];
       $post->ingredients_status = $request['ingredients_status'];
       $post->save();
       $this->checkStatus();
@@ -92,15 +81,17 @@ class IngredientsController extends Controller
 
     public function fetchStock(Request $request)
     {
+        $this->checkStatus();
         $posts = DB::table('ingredients')
             ->leftjoin('used_ingredients', 'ingredients.id', '=', 'used_ingredients.ingredients_id')
             ->select('ingredients.*','used_ingredients.used_ingredients_amount',
             DB::raw('sum(used_ingredients.used_ingredients_amount)as total'))
             ->groupBy(
                     'ingredients.id',
+                    'ingredients.ingredients_amount_id',
                     'used_ingredients.used_ingredients_amount',
                     'ingredients.ingredients_name',
-                    'ingredients.ingredients_unit',
+                    'ingredients.ingredients_remaining',
                     'ingredients.ingredients_status',
                     'ingredients.created_at',
                     'ingredients.updated_at'
@@ -126,23 +117,24 @@ class IngredientsController extends Controller
         return response()->json([
             'message' => 'New post created'
         ]);
+        
     }
 
-     public function fetchIngredientsName(Request $request)
-    {
-        $post = new Ingredients;
-        $post = $request->all();
-        $posts = Ingredients::gBy('created_at', 'asc')->get();
-        foreach ($posts as $key) {
-            return response()->json($key->ingredients_name);
-        }
+    public function addEstimatedAmount(Request $request){
+        $posts = new  IngredientsAmount;   
+        $data = $request->all();
+        $posts->ingredients_name=$data['ingredientsName'];
+        $posts->ingredients_need_amount=$data['ingredientsEstimatedAmount'];
+        $posts->save();
     }
+
 
     public function saveUsedIngredients($id,$amount){
         $ing = new UsedIngredients;
         $ing->ingredients_id = $id;
         $ing->used_ingredients_amount = $amount;
         $ing->save();
+        $this->checkStatus();
     }
 
     public function total($id) {
@@ -157,80 +149,60 @@ class IngredientsController extends Controller
         return $total;
     }
 
-    public function saveRealAmount(Request $request){
-        $message = '';
-        $data = $request->all();
-        dd($data);       
-        try {
-            $posts = new IngredientsAmount;
-            $data = $request->all();
-            dd($data);
-            $result = DB::table('ingredients')->select('id')
-                ->where('ingredients_name',$data[''])
-                ->get();
-            $posts->ingredients_id = $result;
-            $posts->ingredients_amount = $data['ingredients_amount'];
-            // dd($result);
-            $posts->save();
-            $message = 'success';
-        } catch( \Exception $e) {
-            $message = 'failed';
-            return response()->json(['error'=>$e]);
-        }
-        return $message;
-    }
-
-    // public function ubeStatus($remainingAmount,$budgetAmount){
-    //     if(($remainingAmount) > $budgetAmount + 20){
-    //         return 'Good Level of Stock';
-    //     }else if(($remainingAmount) == ($budgetAmount + 20)){
-    //         return 'Warning! Stock level is almost running out low';
-    //     }else{
-    //         return 'Alert! Stock is Very Low';
-    //     }
-    // }
 
     public function checkStatus(){
+        $message = '';
+        try{
         $data = DB::table('ingredients')
-        ->join('ingredients_amount', 'ingredients.id', '=', 'ingredients_amount.ingredients_id')
+        ->join('ingredients_amount', 'ingredients.ingredients_name','=','ingredients_amount.ingredients_name')
         ->select('ingredients.id',
                 'ingredients.ingredients_name',
-                'ingredients.ingredients_unit',
-                'ingredients_amount.ingredients_amount',
+                'ingredients.ingredients_remaining',
+                'ingredients_amount.ingredients_need_amount',
                 'ingredients.ingredients_status'
                 )
         ->get();
+       
+      
         $i = 0; 
         foreach($data as $item){
-            if($item->ingredients_unit > ($item->ingredients_amount + 20)){
+           
+            if($item->ingredients_remaining > ($item->ingredients_need_amount + 20)){
+               
                 $res = Ingredients::where('id', $item->id )
                     ->update([
                         'ingredients_name' => $item->ingredients_name,
-                        'ingredients_unit' => $item->ingredients_unit,
+                        'ingredients_remaining' => $item->ingredients_remaining,
                         'ingredients_status' => 'Good Level of Stock',
                     ]);
-            }else if($item->ingredients_unit == ($item->ingredients_amount + 20)){
+            }else if($item->ingredients_remaining == ($item->ingredients_need_amount + 20)){
                 $res = Ingredients::where('id', $item->id )
                     ->update([
                         'ingredients_name' => $item->ingredients_name,
-                        'ingredients_unit' => $item->ingredients_unit,
+                        'ingredients_remaining' => $item->ingredients_remaining,
                         'ingredients_status' => 'Warning! Stock level is almost running out low',
                     ]);
             }else{
                 $res = Ingredients::where('id', $item->id )
                     ->update([
                         'ingredients_name' => $item->ingredients_name,
-                        'ingredients_unit' => $item->ingredients_unit,
+                        'ingredients_remaining' => $item->ingredients_remaining,
                         'ingredients_status' => 'Alert! Stock is Very Low',
                     ]);
             }
         }
-        // return $data;
+            }catch(Exception $e){
+                $message = 'failed';
+                return response()->json(['error'=>$e]);
+
+            }
+     
     }
 
     public function newIngredients(Request $request){
         $data = $request->all();
         $message = '';
+      
         try {
             $test = DB::table('ingredients')
             ->select('*')
@@ -240,24 +212,38 @@ class IngredientsController extends Controller
                 $res = new Ingredients;
                 $res->ingredients_name = $data['ingredientsName'];
                 $res->ingredients_status = $data['stockStatus'];
-                $res->ingredients_unit = $data['ingredientsUnit'];
+                $res->ingredients_remaining = $data['ingredientsUnit'];
                 $res->save();
                 $message = 'not existed';
+                $this->checkStatus();
+            
             } elseif(sizeof($test) > 0){
-                // $unit = floatval($test[0]->ingredients_unit);
-                // $res = Ingredients::where('ingredients_name', $data['ingredientsName'])
-                // ->update([
-                //     'ingredients_name' => $data['ingredientsName'],
-                //     'ingredients_unit' => floatval($data['ingredientsUnit']) + $unit,
-                //     'ingredients_status' => $data['stockStatus']
-                // ]);
                 $message = 'existed';
             }
         }catch(\Exception $e){
             return response()->json(['error'=>$e]);
         }
-        $this->checkStatus();
+        
         return response()->json($message);
+    }
+
+    public function fetchEstimatedValue(){
+        $entireTable = ingredientsAmount::all();
+        return $entireTable;
+
+    }
+
+    public function editEstimatedValue($id){
+        $post = ingredientsAmount::find($id);
+        return response()->json($post);
+    }
+
+    public function updateEstimatedValue(Request $request){
+      $post = ingredientsAmount::firstOrCreate(['id' => $request->id]);
+      $post->ingredients_name= $request['ingredients_name'];
+      $post->ingredients_need_amount= $request['ingredients_need_amount'];
+      $post->save();
+      return response()->json(compact('post'));
     }
 }
 
