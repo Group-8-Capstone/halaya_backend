@@ -44,9 +44,9 @@ class IngredientsController extends Controller
         return 'sucess';
     }
 
-    public function editStockIngredients()
+    public function editStockIngredients($id)
     {
-    //   $post = IngredientsView::find(1);
+    //   $post = \ingredientsView::find($id);
     $post = DB::table('ingredients')
         ->join('ingredients_amount', 'ingredients_amount.id', '=', 'ingredients.ingredients_amount_id')
         ->select(
@@ -55,29 +55,25 @@ class IngredientsController extends Controller
             'ingredients.ingredients_status',
             'ingredients_amount.ingredients_name'
         )
-        ->where('ingredients_amount.id', 1)
+        ->where('ingredients_amount.id', $id )
         ->get();
-    $obj = {};
-    foreach($post as $item){
-        $obj['id'] = $item->id;
-        $obj['ingredients_remaining'] = $item->ingredients_remaining;
-        $obj['ingredients_status'] = $item->ingredients_status;
-        $obj['ingredients_name'] = $item->ingredients_name;
-    }
-    dd($post);
       return response()->json($post);
     }
 
     public function updateStockIngredients(Request $request)
     {
-   
-      $post = Ingredients::firstOrCreate(['id' => $request->id]);
-    //   $post->ingredients_name= $request['ingredients_name'];
-      $post->ingredients_remaining= $request['ingredients_remaining'];
-      $post->ingredients_status = $request['ingredients_status'];
-      $post->save();
-      $this->checkStatus();
-      return response()->json(compact('post'));
+        $data = $request->all();
+        try {
+            $res = Ingredients::where('ingredients_amount_id', $data['id'] )
+                ->update([
+                    'ingredients_remaining' => $data['ingredients_remaining'],
+                ]);
+            $this->checkStatus();
+        } catch (\Exception $e) {
+            return 'failed';
+            return response()->json($e);
+        }
+        return 'success';
     }
 
     public function fetchStock(Request $request)
