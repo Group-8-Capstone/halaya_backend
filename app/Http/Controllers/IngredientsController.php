@@ -166,19 +166,19 @@ class IngredientsController extends Controller
                 $res = Ingredients::where('id', $item->id )
                     ->update([
                         'ingredients_remaining' => $item->ingredients_remaining,
-                        'ingredients_status' => 'Good Level of Stock',
+                        'ingredients_status' => 'Good Level',
                     ]);
-            }else if($item->ingredients_remaining == ($item->ingredients_need_amount + 20)){
+            }else if(($item->ingredients_remaining >= ($item->ingredients_need_amount + 20)) && $item->ingredients_remaining < ($item->ingredients_need_amount)){
                 $res = Ingredients::where('id', $item->id )
                     ->update([
                         'ingredients_remaining' => $item->ingredients_remaining,
-                        'ingredients_status' => 'Warning! Stock level is almost running out low',
+                        'ingredients_status' => 'Warning! Running Low',
                     ]);
             }else{
                 $res = Ingredients::where('id', $item->id )
                     ->update([
                         'ingredients_remaining' => $item->ingredients_remaining,
-                        'ingredients_status' => 'Alert! Stock is Very Low',
+                        'ingredients_status' => 'Alert! Very Low',
                     ]);
             }
         }
