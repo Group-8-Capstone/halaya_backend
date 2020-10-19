@@ -69,7 +69,7 @@ class OrderController extends Controller
         }
         array_push($data, $tempData);
         $start = $z + 1;
-        $stop = $stop + 6;
+        $stop = $stop + 5;
         \Log::info($start);
       }
       return response()->json($data);
