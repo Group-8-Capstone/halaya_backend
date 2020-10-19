@@ -19,7 +19,8 @@ class IngredientsController extends Controller
         $data = $request->all();
         $post->ingredients_name= $data['availableIngredients'];
         $post->ingredients_remaining= $data['usedIngredientsAmount'];
-       
+        $post->ingredients_unit= $data['usedIngredientsAmount'];
+
      $isExist = Ingredients::select("*")
                         ->where("ingredients_name",$data['availableIngredients'])
                         ->exists();
@@ -150,6 +151,7 @@ class IngredientsController extends Controller
     }
 
 
+
     public function checkStatus(){
         $message = '';
         try{
@@ -202,7 +204,6 @@ class IngredientsController extends Controller
     public function newIngredients(Request $request){
         $data = $request->all();
         $message = '';
-      
         try {
             $test = DB::table('ingredients')
             ->select('*')

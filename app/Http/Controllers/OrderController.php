@@ -12,6 +12,7 @@ class OrderController extends Controller
   
     public function createOrder(Request $request)
     {
+      try{
         $post = new Order;
         $data=$request->all();
         $post->customer_name = $data['name'];
@@ -20,7 +21,13 @@ class OrderController extends Controller
         $post->order_quantity = $data['orderQuantity']; 
         $post->delivery_date = $data['deliveryDate'];
         $post->order_status = $data['orderStatus'];
+        $post->longitude = $data['longitude'];
+        $post->latitude = $data['latitude'];
+        $post->distance = $data['distance'];
         $post->save();
+      } catch (\Exception $e){
+        return response()->json(['error'=>$e]);
+      }
     }
   
    public function fetchOrder()
