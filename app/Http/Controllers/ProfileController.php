@@ -35,30 +35,42 @@ class ProfileController extends Controller
      */
     public function storeProfile(Request $request)
     {
-        $this->validate($request, [
-            'username' => 'required',
-            'avatar' => 'required'
-        ]);
+        if($request->get('image'))
+        {
+           $image = $request->get('image');
+           $name = time().'.' . explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
+           \Image::make($request->get('image'))->save(public_path('images/').$name);
+         }
+ 
+        $image= new FileUpload();
+        $image->image_name = $name;
+        $image->save();
+ 
+        return response()->json(['success' => 'You have successfully uploaded an image'], 200);
+        // $this->validate($request, [
+        //     'username' => 'required',
+        //     'avatar' => 'required'
+        // ]);
 
-        if($request->avatar){
+        // if($request->avatar){
 
-            $name = time().'.' . explode('/', explode(':', substr($request->avatar, 0, strpos($request->avatar, ';')))[1])[1];
-            \Image::make($request->avatar)->save(public_path('img/profile/').$name);
-            $request->merge(['avatar' => $name]);
+        //     $name = time().'.' . explode('/', explode(':', substr($request->avatar, 0, strpos($request->avatar, ';')))[1])[1];
+        //     \Image::make($request->avatar)->save(public_path('img/profile/').$name);
+        //     $request->merge(['avatar' => $name]);
            
-        }
+        // }
         
-        $user = new User;
-        $user->username = $request->username;
-        $user->avatar = $name;
-        $user->save();
+        // $user = new User;
+        // $user->username = $request->username;
+        // $user->avatar = $name;
+        // $user->save();
         
-        return response()->json(
-            [
-                'success' => true,
-                'message' => 'User registered successfully'
-            ]
-        );
+        // return response()->json(
+        //     [
+        //         'success' => true,
+        //         'message' => 'User registered successfully'
+        //     ]
+        // );
 
     }
 
