@@ -27,6 +27,7 @@ use App\Http\Controllers\SalesController;
 Route::post('/post',[OrderController::class,'createOrder']);
 Route::get('/posts/order',[OrderController::class,'fetchOrder']);
 Route::get('/posts/delivered',[OrderController::class,'fetchDelivered']);
+Route::get('/posts/delivery',[OrderController::class,'fetchDelivery']);
 Route::get('/post/edit/{id}',[OrderController::class,'editOrder']);
 Route::post('/post/update',[OrderController::class,'updateOrder']);
 Route::delete('/post/delete/{id}',[OrderController::class,'deleteOrder']);
@@ -45,6 +46,11 @@ Route::get('/sales/filterYear',[SalesController::class,'selectYear']);
 Route::get('/sales/yearly',[SalesController::class,'indexYearly']);
 Route::post('/post/updateStock',[IngredientsController::class,'updateStockIngredients']);
 Route::post('/post/addStockAmount',[IngredientsController::class,'updateStockAmount']);
+
+// Route::get('/fetch/fetchUsedIng',[IngredientsController::class,'fetchUsedIngredients']);
+
+// Route::get('/fetch/checkStatus',[IngredientsController::class,'checkStatus']);
+Route::post('/post/usedIngredients',[IngredientsController::class,'saveUsedIngredients']);
 Route::get('/fetch/checkStatus',[IngredientsController::class,'checkStatus']);
 Route::post('/fetch/updateStatus',[IngredientsController::class,'updateStatus']);
 Route::post('/posts/ingredients',[IngredientsController::class,'newIngredients']);

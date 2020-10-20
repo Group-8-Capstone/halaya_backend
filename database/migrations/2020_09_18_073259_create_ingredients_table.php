@@ -16,7 +16,6 @@ class CreateIngredientsTable extends Migration
         Schema::create('ingredients', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('ingredients_amount_id');
-            $table->string('ingredients_name');
             $table->float('ingredients_remaining');
             $table->string('ingredients_status');
             $table->timestamps();
