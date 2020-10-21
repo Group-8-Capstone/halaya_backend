@@ -57,7 +57,7 @@ class IngredientsController extends Controller
         )
         ->where('ingredients_amount.id', 1)
         ->get();
-    $obj = {};
+        $obj = [];
     foreach($post as $item){
         $obj['id'] = $item->id;
         $obj['ingredients_remaining'] = $item->ingredients_remaining;
@@ -131,6 +131,7 @@ class IngredientsController extends Controller
         $data = $request->all();
         $posts->ingredients_name=$data['ingredientsName'];
         $posts->ingredients_need_amount=$data['ingredientsEstimatedAmount'];
+        $posts->ingredients_category=$data['ingredientsCategory'];
         $posts->save();
     }
 
@@ -241,6 +242,7 @@ class IngredientsController extends Controller
       $post = ingredientsAmount::firstOrCreate(['id' => $request->id]);
       $post->ingredients_name= $request['ingredients_name'];
       $post->ingredients_need_amount= $request['ingredients_need_amount'];
+      $post->ingredients_category= $request['ingredients_category'];
       $post->save();
       return response()->json(compact('post'));
     }
