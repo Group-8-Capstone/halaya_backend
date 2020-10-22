@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Ingredients;
 use App\Models\UsedIngredients;
 use App\Models\IngredientsAmount;
+use Carbon\Carbon;
 use DB;
 
 class IngredientsController extends Controller
@@ -37,7 +38,7 @@ class IngredientsController extends Controller
                     'ingredients_remaining' => $item->ingredients_remaining - $usedQty,
                 ]);
             }
-            $this->checkStatus(); 
+            $this->checkStatus($getID); 
         } catch(\Excetion $e){
             return response()->json($e);
         }
@@ -46,17 +47,7 @@ class IngredientsController extends Controller
 
     public function editStockIngredients($id)
     {
-    //   $post = \ingredientsView::find($id);
-    $post = DB::table('ingredients')
-        ->join('ingredients_amount', 'ingredients_amount.id', '=', 'ingredients.ingredients_amount_id')
-        ->select(
-            'ingredients_amount.id',
-            'ingredients.ingredients_remaining',
-            'ingredients.ingredients_status',
-            'ingredients_amount.ingredients_name'
-        )
-        ->where('ingredients_amount.id', $id )
-        ->get();
+      $post = Ingredients::find($id);
       return response()->json($post);
     }
 
@@ -68,7 +59,7 @@ class IngredientsController extends Controller
                 ->update([
                     'ingredients_remaining' => $data['ingredients_remaining'],
                 ]);
-            $this->checkStatus();
+            $this->checkStatus($data['id']);
         } catch (\Exception $e) {
             return 'failed';
             return response()->json($e);
@@ -78,7 +69,6 @@ class IngredientsController extends Controller
 
     public function fetchStock(Request $request)
     {
-        $this->checkStatus();
         $posts = DB::table('ingredients_amount')
             ->leftjoin('used_ingredients', 'ingredients_amount.id', '=', 'used_ingredients.ingredients_id')
             ->join('ingredients','ingredients_amount.id', '=','ingredients.ingredients_amount_id')
@@ -100,7 +90,6 @@ class IngredientsController extends Controller
                 )
             ->get();
 
-            $results = array();
             $i = 0; 
         
             foreach($posts as $item){
@@ -132,8 +121,13 @@ class IngredientsController extends Controller
 
 
     public function total($id) {
-        $data = DB::table('used_ingredients')->where('ingredients_id', $id)->get();
-        $results= array();
+        $monthYear = Carbon::now();
+        $data = DB::table('used_ingredients')
+            ->where('ingredients_id', $id )
+            ->whereMonth('created_at',$monthYear->month)
+            ->whereYear('created_at',$monthYear->year)
+            ->get();
+            
         $i = 0;
         $total = 0;
         foreach($data as $item){
@@ -143,9 +137,7 @@ class IngredientsController extends Controller
         return $total;
     }
 
-
-
-    public function checkStatus(){
+    public function checkStatus($id){
         $message = '';
         try{
         $data = DB::table('ingredients')
@@ -155,9 +147,9 @@ class IngredientsController extends Controller
                 'ingredients_amount.ingredients_need_amount',
                 'ingredients.ingredients_status'
                 )
+        ->where('ingredients_amount.id','=', $id)
         ->get();
-       
-      
+
         $i = 0; 
         foreach($data as $item){
            
@@ -168,7 +160,7 @@ class IngredientsController extends Controller
                         'ingredients_remaining' => $item->ingredients_remaining,
                         'ingredients_status' => 'Good Level',
                     ]);
-            }else if(($item->ingredients_remaining >= ($item->ingredients_need_amount + 20)) && $item->ingredients_remaining < ($item->ingredients_need_amount)){
+            }else if(($item->ingredients_remaining <= ($item->ingredients_need_amount + 20)) && $item->ingredients_remaining > ($item->ingredients_need_amount)){
                 $res = Ingredients::where('id', $item->id )
                     ->update([
                         'ingredients_remaining' => $item->ingredients_remaining,
@@ -187,7 +179,7 @@ class IngredientsController extends Controller
                 return response()->json(['error'=>$e]);
 
             }
-     
+     return $data;
     }
 
     public function newIngredients(Request $request){
@@ -197,7 +189,7 @@ class IngredientsController extends Controller
             ->select('id')
             ->where('ingredients_amount.ingredients_name', '=', $data['ingredientsName'])
             ->first()->id;
-            // dd($getID);
+            // dd($data);s
         try {
             $test = DB::table('ingredients')
             ->select('*')
