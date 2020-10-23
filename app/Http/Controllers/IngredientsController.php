@@ -230,7 +230,6 @@ class IngredientsController extends Controller
     public function fetchEstimatedValue(){
         $entireTable = ingredientsAmount::all();
         return $entireTable;
-
     }
 
     public function editEstimatedValue($id){
