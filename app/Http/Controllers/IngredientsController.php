@@ -237,6 +237,17 @@ class IngredientsController extends Controller
         }
     }
 
+    public function fetchIngredientsName(){
+        try{
+            $post = DB::table('ingredients_amount')
+            ->select('id','ingredients_name','ingredients_category')
+            ->get();
+            return $post;
+        } catch (\Exception $e) {
+            return response()->json($e);
+        }
+    }
+
     public function getAllIngredients($name){
         
         try {

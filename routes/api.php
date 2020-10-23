@@ -24,13 +24,16 @@ use App\Http\Controllers\SalesController;
 
 
 //Order Controller
+Route::post('/post/update',[OrderController::class,'updateOrder']);
 Route::post('/post',[OrderController::class,'createOrder']);
+
 Route::get('/posts/order',[OrderController::class,'fetchOrder']);
 Route::get('/posts/delivered',[OrderController::class,'fetchDelivered']);
 Route::get('/posts/delivery',[OrderController::class,'fetchDelivery']);
 Route::get('/post/edit/{id}',[OrderController::class,'editOrder']);
-Route::post('/post/update',[OrderController::class,'updateOrder']);
+
 Route::delete('/post/delete/{id}',[OrderController::class,'deleteOrder']);
+
 Route::put('/post/updateStat/{id}',[OrderController::class,'updateStatus']);
 Route::put('/post/updateCanceledStat/{id}',[OrderController::class,'updateCancelledStatus']);
 
@@ -38,6 +41,7 @@ Route::put('/post/updateCanceledStat/{id}',[OrderController::class,'updateCancel
 Route::post('/sales/daily',[SalesController::class,'index']);
 Route::post('/sales/weekly',[SalesController::class,'indexWeekly']);
 Route::post('/sales/monthly',[SalesController::class,'indexMonthly']);
+
 Route::get('/sales/filterYear',[SalesController::class,'selectYear']);
 Route::get('/sales/yearly',[SalesController::class,'indexYearly']);
 
@@ -49,14 +53,16 @@ Route::post('/fetch/updateStatus',[IngredientsController::class,'updateStatus'])
 Route::post('/posts/ingredients',[IngredientsController::class,'newIngredients']);
 Route::post('/post/saveRealNumbers',[IngredientsController::class,'saveRealAmount']);
 Route::post('/post/neededValue',[IngredientsController::class,'addEstimatedAmount']);
+Route::post('/post/updateNewEstimatedValue',[IngredientsController::class,'updateEstimatedValue']);
+
 Route::get('/fetch/estimatedValue',[IngredientsController::class,'fetchEstimatedValue']);
 Route::get('/post/updateEstimatedValue/{id}',[IngredientsController::class,'editEstimatedValue']);
-Route::post('/post/updateNewEstimatedValue',[IngredientsController::class,'updateEstimatedValue']);
 Route::get('/post/editStock/{id}',[IngredientsController::class,'editStockIngredients']);
 Route::get('/fetch/stock',[IngredientsController::class,'fetchStock']);
 Route::get('/getHalayaIngredients',[IngredientsController::class,'getHalayaIngredients']);
 Route::get('/getButchiIngredients',[IngredientsController::class,'getButchiIngredients']);
 Route::get('/getIceCreamIngredients',[IngredientsController::class,'getIceCreamIngredients']);
+Route::get('/fetch/ingredientsName',[IngredientsController::class,'fetchIngredientsName']);
 
 
 //for testing only
