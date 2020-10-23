@@ -10,7 +10,7 @@ class Ingredients extends Model
     protected $guarded = [];
     protected $table = 'ingredients';
     protected $fillable = [
-        'ingredients_amount_id', 'ingredients_remaining','ingredients_status'
+        'ingredients_amount_id', 'ingredients_remaining','ingredients_status','ingredients_category'
     ];
     
 }

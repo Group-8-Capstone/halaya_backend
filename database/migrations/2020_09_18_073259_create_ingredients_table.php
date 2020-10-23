@@ -18,6 +18,7 @@ class CreateIngredientsTable extends Migration
             $table->bigInteger('ingredients_amount_id');
             $table->float('ingredients_remaining');
             $table->string('ingredients_status');
+            $table->string('ingredients_category');
             $table->timestamps();
         });
     }
