@@ -54,8 +54,12 @@ Route::get('/post/updateEstimatedValue/{id}',[IngredientsController::class,'edit
 Route::post('/post/updateNewEstimatedValue',[IngredientsController::class,'updateEstimatedValue']);
 Route::get('/post/editStock/{id}',[IngredientsController::class,'editStockIngredients']);
 Route::get('/fetch/stock',[IngredientsController::class,'fetchStock']);
+Route::get('/getHalayaIngredients',[IngredientsController::class,'getHalayaIngredients']);
+Route::get('/getButchiIngredients',[IngredientsController::class,'getButchiIngredients']);
+Route::get('/getIceCreamIngredients',[IngredientsController::class,'getIceCreamIngredients']);
 
 
 //for testing only
 Route::get('/fetch/checkStatus',[IngredientsController::class,'checkStatus']);
 Route::get('/getMonthYear',[IngredientsController::class,'compareDate']);
+Route::get('/getAllIngredients',[IngredientsController::class,'getAllIngredients']);

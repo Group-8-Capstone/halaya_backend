@@ -67,33 +67,76 @@ class IngredientsController extends Controller
         return 'success';
     }
 
-    public function fetchStock(Request $request)
-    {
-        $posts = DB::table('ingredients_amount')
-            ->leftjoin('used_ingredients', 'ingredients_amount.id', '=', 'used_ingredients.ingredients_id')
-            ->join('ingredients','ingredients_amount.id', '=','ingredients.ingredients_amount_id')
-            ->select(
-                'ingredients_amount.id',
-                'ingredients_amount.ingredients_name',
-                'ingredients_amount.ingredients_need_amount',
-                'used_ingredients.used_ingredients_amount',
-                'ingredients.ingredients_remaining',
-                'ingredients.ingredients_status',
-            DB::raw('sum(used_ingredients.used_ingredients_amount)as total'))
-            ->groupBy(
-                'ingredients_amount.id',
-                'used_ingredients.used_ingredients_amount',
-                'ingredients_amount.ingredients_name',
-                'ingredients_amount.ingredients_need_amount',
-                'ingredients.ingredients_remaining',
-                'ingredients.ingredients_status'
-                )
-            ->get();
+    // public function fetchStock(Request $request)
+    // {
+    //     $posts = DB::table('ingredients_amount')
+    //         ->leftjoin('used_ingredients', 'ingredients_amount.id', '=', 'used_ingredients.ingredients_id')
+    //         ->join('ingredients','ingredients_amount.id', '=','ingredients.ingredients_amount_id')
+    //         ->select(
+    //             'ingredients_amount.id',
+    //             'ingredients_amount.ingredients_name',
+    //             'ingredients_amount.ingredients_need_amount',
+    //             'used_ingredients.used_ingredients_amount',
+    //             'ingredients.ingredients_remaining',
+    //             'ingredients.ingredients_status',
+    //         DB::raw('sum(used_ingredients.used_ingredients_amount)as total'))
+    //         ->groupBy(
+    //             'ingredients_amount.id',
+    //             'used_ingredients.used_ingredients_amount',
+    //             'ingredients_amount.ingredients_name',
+    //             'ingredients_amount.ingredients_need_amount',
+    //             'ingredients.ingredients_remaining',
+    //             'ingredients.ingredients_status'
+    //             )
+    //         ->get();
 
-            $i = 0; 
+    //         $i = 0; 
         
-            foreach($posts as $item){
-                if(array_key_exists('id', $posts->toArray())){
+    //         foreach($posts as $item){
+    //             if(array_key_exists('id', $posts->toArray())){
+    //                 return response()->json([
+    //                     'message' => 'New post created'
+    //                 ]);
+    //             } else{
+    //                 $item->total = $this->total($item->id);
+    //             }
+                
+    //             continue;
+    //             $i++;
+    //         }
+    //     return response()->json($posts);
+    //     return response()->json([
+    //         'message' => 'New post created'
+    //     ]);
+        
+    // }
+
+    public function getHalayaIngredients(){
+        try {
+            $post = DB::table('ingredients_amount')
+                ->join('ingredients', 'ingredients.ingredients_amount_id', '=', 'ingredients_amount.id')
+                ->leftjoin('used_ingredients', 'ingredients_amount.id', '=', 'used_ingredients.ingredients_id')
+                ->select(
+                    'ingredients_amount.id',
+                    'ingredients.ingredients_remaining',
+                    'ingredients.ingredients_status',
+                    'ingredients_amount.ingredients_name',
+                    'used_ingredients.used_ingredients_amount',
+                    DB::raw('sum(used_ingredients.used_ingredients_amount)as total'))
+                ->where('ingredients_amount.ingredients_category', 'Ube Halaya')
+                ->groupBy(
+                    'ingredients_amount.id',
+                    'ingredients.ingredients_remaining',
+                    'ingredients.ingredients_status',
+                    'ingredients_amount.ingredients_name',
+                    'used_ingredients.used_ingredients_amount',
+                    )
+                ->get();
+
+                $i = 0; 
+        
+            foreach($post as $item){
+                if(array_key_exists('id', $post->toArray())){
                     return response()->json([
                         'message' => 'New post created'
                     ]);
@@ -104,19 +147,128 @@ class IngredientsController extends Controller
                 continue;
                 $i++;
             }
-        return response()->json($posts);
-        return response()->json([
-            'message' => 'New post created'
-        ]);
+            return $post;
+        } catch (\Exception $e) {
+            return response()->json($e);
+        }
+    }
+
+    public function getButchiIngredients(){
+        try {
+            $post = DB::table('ingredients_amount')
+            ->join('ingredients', 'ingredients.ingredients_amount_id', '=', 'ingredients_amount.id')
+            ->leftjoin('used_ingredients', 'ingredients_amount.id', '=', 'used_ingredients.ingredients_id')
+            ->select(
+                'ingredients_amount.id',
+                'ingredients.ingredients_remaining',
+                'ingredients.ingredients_status',
+                'ingredients_amount.ingredients_name',
+                'used_ingredients.used_ingredients_amount',
+                DB::raw('sum(used_ingredients.used_ingredients_amount)as total'))
+            ->where('ingredients_amount.ingredients_category', 'Butchi')
+            ->groupBy(
+                'ingredients_amount.id',
+                'ingredients.ingredients_remaining',
+                'ingredients.ingredients_status',
+                'ingredients_amount.ingredients_name',
+                'used_ingredients.used_ingredients_amount',
+                )
+            ->get();
+
+            $i = 0; 
         
+            foreach($post as $item){
+                if(array_key_exists('id', $post->toArray())){
+                    return response()->json([
+                        'message' => 'New post created'
+                    ]);
+                } else{
+                    $item->total = $this->total($item->id);
+                }
+                
+                continue;
+                $i++;
+            }
+            return $post;
+        } catch (\Exception $e) {
+            return response()->json($e);
+        }
+    } 
+
+    public function getIceCreamIngredients(){
+        try {
+            $post = DB::table('ingredients_amount')
+                ->join('ingredients', 'ingredients.ingredients_amount_id', '=', 'ingredients_amount.id')
+                ->leftjoin('used_ingredients', 'ingredients_amount.id', '=', 'used_ingredients.ingredients_id')
+                ->select(
+                    'ingredients_amount.id',
+                    'ingredients.ingredients_remaining',
+                    'ingredients.ingredients_status',
+                    'ingredients_amount.ingredients_name',
+                    'used_ingredients.used_ingredients_amount',
+                    DB::raw('sum(used_ingredients.used_ingredients_amount)as total'))
+                ->where('ingredients_amount.ingredients_category', 'Ice Cream')
+                ->groupBy(
+                    'ingredients_amount.id',
+                    'ingredients.ingredients_remaining',
+                    'ingredients.ingredients_status',
+                    'ingredients_amount.ingredients_name',
+                    'used_ingredients.used_ingredients_amount',
+                    )
+                ->get();
+
+                $i = 0; 
+        
+            foreach($post as $item){
+                if(array_key_exists('id', $post->toArray())){
+                    return response()->json([
+                        'message' => 'New post created'
+                    ]);
+                } else{
+                    $item->total = $this->total($item->id);
+                }
+                
+                continue;
+                $i++;
+            }
+            return $post;
+        } catch (\Exception $e) {
+            return response()->json($e);
+        }
+    }
+
+    public function getAllIngredients($name){
+        
+        try {
+            $post = DB::table('ingredients_amount')
+            ->select('id','ingredients_name','ingredients_category')
+            ->where('ingredients_name', $name)
+            ->get();
+            foreach($post as $item){
+                $data = new Ingredients;
+                $data->ingredients_amount_id = $item->id;
+                $data->ingredients_remaining = 0;
+                $data->ingredients_status = 'Calculating...';
+                $data->ingredients_category = $item->ingredients_category;
+                $data->save();
+            }
+        } catch ( \Exception $e) {
+            return response()->json($e);
+        }
     }
 
     public function addEstimatedAmount(Request $request){
-        $posts = new  IngredientsAmount;   
-        $data = $request->all();
-        $posts->ingredients_name=$data['ingredientsName'];
-        $posts->ingredients_need_amount=$data['ingredientsEstimatedAmount'];
-        $posts->save();
+        try {
+            $posts = new  IngredientsAmount;   
+            $data = $request->all();
+            $posts->ingredients_name=$data['ingredientsName'];
+            $posts->ingredients_need_amount=$data['ingredientsEstimatedAmount'];
+            $posts->ingredients_category=$data['ingredientsCategory'];
+            $posts->save();
+            $this->getAllIngredients($data['ingredientsName']);
+        } catch ( \Exception $e)  {
+            return response()->json($e);
+        }
     }
 
 
