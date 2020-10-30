@@ -4,14 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Product extends Model
+class OrderedProduct extends Model
 {
+    use HasFactory;
     protected $guarded = [];
-    protected $table = 'products';
-    use SoftDeletes;
+    protected $table = 'ordered_product';
     protected $fillable = [
-        'product_name', 'image'
+     'make_product_id', 'ordered_product_quantity'
     ];
 }

@@ -1,34 +1,36 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Http\Resources\OrderCollection;
+use App\Http\Resources\DeliveryCollection;
+use Carbon\Carbon;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\DeleveredOrder;
 use DB;
 
 class OrderController extends Controller
 {
   
-    public function createOrder(Request $request)
-    {
-      try{
-        $post = new Order;
-        $data=$request->all();
-        $post->customer_name = $data['name'];
-        $post->customer_address = $data['address'];
-        $post->contact_number = $data['contactNumber'];
-        $post->order_quantity = $data['orderQuantity']; 
-        $post->delivery_date = $data['deliveryDate'];
-        $post->order_status = $data['orderStatus'];
-        $post->longitude = $data['longitude'];
-        $post->latitude = $data['latitude'];
-        $post->distance = $data['distance'];
-        $post->save();
-      } catch (\Exception $e){
-        return response()->json(['error'=>$e]);
-      }
-    }
+    // public function createOrder(Request $request)
+    // {
+    //   try{
+    //     $post = new Order;
+    //     $data=$request->all();
+    //     $post->customer_name = $data['name'];
+    //     $post->customer_address = $data['address'];
+    //     $post->contact_number = $data['contactNumber'];
+    //     $post->order_quantity = $data['orderQuantity']; 
+    //     $post->delivery_date = $data['deliveryDate'];
+    //     $post->order_status = $data['orderStatus'];
+    //     $post->longitude = $data['longitude'];
+    //     $post->latitude = $data['latitude'];
+    //     $post->distance = $data['distance'];
+    //     $post->save();
+    //   } catch (\Exception $e){
+    //     return response()->json(['error'=>$e]);
+    //   }
+    // }
   
    public function fetchOrder()
     {
@@ -44,9 +46,19 @@ class OrderController extends Controller
     }
 
     public function fetchDelivery(Request $request){
-      $order = Order::where('order_status', 'On order')
-      ->orWhere('delivery_date',DB::raw('CURDATE()'))
-      ->orderBy('distance', 'asc')->get();
+      return new OrderCollection(Order::where('order_status', 'On order')
+      ->orderBy('delivery_date', 'asc')->get());
+      // dd(Carbon::today()->toDateString());
+      // $order = Order::where('order_status', 'On order' AND 'delivery_date', Carbon::today()->toDateString())
+      // ->orderBy('distance', 'asc')->get();
+      // $order = DB::table('orders')->select('*')->where('order_status', 'On order' AND 'delivery_date', Carbon::today()->toDateString())->get();
+      // $test = $order->delivery_date;
+      //$order = DB:: table('orders')
+      //->whereColumn([
+       // ['order_status', 'On order']
+     // ]) 
+     
+     dd($order);
       $start = 0;
       $stop = 5;
       $data = [];
@@ -69,7 +81,7 @@ class OrderController extends Controller
         }
         array_push($data, $tempData);
         $start = $z + 1;
-        $stop = $stop + 6;
+        $stop = $stop + 5;
         \Log::info($start);
       }
       return response()->json($data);
@@ -121,4 +133,26 @@ class OrderController extends Controller
       $post->delete();
       return response()->json('successfully deleted');
     }
+
+    public function saveDeliveredOrder(Request $request, $id){
+      try{
+        $post = new DeleveredOrder;
+        $data=$request->all();
+        $post->customer_name = $data['name'];
+        $post->delivery_address = $data['address'];
+        $post->halayaJar_qty = $data['halaya_qty']; 
+        $post->ubechi_qty = $data['ubechi_qty']; 
+        $post->delivery_date = $data['deliveryDate'];
+        $post->order_status = $data['orderStatus'];
+        $post->distance = $data['distance'];
+        $post->save();
+        return 'success';
+      } catch (\Exception $e){
+        return response()->json(['error'=>$e]);
+      }
+    }
+
+    // public function saveAllOrders(Request $request){
+
+    // }
 }
