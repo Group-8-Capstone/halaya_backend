@@ -12,7 +12,28 @@ use Carbon\Carbon;
 use DB;
 
 class IngredientsController extends Controller
-{
+{ 
+    private function notFoundMessage()
+    {
+
+        return [
+            'code' => 404,
+            'message' => 'Note not found',
+            'success' => false,
+        ];
+
+    }
+    private function successfulMessage($code, $message, $status)
+    {
+
+        return [
+            'code' => $code,
+            'message' => $message,
+            'success' => $status,
+          
+        ];
+
+    }
 
    
     public function saveUsedIngredients(Request $request){
@@ -105,14 +126,45 @@ class IngredientsController extends Controller
 <<<<<<< HEAD
 =======
 
+<<<<<<< HEAD
 >>>>>>> aac48cadaeac824dcea96f99fd0a7e887daae25f
+=======
+    public function softDeleteIngredients($id)
+    {
+      $post = IngredientsAmount::destroy($id);
+      if ($post) {
+          $response = $this->successfulMessage(200, 'Successfully deleted', true);
+      } else {
+          $response = $this->notFoundMessage();
+      }
+      return response($response);
+    }
+
+    public function softDeleteStockIngredients(Request $request, $id)
+    {
+      $ing = Ingredients::find(['id' => $request->ingredients_amount_id]);
+      $ing = Ingredients::destroy($id);
+      if ($ing) {
+          $response = $this->successfulMessage(200, 'Successfully deleted', true);
+      } else {
+          $response = $this->notFoundMessage();
+      }
+      return response($response);
+    }
+
+
+>>>>>>> 6ed767376525951734a4bb6d491eb870de055b68
     public function fetchStock(Request $request)
     {
         // $this->checkStatus();
         $posts = DB::table('ingredients_amount')
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
+=======
+    }
+>>>>>>> 6ed767376525951734a4bb6d491eb870de055b68
 
 >>>>>>> aac48cadaeac824dcea96f99fd0a7e887daae25f
     // public function fetchStock(Request $request)
@@ -170,14 +222,17 @@ class IngredientsController extends Controller
                     'ingredients.ingredients_status',
                     'ingredients_amount.ingredients_name',
                     'used_ingredients.used_ingredients_amount',
+                    'ingredients.deleted_at',
                     DB::raw('sum(used_ingredients.used_ingredients_amount)as total'))
                 ->where('ingredients_amount.ingredients_category', 'Ube Halaya')
+                ->where('ingredients.deleted_at','=', null)
                 ->groupBy(
                     'ingredients_amount.id',
                     'ingredients.ingredients_remaining',
                     'ingredients.ingredients_status',
                     'ingredients_amount.ingredients_name',
                     'used_ingredients.used_ingredients_amount',
+                    'ingredients.deleted_at'
                     )
                 ->get();
 
@@ -219,17 +274,17 @@ class IngredientsController extends Controller
                 'used_ingredients.used_ingredients_amount',
                 DB::raw('sum(used_ingredients.used_ingredients_amount)as total'))
             ->where('ingredients_amount.ingredients_category', 'Butchi')
+            ->where('ingredients.deleted_at','=', null)
             ->groupBy(
                 'ingredients_amount.id',
                 'ingredients.ingredients_remaining',
                 'ingredients.ingredients_status',
                 'ingredients_amount.ingredients_name',
                 'used_ingredients.used_ingredients_amount',
+                'ingredients.deleted_at',
                 )
             ->get();
-
             $i = 0; 
-        
             foreach($post as $item){
                 if(array_key_exists('id', $post->toArray())){
                     return response()->json([
@@ -261,12 +316,14 @@ class IngredientsController extends Controller
                     'used_ingredients.used_ingredients_amount',
                     DB::raw('sum(used_ingredients.used_ingredients_amount)as total'))
                 ->where('ingredients_amount.ingredients_category', 'Ice Cream')
+                ->where('ingredients.deleted_at','=', null)
                 ->groupBy(
                     'ingredients_amount.id',
                     'ingredients.ingredients_remaining',
                     'ingredients.ingredients_status',
                     'ingredients_amount.ingredients_name',
                     'used_ingredients.used_ingredients_amount',
+                    'ingredients.deleted_at',
                     )
                 ->get();
 
@@ -433,7 +490,6 @@ class IngredientsController extends Controller
     public function fetchEstimatedValue(){
         $entireTable = ingredientsAmount::all();
         return $entireTable;
-
     }
 
     public function editEstimatedValue($id){
@@ -445,6 +501,7 @@ class IngredientsController extends Controller
       $post = ingredientsAmount::firstOrCreate(['id' => $request->id]);
       $post->ingredients_name= $request['ingredients_name'];
       $post->ingredients_need_amount= $request['ingredients_need_amount'];
+      $post->ingredients_category= $request['ingredients_category'];
       $post->save();
       return response()->json(compact('post'));
     }

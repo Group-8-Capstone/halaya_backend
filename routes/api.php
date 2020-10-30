@@ -6,6 +6,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\IngredientsController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SalesController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,7 +42,6 @@ Route::put('/post/updateCanceledStat/{id}',[OrderController::class,'updateCancel
 Route::post('/sales/daily',[SalesController::class,'index']);
 Route::post('/sales/weekly',[SalesController::class,'indexWeekly']);
 Route::post('/sales/monthly',[SalesController::class,'indexMonthly']);
-
 Route::get('/sales/filterYear',[SalesController::class,'selectYear']);
 Route::get('/sales/yearly',[SalesController::class,'indexYearly']);
 
@@ -63,9 +63,26 @@ Route::get('/getHalayaIngredients',[IngredientsController::class,'getHalayaIngre
 Route::get('/getButchiIngredients',[IngredientsController::class,'getButchiIngredients']);
 Route::get('/getIceCreamIngredients',[IngredientsController::class,'getIceCreamIngredients']);
 Route::get('/fetch/ingredientsName',[IngredientsController::class,'fetchIngredientsName']);
+Route::delete('/softDeleteIngredients/{id}',[IngredientsController::class,'softDeleteIngredients']);
+Route::delete('/softDeleteStockIngredients/{id}',[IngredientsController::class,'softDeleteStockIngredients']);
 
 
 //for testing only
 Route::get('/fetch/checkStatus',[IngredientsController::class,'checkStatus']);
 Route::get('/getMonthYear',[IngredientsController::class,'compareDate']);
 Route::get('/getAllIngredients',[IngredientsController::class,'getAllIngredients']);
+
+//Product
+Route::post('/post/product',[ProductController::class,'addProduct']);
+Route::get('/fetch/product',[ProductController::class,'retrieveProduct']);
+Route::post('/post/updateProduct',[ProductController::class,'updateProduct']);
+Route::get('/fetch/postProduct',[ProductController::class,'postStockProduct']);
+Route::get('/fetch/allProduct',[ProductController::class,'getAllProduct']);
+Route::post('/post/updateStockProduct',[ProductController::class,'updateStockProduct']);
+Route::delete('/softDeleteProduct/{id}',[ProductController::class,'softDeleteProduct']);
+Route::delete('/softDeleteStockProduct/{id}',[ProductController::class,'softDeleteStockProducts']);
+
+//Profile
+
+Route::post('/post/account',[ProfileController::class,'addProfile']);
+Route::get('/retrieveAccount',[ProfileController::class,'fetchAccount']);
