@@ -19,6 +19,7 @@ class CreateIngredientsTable extends Migration
             $table->float('ingredients_remaining');
             $table->string('ingredients_status');
             $table->string('ingredients_category');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
