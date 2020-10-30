@@ -18,6 +18,7 @@ class IngredientsAmount extends Migration
             // $table->bigInteger('ingredients_id');
             $table->string('ingredients_name');
             $table->float('ingredients_need_amount');
+            $table->string('ingredients_category');
             $table->timestamps();
         });
     }
