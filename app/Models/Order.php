@@ -11,13 +11,14 @@ class Order extends Model
     protected $table = 'orders';
     protected $fillable = [
         'customer_name', 
-        'customer_address',
-        'contact_number', 
+        'product_name',
+        // 'customer_address',
+        // 'contact_number', 
         'order_quantity', 
-        'delivery_date',
-        'order_status',
-        'longitude',
-        'latitude',
+        // 'delivery_date',
+        // 'order_status',
+        // 'longitude',
+        // 'latitude',
         'distance'
     ];
 }
