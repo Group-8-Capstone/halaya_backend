@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class IngredientsAmount extends Migration
+class CreateOrderedProductTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,12 @@ class IngredientsAmount extends Migration
      */
     public function up()
     {
-        Schema::create('ingredients_amount', function (Blueprint $table) {
+        Schema::create('ordered_product', function (Blueprint $table) {
             $table->bigIncrements('id');
-            // $table->bigInteger('ingredients_id');
-            $table->string('ingredients_name');
-            $table->float('ingredients_need_amount');
-            $table->string('ingredients_category');
-            $table->softDeletes();
+            $table->bigInteger('make_product_id');
+            $table->float('ordered_product_quantity');
             $table->timestamps();
+            
         });
     }
 
@@ -31,6 +29,6 @@ class IngredientsAmount extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('ordered_product');
     }
 }

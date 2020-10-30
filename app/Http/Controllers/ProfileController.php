@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Profile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\ProfileCollection;
 
 class ProfileController extends Controller
 {
@@ -33,47 +35,39 @@ class ProfileController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function storeProfile(Request $request)
+    public function addProfile(Request $request)
     {
-        if($request->get('image'))
-        {
-           $image = $request->get('image');
-           $name = time().'.' . explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
-           \Image::make($request->get('image'))->save(public_path('images/').$name);
-         }
- 
-        $image= new FileUpload();
-        $image->image_name = $name;
-        $image->save();
- 
-        return response()->json(['success' => 'You have successfully uploaded an image'], 200);
-        // $this->validate($request, [
-        //     'username' => 'required',
-        //     'avatar' => 'required'
-        // ]);
-
-        // if($request->avatar){
-
-        //     $name = time().'.' . explode('/', explode(':', substr($request->avatar, 0, strpos($request->avatar, ';')))[1])[1];
-        //     \Image::make($request->avatar)->save(public_path('img/profile/').$name);
-        //     $request->merge(['avatar' => $name]);
-           
-        // }
-        
-        // $user = new User;
-        // $user->username = $request->username;
-        // $user->avatar = $name;
-        // $user->save();
-        
-        // return response()->json(
-        //     [
-        //         'success' => true,
-        //         'message' => 'User registered successfully'
-        //     ]
-        // );
-
+        $validator = Validator::make($request->all(), [
+            'ownersName' => 'required|string|max:255',
+        ]);
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+        try { 
+            $imageName = time().'.'.$request->image->getClientOriginalExtension();
+            $request->image->move(public_path('images'), $imageName);
+            $data = $request->all();
+            $account = new Profile();
+            $account->avatar = 'images/'.$imageName;
+            $account->owners_name = $data['ownersName'];
+            $account->save();
+            $this->getAllProduct($data['ownersName']);
+            
+        } catch ( \Exception $e)  {
+            return response()->json($e);
+        }
     }
 
+
+    public function fetchAccount()
+    {
+      
+        return new ProfileCollection(Profile::where('id', '1')->get());
+
+        // $result = DB::table('ingredients')
+        // ->select('ingredients_remaining')->where('ingredients_amount_id','=', $getID)->get();
+        
+    }
     /**
      * Display the specified resource.
      *

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class IngredientsAmount extends Migration
+class CreateMakeProductTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class IngredientsAmount extends Migration
      */
     public function up()
     {
-        Schema::create('ingredients_amount', function (Blueprint $table) {
+        Schema::create('make_product', function (Blueprint $table) {
             $table->bigIncrements('id');
-            // $table->bigInteger('ingredients_id');
-            $table->string('ingredients_name');
-            $table->float('ingredients_need_amount');
-            $table->string('ingredients_category');
+            $table->bigInteger('product_id');
+            $table->float('product_remaining');
+            $table->string('product_status');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -31,6 +30,6 @@ class IngredientsAmount extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('make_product');
     }
 }
