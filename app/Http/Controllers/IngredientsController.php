@@ -48,6 +48,10 @@ class IngredientsController extends Controller
     public function editStockIngredients($id)
     {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> aac48cadaeac824dcea96f99fd0a7e887daae25f
         //   $post = IngredientsView::find(1);
         $post = DB::table('ingredients')
             ->join('ingredients_amount', 'ingredients_amount.id', '=', 'ingredients.ingredients_amount_id')
@@ -68,10 +72,17 @@ class IngredientsController extends Controller
         }
         dd($post);
         return response()->json($post);
+<<<<<<< HEAD
 =======
       $post = Ingredients::find($id);
       return response()->json($post);
 >>>>>>> f823eacfb687abf10fdc89778e13ab0f6258f054
+=======
+
+      $post = Ingredients::find($id);
+      return response()->json($post);
+
+>>>>>>> aac48cadaeac824dcea96f99fd0a7e887daae25f
     }
 
     public function updateStockIngredients(Request $request)
@@ -91,11 +102,19 @@ class IngredientsController extends Controller
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> aac48cadaeac824dcea96f99fd0a7e887daae25f
     public function fetchStock(Request $request)
     {
         // $this->checkStatus();
         $posts = DB::table('ingredients_amount')
+<<<<<<< HEAD
 =======
+=======
+
+>>>>>>> aac48cadaeac824dcea96f99fd0a7e887daae25f
     // public function fetchStock(Request $request)
     // {
     //     $posts = DB::table('ingredients_amount')
@@ -186,7 +205,11 @@ class IngredientsController extends Controller
         try {
             $post = DB::table('ingredients_amount')
             ->join('ingredients', 'ingredients.ingredients_amount_id', '=', 'ingredients_amount.id')
+<<<<<<< HEAD
 >>>>>>> f823eacfb687abf10fdc89778e13ab0f6258f054
+=======
+
+>>>>>>> aac48cadaeac824dcea96f99fd0a7e887daae25f
             ->leftjoin('used_ingredients', 'ingredients_amount.id', '=', 'used_ingredients.ingredients_id')
             ->select(
                 'ingredients_amount.id',
