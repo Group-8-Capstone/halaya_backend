@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Http\Resources\OrderCollection;
+use App\Http\Resources\DeliveryCollection;
+use Carbon\Carbon;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
@@ -45,9 +46,19 @@ class OrderController extends Controller
     }
 
     public function fetchDelivery(Request $request){
-      $order = Order::where('order_status', 'On order')
-      ->orWhere('delivery_date',DB::raw('CURDATE()'))
-      ->orderBy('distance', 'asc')->get();
+      return new OrderCollection(Order::where('order_status', 'On order')
+      ->orderBy('delivery_date', 'asc')->get());
+      // dd(Carbon::today()->toDateString());
+      // $order = Order::where('order_status', 'On order' AND 'delivery_date', Carbon::today()->toDateString())
+      // ->orderBy('distance', 'asc')->get();
+      // $order = DB::table('orders')->select('*')->where('order_status', 'On order' AND 'delivery_date', Carbon::today()->toDateString())->get();
+      // $test = $order->delivery_date;
+      //$order = DB:: table('orders')
+      //->whereColumn([
+       // ['order_status', 'On order']
+     // ]) 
+     
+     dd($order);
       $start = 0;
       $stop = 5;
       $data = [];
@@ -70,7 +81,7 @@ class OrderController extends Controller
         }
         array_push($data, $tempData);
         $start = $z + 1;
-        $stop = $stop + 6;
+        $stop = $stop + 5;
         \Log::info($start);
       }
       return response()->json($data);

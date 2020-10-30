@@ -21,8 +21,6 @@ class Order extends Model
         // 'latitude',
         'distance'
     ];
-    
-
 }
 
 
