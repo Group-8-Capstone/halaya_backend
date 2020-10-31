@@ -35,27 +35,65 @@ class ProfileController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function addProfile(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'ownersName' => 'required|string|max:255',
-        ]);
-        if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
-        }
-        try { 
-            $imageName = time().'.'.$request->image->getClientOriginalExtension();
-            $request->image->move(public_path('images'), $imageName);
-            $data = $request->all();
-            $account = new Profile();
-            $account->avatar = 'images/'.$imageName;
-            $account->owners_name = $data['ownersName'];
-            $account->save();
-            $this->getAllProduct($data['ownersName']);
+    // public function addProfile(Request $request)
+    // {
+    //     $validator = Validator::make($request->all(), [
+    //         'ownersName' => 'required|string|max:255',
+    //     ]);
+    //     if($validator->fails()){
+    //         return response()->json($validator->errors()->toJson(), 400);
+    //     }
+    //     try { 
+    //         $imageName = time().'.'.$request->image->getClientOriginalExtension();
+    //         $request->image->move(public_path('images'), $imageName);
+    //         $data = $request->all();
+    //         $account = new Profile();
+    //         $account->avatar = 'images/'.$imageName;
+    //         $account->owners_name = $data['ownersName'];
+    //         $account->save();
+    //         $this->getAllProduct($data['ownersName']);
             
-        } catch ( \Exception $e)  {
-            return response()->json($e);
-        }
+    //     } catch ( \Exception $e)  {
+    //         return response()->json($e);
+    //     }
+    // }
+
+
+    public function addProfile(Request $request){
+        if (Profile::where('id', '=', '1')->exists()) {
+        $imageName = time().'.'.$request->image->getClientOriginalExtension();
+        $request->image->move(public_path('images'), $imageName);
+        $data = $request->all();
+        $account = Profile::firstOrCreate(['id' => $request->id]);
+        $account->owners_name = $request['ownersName'];
+        $account->avatar = 'images/'.$imageName;
+        $account->save();
+        $this->getAllProduct($data['account']);
+         }
+         else{
+       
+            $validator = Validator::make($request->all(), [
+                'ownersName' => 'required|string|max:255',
+            ]);
+            if($validator->fails()){
+                return response()->json($validator->errors()->toJson(), 400);
+            }
+            try { 
+                $imageName = time().'.'.$request->image->getClientOriginalExtension();
+                $request->image->move(public_path('images'), $imageName);
+                $data = $request->all();
+                $account = new Profile();
+                $account->avatar = 'images/'.$imageName;
+                $account->owners_name = $data['ownersName'];
+                $account->save();
+                $this->getAllProduct($data['ownersName']);
+                
+            } catch ( \Exception $e)  {
+                return response()->json($e);
+            }
+            
+
+         }
     }
 
 
