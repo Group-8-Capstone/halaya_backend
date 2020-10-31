@@ -68,42 +68,31 @@ class IngredientsController extends Controller
 
     public function editStockIngredients($id)
     {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 
->>>>>>> aac48cadaeac824dcea96f99fd0a7e887daae25f
         //   $post = IngredientsView::find(1);
-        $post = DB::table('ingredients')
-            ->join('ingredients_amount', 'ingredients_amount.id', '=', 'ingredients.ingredients_amount_id')
-            ->select(
-                'ingredients_amount.id',
-                'ingredients.ingredients_remaining',
-                'ingredients.ingredients_status',
-                'ingredients_amount.ingredients_name'
-            )
-            ->where('ingredients_amount.id', 1)
-            ->get();
+        // $post = DB::table('ingredients')
+        //     ->join('ingredients_amount', 'ingredients_amount.id', '=', 'ingredients.ingredients_amount_id')
+        //     ->select(
+        //         'ingredients_amount.id',
+        //         'ingredients.ingredients_remaining',
+        //         'ingredients.ingredients_status',
+        //         'ingredients_amount.ingredients_name'
+        //     )
+        //     ->where('ingredients_amount.id', $id)
+        //     ->get();
         // $obj = {};
-        foreach($post as $item){
-            $obj['id'] = $item->id;
-            $obj['ingredients_remaining'] = $item->ingredients_remaining;
-            $obj['ingredients_status'] = $item->ingredients_status;
-            $obj['ingredients_name'] = $item->ingredients_name;
-        }
-        dd($post);
-        return response()->json($post);
-<<<<<<< HEAD
-=======
-      $post = Ingredients::find($id);
-      return response()->json($post);
->>>>>>> f823eacfb687abf10fdc89778e13ab0f6258f054
-=======
+        // foreach($post as $item){
+        //     $obj['id'] = $item->id;
+        //     $obj['ingredients_remaining'] = $item->ingredients_remaining;
+        //     $obj['ingredients_status'] = $item->ingredients_status;
+        //     $obj['ingredients_name'] = $item->ingredients_name;
+        // }
+        // dd($post);
+        // return response()->json($post);
 
       $post = Ingredients::find($id);
       return response()->json($post);
 
->>>>>>> aac48cadaeac824dcea96f99fd0a7e887daae25f
     }
 
     public function updateStockIngredients(Request $request)
@@ -122,13 +111,50 @@ class IngredientsController extends Controller
         return 'success';
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
+    public function fetchStock(Request $request)
+    {
+        $posts = DB::table('ingredients_amount')
+            ->leftjoin('used_ingredients', 'ingredients_amount.id', '=', 'used_ingredients.ingredients_id')
+            ->join('ingredients','ingredients_amount.id', '=','ingredients.ingredients_amount_id')
+            ->select(
+                'ingredients_amount.id',
+                'ingredients_amount.ingredients_name',
+                'ingredients_amount.ingredients_need_amount',
+                'used_ingredients.used_ingredients_amount',
+                'ingredients.ingredients_remaining',
+                'ingredients.ingredients_status',
+            DB::raw('sum(used_ingredients.used_ingredients_amount)as total'))
+            ->groupBy(
+                'ingredients_amount.id',
+                'used_ingredients.used_ingredients_amount',
+                'ingredients_amount.ingredients_name',
+                'ingredients_amount.ingredients_need_amount',
+                'ingredients.ingredients_remaining',
+                'ingredients.ingredients_status'
+                )
+            ->get();
 
-<<<<<<< HEAD
->>>>>>> aac48cadaeac824dcea96f99fd0a7e887daae25f
-=======
+            $i = 0;         foreach($posts as $item){
+                if(array_key_exists('id', $posts->toArray())){
+                    return response()->json([
+                        'message' => 'New post created'
+                    ]);
+                } else{
+                    $item->total = $this->total($item->id);
+                }
+                
+                continue;
+                $i++;
+            }
+        return response()->json($posts);
+        return response()->json([
+            'message' => 'New post created'
+        ]);
+        
+    }
+
+
+
     public function softDeleteIngredients($id)
     {
       $post = IngredientsAmount::destroy($id);
@@ -151,65 +177,6 @@ class IngredientsController extends Controller
       }
       return response($response);
     }
-
-
->>>>>>> 6ed767376525951734a4bb6d491eb870de055b68
-    public function fetchStock(Request $request)
-    {
-        // $this->checkStatus();
-        $posts = DB::table('ingredients_amount')
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
-=======
-    }
->>>>>>> 6ed767376525951734a4bb6d491eb870de055b68
-
->>>>>>> aac48cadaeac824dcea96f99fd0a7e887daae25f
-    // public function fetchStock(Request $request)
-    // {
-    //     $posts = DB::table('ingredients_amount')
-    //         ->leftjoin('used_ingredients', 'ingredients_amount.id', '=', 'used_ingredients.ingredients_id')
-    //         ->join('ingredients','ingredients_amount.id', '=','ingredients.ingredients_amount_id')
-    //         ->select(
-    //             'ingredients_amount.id',
-    //             'ingredients_amount.ingredients_name',
-    //             'ingredients_amount.ingredients_need_amount',
-    //             'used_ingredients.used_ingredients_amount',
-    //             'ingredients.ingredients_remaining',
-    //             'ingredients.ingredients_status',
-    //         DB::raw('sum(used_ingredients.used_ingredients_amount)as total'))
-    //         ->groupBy(
-    //             'ingredients_amount.id',
-    //             'used_ingredients.used_ingredients_amount',
-    //             'ingredients_amount.ingredients_name',
-    //             'ingredients_amount.ingredients_need_amount',
-    //             'ingredients.ingredients_remaining',
-    //             'ingredients.ingredients_status'
-    //             )
-    //         ->get();
-
-    //         $i = 0; 
-        
-    //         foreach($posts as $item){
-    //             if(array_key_exists('id', $posts->toArray())){
-    //                 return response()->json([
-    //                     'message' => 'New post created'
-    //                 ]);
-    //             } else{
-    //                 $item->total = $this->total($item->id);
-    //             }
-                
-    //             continue;
-    //             $i++;
-    //         }
-    //     return response()->json($posts);
-    //     return response()->json([
-    //         'message' => 'New post created'
-    //     ]);
-        
-    // }
 
     public function getHalayaIngredients(){
         try {
@@ -260,11 +227,7 @@ class IngredientsController extends Controller
         try {
             $post = DB::table('ingredients_amount')
             ->join('ingredients', 'ingredients.ingredients_amount_id', '=', 'ingredients_amount.id')
-<<<<<<< HEAD
->>>>>>> f823eacfb687abf10fdc89778e13ab0f6258f054
-=======
 
->>>>>>> aac48cadaeac824dcea96f99fd0a7e887daae25f
             ->leftjoin('used_ingredients', 'ingredients_amount.id', '=', 'used_ingredients.ingredients_id')
             ->select(
                 'ingredients_amount.id',
@@ -351,6 +314,7 @@ class IngredientsController extends Controller
         try{
             $post = DB::table('ingredients_amount')
             ->select('id','ingredients_name','ingredients_category')
+            // ->where('ingredients.ingredients_status', '!=', 'Deleted')
             ->get();
             return $post;
         } catch (\Exception $e) {
@@ -462,7 +426,6 @@ class IngredientsController extends Controller
             ->select('id')
             ->where('ingredients_amount.ingredients_name', '=', $data['ingredientsName'])
             ->first()->id;
-            // dd($data);s
         try {
             $test = DB::table('ingredients')
             ->select('*')
@@ -505,5 +468,11 @@ class IngredientsController extends Controller
       $post->save();
       return response()->json(compact('post'));
     }
-}
 
+    public function deleteIngredients($id){
+        $res = Ingredients::where('ingredients_amount_id', $id )
+                    ->update([
+                        'ingredients_status' => 'Deleted',
+                    ]);
+    }
+}
