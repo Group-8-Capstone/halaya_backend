@@ -70,25 +70,25 @@ class IngredientsController extends Controller
     {
 
         //   $post = IngredientsView::find(1);
-        $post = DB::table('ingredients')
-            ->join('ingredients_amount', 'ingredients_amount.id', '=', 'ingredients.ingredients_amount_id')
-            ->select(
-                'ingredients_amount.id',
-                'ingredients.ingredients_remaining',
-                'ingredients.ingredients_status',
-                'ingredients_amount.ingredients_name'
-            )
-            ->where('ingredients_amount.id', 1)
-            ->get();
+        // $post = DB::table('ingredients')
+        //     ->join('ingredients_amount', 'ingredients_amount.id', '=', 'ingredients.ingredients_amount_id')
+        //     ->select(
+        //         'ingredients_amount.id',
+        //         'ingredients.ingredients_remaining',
+        //         'ingredients.ingredients_status',
+        //         'ingredients_amount.ingredients_name'
+        //     )
+        //     ->where('ingredients_amount.id', $id)
+        //     ->get();
         // $obj = {};
-        foreach($post as $item){
-            $obj['id'] = $item->id;
-            $obj['ingredients_remaining'] = $item->ingredients_remaining;
-            $obj['ingredients_status'] = $item->ingredients_status;
-            $obj['ingredients_name'] = $item->ingredients_name;
-        }
-        dd($post);
-        return response()->json($post);
+        // foreach($post as $item){
+        //     $obj['id'] = $item->id;
+        //     $obj['ingredients_remaining'] = $item->ingredients_remaining;
+        //     $obj['ingredients_status'] = $item->ingredients_status;
+        //     $obj['ingredients_name'] = $item->ingredients_name;
+        // }
+        // dd($post);
+        // return response()->json($post);
 
       $post = Ingredients::find($id);
       return response()->json($post);
