@@ -476,4 +476,3 @@ class IngredientsController extends Controller
                     ]);
     }
 }
-
