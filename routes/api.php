@@ -8,6 +8,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DataController;
+use App\Http\Controllers\ProfileController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -81,4 +83,19 @@ Route::get('open', [DataController::class, 'open']);
     Route::get('/getAllIngredients', [IngredientsController::class, 'getAllIngredients']);
     Route::get('user', [UserController::class, 'getAuthenticatedUser']);
     Route::get('closed', [DataConroller::class, 'closed']);
+
+    //Product
+    Route::post('/post/product',[ProductController::class,'addProduct']);
+    Route::get('/fetch/product',[ProductController::class,'retrieveProduct']);
+    Route::post('/post/updateProduct',[ProductController::class,'updateProduct']);
+    Route::get('/fetch/postProduct',[ProductController::class,'postStockProduct']);
+    Route::get('/fetch/allProduct',[ProductController::class,'getAllProduct']);
+    Route::post('/post/updateStockProduct',[ProductController::class,'updateStockProduct']);
+    Route::delete('/softDeleteProduct/{id}',[ProductController::class,'softDeleteProduct']);
+    Route::delete('/softDeleteStockProduct/{id}',[ProductController::class,'softDeleteStockProducts']);
+
+    //Profile
+
+    Route::post('/post/account',[ProfileController::class,'addProfile']);
+    Route::get('/retrieveAccount',[ProfileController::class,'fetchAccount']);
 // });
