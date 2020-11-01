@@ -40,6 +40,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('/posts/delivered', [OrderController::class, 'fetchDelivered']);
     Route::get('/posts/delivery', [OrderController::class, 'fetchDelivery']);
     Route::get('/post/edit/{id}', [OrderController::class, 'editOrder']);
+    Route::post('/post/deliveredOrder/{id}', [OrderController::class, 'saveDeliveredOrder']);
 
     Route::delete('/post/delete/{id}', [OrderController::class, 'deleteOrder']);
 
