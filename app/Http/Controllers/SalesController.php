@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\DeleveredOrder;
 
 
 class SalesController extends Controller
@@ -11,9 +12,9 @@ class SalesController extends Controller
     public function index(Request $request){
         $Date = date("Y-m-d"); //current date
         $year = $request->all();
-        $Delivered = Order::select(\DB::raw('sum(order_quantity)as total'), 'delivery_date')
+        $Delivered = DeleveredOrder::select(\DB::raw('sum(halayaJar_qty)as total'), 'delivery_date')
         ->where([
-            ['order_status', '=','delivered'],
+            ['order_status', '=','Delivered'],
             // ['delivery_date', '<=', $Date],
             [\DB::raw('Year(`delivery_date`)'), '=', $year['year']],
             [\DB::raw('Month(`delivery_date`)'), '=', $year['month']]
@@ -31,7 +32,7 @@ class SalesController extends Controller
 
         /**Getting the first delivery of the year */
 
-        $firstDelivery = Order::select('delivery_date')
+        $firstDelivery = DeleveredOrder::select('delivery_date')
         ->where(\DB::raw('Year(`delivery_date`)'), '=', $request['year'])
         ->first();
 
@@ -43,7 +44,7 @@ class SalesController extends Controller
         for($i = 0; $i < sizeof($weekArray); $i++){
             \Log::info('Order::select sum(order_quantity)->where([[delivery_date, >=, ' . $weekArray[$i]['start'] . ' ], [delivery_date, <=, '. $weekArray[$i]['end'] .' ])');
 
-            $getWeeklySales = Order::select(\DB::raw("sum(`order_quantity`) as totals"))
+            $getWeeklySales = DeleveredOrder::select(\DB::raw("sum(`halayaJar_qty`) as totals"))
             ->where([
                 ["delivery_date", ">=", $weekArray[$i]['start']],
                 ["delivery_date", "<=", $weekArray[$i]['end']]
@@ -76,7 +77,7 @@ class SalesController extends Controller
 }
     public function indexMonthly(Request $request){
         $year = $request->all();
-        $monthlySales = Order::select(\DB::raw("sum(`order_quantity`) as `totals`")
+        $monthlySales = DeleveredOrder::select(\DB::raw("sum(`halayaJar_qty`) as `totals`")
         , \DB::raw("Month(`delivery_date`) as `months`"))
         ->whereYear('delivery_date', '=', $year['year'])
         ->groupBy('months')
@@ -84,14 +85,14 @@ class SalesController extends Controller
         return response()->json($monthlySales);
     }
     public function indexYearly(Request $request){
-        $yearlySales = Order::select(\DB::raw("sum(`order_quantity`) as `totals`"),
+        $yearlySales = DeleveredOrder::select(\DB::raw("sum(`order_quantity`) as `totals`"),
         \DB::raw("Year(`delivery_date`) as `years`"))
         ->groupBy('years')
         ->get();
         return response()->json($yearlySales);
     }
     public function selectYear(Request $request){
-        $selectingYear = Order::select(\DB::raw("Year(`delivery_date`) as `years`"))
+        $selectingYear = DeleveredOrder::select(\DB::raw("Year(`delivery_date`) as `years`"))
         ->groupBy('years')
         ->get();
         return response()->json($selectingYear);
