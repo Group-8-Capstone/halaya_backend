@@ -47,8 +47,10 @@ class OrderController extends Controller
     }
 
     public function fetchDelivery(Request $request){
-      return new OrderCollection(Order::where('order_status', 'On order')
-      ->orderBy('delivery_date', 'asc')->get());
+      return new OrderCollection(DeleveredOrder::where('order_status', 'On order')
+      ->where('delivery_date', '2020-10-27')->get());
+      // ->orderBy('delivery_date', 'asc')->get());      
+      // ->orderBy('delivery_date', 'asc')->get());
       // dd(Carbon::today()->toDateString());
       // $order = Order::where('order_status', 'On order' AND 'delivery_date', Carbon::today()->toDateString())
       // ->orderBy('distance', 'asc')->get();
@@ -59,32 +61,32 @@ class OrderController extends Controller
        // ['order_status', 'On order']
      // ]) 
      
-     dd($order);
-      $start = 0;
-      $stop = 5;
-      $data = [];
-      $break = false;
-      for($i = 0; $i < 5; $i++){
-        $z = 0;
-        $tempData = [];
-        if($break){
-          break;
-        }
-        for($x = $start; $x < $stop; $x++){
-          if($x < sizeof($order)){
-            $z = $x;
-            array_push($tempData, $order[$x]);
-          }else{
-            $break = true;
-            // \Log::info($x);
-            break;
-          }
-        }
-        array_push($data, $tempData);
-        $start = $z + 1;
-        $stop = $stop + 5;
-        \Log::info($start);
-      }
+    //  dd($order);
+    //   $start = 0;
+    //   $stop = 5;
+    //   $data = [];
+    //   $break = false;
+    //   for($i = 0; $i < 5; $i++){
+    //     $z = 0;
+    //     $tempData = [];
+    //     if($break){
+    //       break;
+    //     }
+    //     for($x = $start; $x < $stop; $x++){
+    //       if($x < sizeof($order)){
+    //         $z = $x;
+    //         array_push($tempData, $order[$x]);
+    //       }else{
+    //         $break = true;
+    //         // \Log::info($x);
+    //         break;
+    //       }
+    //     }
+    //     array_push($data, $tempData);
+    //     $start = $z + 1;
+    //     $stop = $stop + 5;
+    //     \Log::info($start);
+    //   }
       return response()->json($data);
   }
 
@@ -156,9 +158,10 @@ class OrderController extends Controller
           $post->save();
           return 'success';
         }else {
-          return 'already existed';
+          return 'already exist';
         }
       } catch (\Exception $e){
+        return "failed";
         return response()->json(['error'=>$e]);
       }
     }
