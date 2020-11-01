@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Http\Resources\DeliveryCollection;
+use App\Http\Resources\OrderCollection;
 use Carbon\Carbon;
 
 use Illuminate\Http\Request;
@@ -35,18 +36,18 @@ class OrderController extends Controller
    public function fetchOrder()
     {
       
-      return new OrderCollection(Order::where('order_status', 'On order')
+      return new OrderCollection(DeleveredOrder::where('order_status', 'On order')
       ->orWhere('order_status', 'Canceled')
       ->orderBy('delivery_date', 'asc')->get());
     }
 
     public function fetchDelivered()
     {
-      return new OrderCollection(Order::where('order_status', 'Delivered')->get());
+      return new OrderCollection(DeleveredOrder::where('order_status', 'Delivered')->get());
     }
 
     public function fetchDelivery(Request $request){
-      return new OrderCollection(Order::where('order_status', 'On order')
+      return new OrderCollection(DeleveredOrder::where('order_status', 'On order')
       ->orderBy('delivery_date', 'asc')->get());
       // dd(Carbon::today()->toDateString());
       // $order = Order::where('order_status', 'On order' AND 'delivery_date', Carbon::today()->toDateString())
@@ -90,7 +91,7 @@ class OrderController extends Controller
     public function updateCancelledStatus(Request $request, $id)
     {
       $newItem =  $request->all();
-      $post = Order::firstOrCreate(['id' => $request->id]);
+      $post = DeleveredOrder::firstOrCreate(['id' => $request->id]);
       $post->order_status = 'Canceled';
       $post->update();
       return response()->json(compact('post'));
@@ -99,7 +100,7 @@ class OrderController extends Controller
 
     public function editOrder($id)
     {
-      $post = Order::find($id);
+      $post = DeleveredOrder::find($id);
       return response()->json($post);
     }
 
@@ -107,7 +108,7 @@ class OrderController extends Controller
     public function updateOrder(Request $request)
     {
       $newItem =  $request->all();
-      $post = Order::firstOrCreate(['id' => $request->id]);
+      $post = DeleveredOrder::firstOrCreate(['id' => $request->id]);
       $post->customer_name = $request['customer_name'];
       $post->customer_address = $request['customer_address'];
       $post->contact_number = $request['contact_number'];
@@ -120,7 +121,7 @@ class OrderController extends Controller
     public function updateStatus(Request $request, $id)
     {
       $newItem =  $request->all();
-      $post = Order::firstOrCreate(['id' => $request->id]);
+      $post = DeleveredOrder::firstOrCreate(['id' => $request->id]);
       $post->order_status = 'Delivered';
       $post->update();
       return response()->json(compact('post'));
@@ -129,24 +130,34 @@ class OrderController extends Controller
   
     public function deleteOrder($id)
     {
-      $post = Order::find($id);
+      $post = DeleveredOrder::find($id);
       $post->delete();
       return response()->json('successfully deleted');
     }
 
     public function saveDeliveredOrder(Request $request, $id){
       try{
-        $post = new DeleveredOrder;
-        $data=$request->all();
-        $post->customer_name = $data['name'];
-        $post->delivery_address = $data['address'];
-        $post->halayaJar_qty = $data['halaya_qty']; 
-        $post->ubechi_qty = $data['ubechi_qty']; 
-        $post->delivery_date = $data['deliveryDate'];
-        $post->order_status = $data['orderStatus'];
-        $post->distance = $data['distance'];
-        $post->save();
-        return 'success';
+        $test = DB::table('delivered_order')
+            ->select('*')
+            ->where('order_id', '=', $id)
+            ->get();
+        
+        if(sizeof($test) == 0){
+          $post = new DeleveredOrder;
+          $data=$request->all();
+          $post->order_id = $data['order_id'];
+          $post->customer_name = $data['name'];
+          $post->delivery_address = $data['address'];
+          $post->halayaJar_qty = $data['halaya_qty']; 
+          $post->ubechi_qty = $data['ubechi_qty']; 
+          $post->delivery_date = $data['deliveryDate'];
+          $post->order_status = $data['orderStatus'];
+          $post->distance = $data['distance'];
+          $post->save();
+          return 'success';
+        }else {
+          return 'already existed';
+        }
       } catch (\Exception $e){
         return response()->json(['error'=>$e]);
       }
