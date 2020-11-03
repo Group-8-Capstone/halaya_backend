@@ -14,7 +14,8 @@ class UserController extends Controller
   public function authenticate(Request $request)
   {
     $credentials = $request->only('username', 'password');
-
+    
+    // dd($credentials['username']);
     try {
       if (!$token = JWTAuth::attempt($credentials)) {
         return response()->json(['message' => 'invalid_credentials', 'status'=>400]);
@@ -22,8 +23,7 @@ class UserController extends Controller
     } catch (JWTException $e) {
       return response()->json(['message' => 'could_not_create_token', 'status'=> 500]);
     }
-
-    return response()->json(['status'=>200, 'token'=>$token, 'message'=> 'successfully_login']);
+    return response()->json(['status'=>200, 'token'=>$token, 'message'=> 'successfully_login', 'username'=>$credentials['username']]);
   }
 
   public function register(Request $request)
