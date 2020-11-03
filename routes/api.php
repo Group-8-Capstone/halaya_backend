@@ -36,7 +36,7 @@ Route::get('open', [DataController::class, 'open']);
 // Route::group(['middleware' => ['jwt.verify']], function () {
     //Order Controller
     Route::post('/post/update', [OrderController::class, 'updateOrder']);
-    Route::post('/post', [OrderController::class, 'createOrder']);
+    Route::post('/post/createOrder', [OrderController::class, 'createOrder']);
 
     Route::get('/posts/order', [OrderController::class, 'fetchOrder']);
     Route::get('/posts/delivered', [OrderController::class, 'fetchDelivered']);
@@ -75,6 +75,9 @@ Route::get('open', [DataController::class, 'open']);
     Route::get('/getButchiIngredients', [IngredientsController::class, 'getButchiIngredients']);
     Route::get('/getIceCreamIngredients', [IngredientsController::class, 'getIceCreamIngredients']);
     Route::get('/fetch/ingredientsName', [IngredientsController::class, 'fetchIngredientsName']);
+    Route::delete('/softDeleteIngredients/{id}', [IngredientsController::class, 'softDeleteIngredients']);
+    Route::delete('/softDeleteStockIngredients/{id}', [IngredientsController::class, 'softDeleteStockIngredients']);
+
 
 
 //for testing only

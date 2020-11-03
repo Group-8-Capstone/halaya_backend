@@ -156,6 +156,7 @@ class OrderController extends Controller
           $post->order_status = $data['orderStatus'];
           $post->distance = $data['distance'];
           $post->save();
+          DB::disconnect('wawenshalaya');
           return 'success';
         }else {
           return 'already exist';
