@@ -16,6 +16,7 @@ class UserController extends Controller
     $credentials = $request->only('username', 'password');
     
     // dd($credentials['username']);
+    $info = "";
     try {
       if (!$token = JWTAuth::attempt($credentials)) {
         return response()->json(['message' => 'invalid_credentials', 'status'=>400]);
@@ -23,14 +24,27 @@ class UserController extends Controller
     } catch (JWTException $e) {
       return response()->json(['message' => 'could_not_create_token', 'status'=> 500]);
     }
-    return response()->json(['status'=>200, 'token'=>$token, 'message'=> 'successfully_login', 'username'=>$credentials['username']]);
+    // return response()->json(['status'=>200, 'token'=>$token, 'message'=> 'successfully_login', 'username'=>$credentials['username']]);
+
+    try{
+      $info = User::select("role", "username", "id")
+      ->where("username", "=", $request->get('username'))
+      ->get();
+    }catch(\Exception $e){
+      return response()->json(['message' => 'invalid_credentials', 'status'=> 400]);
+    }
+    dd($info->username);
+
+    return response()->json(['status'=>200, 'token'=>$token, 'message'=> 'successfully_login', "UserAccount"=>$info]);
   }
 
   public function register(Request $request)
   {
     $validator = Validator::make($request->all(), [
-      'username' => 'required',
-      'password' => 'required',
+      'uName' => 'required',
+      'phone' => 'required',
+      'pass' => 'required',
+      'role' => 'required',
     ]);
 
     if ($validator->fails()) {
@@ -38,8 +52,10 @@ class UserController extends Controller
     }
 
     $user = User::create([
-      'username' => $request->get('username'),
-      'password' => Hash::make($request->get('password')),
+      'username' => $request->get('uName'),
+      'phone' => $request->get('phone'),
+      'role' => $request->get('role'),
+      'password' => Hash::make($request->get('pass')),
     ]);
 
     $token = JWTAuth::fromUser($user);
