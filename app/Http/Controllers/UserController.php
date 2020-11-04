@@ -15,7 +15,7 @@ class UserController extends Controller
   {
     $credentials = $request->only('username', 'password');
     
-    // dd($credentials['username']);
+    // dd($credentials);
     $info = "";
     try {
       if (!$token = JWTAuth::attempt($credentials)) {
@@ -33,7 +33,6 @@ class UserController extends Controller
     }catch(\Exception $e){
       return response()->json(['message' => 'invalid_credentials', 'status'=> 400]);
     }
-    dd($info->username);
 
     return response()->json(['status'=>200, 'token'=>$token, 'message'=> 'successfully_login', "UserAccount"=>$info]);
   }
