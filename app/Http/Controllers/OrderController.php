@@ -23,7 +23,7 @@ class OrderController extends Controller
         $post->contact_number = $data['contactNumber'];
         $post->ubeHalayaJar_qty = $data['jar_qty']; 
         $post->ubeHalayaTub_qty = $data['tub_qty']; 
-        $post->delivery_date = $data['deliveryDate'];
+        $post->preferred_delivery_date = $data['deliveryDate'];
         $post->order_status = $data['orderStatus'];
         $post->distance = $data['distance'];
         $post->save();
