@@ -19,6 +19,7 @@ class OrderController extends Controller
         $post = new Order;
         $data=$request->all();
         $post->customer_id = $data['customer_id'];
+        $post->receiver_name = $data['receiver_name'];
         $post->customer_address = $data['address'];
         $post->contact_number = $data['contactNumber'];
         $post->ubeHalayaJar_qty = $data['jar_qty']; 
@@ -35,19 +36,24 @@ class OrderController extends Controller
   
    public function fetchOrder()
     {
-      
-      return new OrderCollection(DeleveredOrder::where('order_status', 'On order')
+      return new OrderCollection(Order::where('order_status', 'On order')
       ->orWhere('order_status', 'Canceled')
+      ->orderBy('delivery_date', 'asc')->get());
+    }
+
+    public function fetchPendingOrder()
+    {
+      return new OrderCollection(Order::where('order_status', 'Pending')
       ->orderBy('delivery_date', 'asc')->get());
     }
 
     public function fetchDelivered()
     {
-      return new OrderCollection(DeleveredOrder::where('order_status', 'Delivered')->get());
+      return new OrderCollection(Order::where('order_status', 'Delivered')->get());
     }
 
     public function fetchDelivery(Request $request){
-      return new OrderCollection(DeleveredOrder::where('order_status', 'On order')
+      return new OrderCollection(Order::where('order_status', 'On order')
       ->where('delivery_date', '2020-10-27')->get());
       // ->orderBy('delivery_date', 'asc')->get());      
       // ->orderBy('delivery_date', 'asc')->get());
@@ -93,7 +99,7 @@ class OrderController extends Controller
     public function updateCancelledStatus(Request $request, $id)
     {
       $newItem =  $request->all();
-      $post = DeleveredOrder::firstOrCreate(['id' => $request->id]);
+      $post = Order::firstOrCreate(['id' => $request->id]);
       $post->order_status = 'Canceled';
       $post->update();
       return response()->json(compact('post'));
@@ -102,7 +108,7 @@ class OrderController extends Controller
 
     public function editOrder($id)
     {
-      $post = DeleveredOrder::find($id);
+      $post = Order::find($id);
       return response()->json($post);
     }
 
@@ -110,7 +116,7 @@ class OrderController extends Controller
     public function updateOrder(Request $request)
     {
       $newItem =  $request->all();
-      $post = DeleveredOrder::firstOrCreate(['id' => $request->id]);
+      $post = Order::firstOrCreate(['id' => $request->id]);
       $post->customer_name = $request['customer_name'];
       $post->customer_address = $request['customer_address'];
       $post->contact_number = $request['contact_number'];
@@ -123,7 +129,7 @@ class OrderController extends Controller
     public function updateStatus(Request $request, $id)
     {
       $newItem =  $request->all();
-      $post = DeleveredOrder::firstOrCreate(['order_id' => $id]);
+      $post = Order::firstOrCreate(['id' => $id]);
       $post->order_status = 'Delivered';
       $post->update();
       return response()->json(compact('post'));
@@ -146,7 +152,7 @@ class OrderController extends Controller
   
     public function deleteOrder($id)
     {
-      $post = DeleveredOrder::find($id);
+      $post = Order::find($id);
       $post->delete();
       return response()->json('successfully deleted');
     }
@@ -159,7 +165,7 @@ class OrderController extends Controller
             ->get();
         
         if(sizeof($test) == 0){
-          $post = new DeleveredOrder;
+          $post = new Order;
           $data=$request->all();
           $post->order_id = $data['order_id'];
           $post->customer_name = $data['name'];
