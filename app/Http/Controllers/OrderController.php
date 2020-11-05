@@ -38,13 +38,17 @@ class OrderController extends Controller
     {
       return new OrderCollection(Order::where('order_status', 'On order')
       ->orWhere('order_status', 'Canceled')
-      ->orderBy('delivery_date', 'asc')->get());
+      ->orderBy('preferred_delivery_date', 'asc')
+      ->orderBy('distance', 'asc')
+      ->get());
     }
 
     public function fetchPendingOrder()
     {
       return new OrderCollection(Order::where('order_status', 'Pending')
-      ->orderBy('delivery_date', 'asc')->get());
+      ->orderBy('preferred_delivery_date', 'asc')
+      ->orderBy('distance', 'asc')
+      ->get());
     }
 
     public function fetchDelivered()
@@ -54,7 +58,7 @@ class OrderController extends Controller
 
     public function fetchDelivery(Request $request){
       return new OrderCollection(Order::where('order_status', 'On order')
-      ->where('delivery_date', '2020-10-27')->get());
+      ->where('preferred_delivery_date', '2020-10-27')->get());
       // ->orderBy('delivery_date', 'asc')->get());      
       // ->orderBy('delivery_date', 'asc')->get());
       // dd(Carbon::today()->toDateString());
@@ -171,5 +175,13 @@ class OrderController extends Controller
         return "failed";
         return response()->json(['error'=>$e]);
       }
+    }
+
+    public function updateConfirmStatus(Request $request, $id){
+      $newItem =  $request->all();
+      $post = Order::firstOrCreate(['id' => $id]);
+      $post->order_status = 'On order';
+      $post->update();
+      return response()->json(compact('post'));
     }
 }
