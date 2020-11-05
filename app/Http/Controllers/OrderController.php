@@ -138,6 +138,20 @@ class OrderController extends Controller
       $post->update();
       return response()->json(compact('post'));
     }
+
+    public function fetchOnOrder($id){
+      $post = new OrderCollection(Order::where('order_status', 'On order')
+      ->where('customer_id','=', $id)
+      ->get());
+      return response()->json(compact('post'));
+    }
+
+    public function fetchDeliveredOrder($id){
+      $post = new OrderCollection(Order::where('order_status', 'Delivered')
+      ->where('customer_id','=', $id)
+      ->get());
+      return response()->json(compact('post'));
+    }
     
   
     public function deleteOrder($id)

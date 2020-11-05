@@ -49,6 +49,9 @@ Route::get('open', [DataController::class, 'open']);
 
     Route::put('/post/updateStat/{id}', [OrderController::class, 'updateStatus']);
     Route::put('/post/updateCanceledStat/{id}', [OrderController::class, 'updateCancelledStatus']);
+    Route::get('/fetchOnOrder/{id}', [OrderController::class, 'fetchOnOrder']);
+    Route::get('/fetchDeliveredOrder/{id}', [OrderController::class, 'fetchDeliveredOrder']);
+  
     Route::put('/post/confirm/{id}', [OrderController::class, 'updateConfirmStatus']);
 
 //Sales Controller
