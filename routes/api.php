@@ -37,6 +37,7 @@ Route::get('open', [DataController::class, 'open']);
     //Order Controller
     Route::post('/post/update', [OrderController::class, 'updateOrder']);
     Route::post('/post/createOrder', [OrderController::class, 'createOrder']);
+    Route::get('/fetch/pending-orders', [OrderController::class, 'fetchPendingOrder']);
 
     Route::get('/posts/order', [OrderController::class, 'fetchOrder']);
     Route::get('/posts/delivered', [OrderController::class, 'fetchDelivered']);
@@ -51,6 +52,7 @@ Route::get('open', [DataController::class, 'open']);
     Route::get('/fetchOnOrder/{id}', [OrderController::class, 'fetchOnOrder']);
     Route::get('/fetchDeliveredOrder/{id}', [OrderController::class, 'fetchDeliveredOrder']);
   
+    Route::put('/post/confirm/{id}', [OrderController::class, 'updateConfirmStatus']);
 
 //Sales Controller
     Route::post('/sales/daily', [SalesController::class, 'index']);
