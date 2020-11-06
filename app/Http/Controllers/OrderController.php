@@ -56,6 +56,38 @@ class OrderController extends Controller
       return new OrderCollection(Order::where('order_status', 'Delivered')->get());
     }
 
+    public function totalTab(){
+      $date = Carbon::today();
+      $data = DB::table('orders')
+      ->where('preferred_delivery_date',$date)
+      ->where('order_status', 'On order' )
+      ->get();
+      
+      $i = 0;
+      $total = 0;
+      foreach($data as $item){
+          $total += $item->ubeHalayaTub_qty;
+          $i++;
+      }
+      return $total;
+  }
+
+  public function totalJar(){
+    $date = Carbon::today();
+    $data = DB::table('orders')
+    ->where('preferred_delivery_date',$date)
+    ->where('order_status', 'On order' )
+    ->get();
+    $i = 0;
+    $total = 0;
+    foreach($data as $item){
+        $total += $item->ubeHalayaJar_qty;
+        $i++;
+    }
+    return $total;
+  
+}
+
     public function fetchDelivery(Request $request){
       return new OrderCollection(Order::where('order_status', 'On order')
       ->where('preferred_delivery_date', '2020-10-27')->get());
@@ -141,7 +173,8 @@ class OrderController extends Controller
 
     public function fetchOnOrder($id){
       $post = new OrderCollection(Order::where('order_status', 'On order')
-      ->where('customer_id','=', $id)
+      ->where('order_status', 'Pending')
+      ->orWhere('customer_id','=', $id)
       ->get());
       return response()->json(compact('post'));
     }
