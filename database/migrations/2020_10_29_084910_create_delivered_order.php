@@ -15,6 +15,7 @@ class CreateDeliveredOrder extends Migration
     {
         Schema::create('delivered_order', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->bigInteger('order_id');
             $table->string('customer_name');
             $table->string('delivery_address');
             $table->string('halayaJar_qty');

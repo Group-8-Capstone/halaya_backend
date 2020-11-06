@@ -11,6 +11,7 @@ class DeleveredOrder extends Model
     protected $guarded = [];
     protected $table = 'delivered_order';
     protected $fillable = [
+        'order_id',
         'customer_name', 
         'delivery_address',
         'halaya_qty',

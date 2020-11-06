@@ -10,16 +10,15 @@ class Order extends Model
     protected $guarded = [];
     protected $table = 'orders';
     protected $fillable = [
-        'customer_name', 
-        'product_name',
-        // 'customer_address',
-        // 'contact_number', 
-        'order_quantity', 
-        // 'delivery_date',
-        // 'order_status',
-        // 'longitude',
-        // 'latitude',
-        'distance'
+        'customer_id',
+        'receiver_name',
+        'customer_address',
+        'contact_number', 
+        'ubeHalayaJar_qty',
+        'ubeHalayaTub_qty',
+        'preferred_delivery_date',
+        'distance',
+        'order_status',
     ];
 }
 
