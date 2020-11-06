@@ -28,7 +28,7 @@
                     return response()->json(['status' => 'Token is Expired']);
                 }else{
                     return response()->json(['status' => 'Authorization Token not found']);
-                }
+                }   
             }
             return $next($request);
         }
