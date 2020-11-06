@@ -12,15 +12,15 @@ class SalesController extends Controller
     public function index(Request $request){
         $Date = date("Y-m-d"); //current date
         $year = $request->all();
-        $Delivered = DeleveredOrder::select(\DB::raw('sum(halayaJar_qty)as total'), 'delivery_date')
+        $Delivered = Order::select(\DB::raw('sum(ubeHalayaJar_qty)as total'), 'preferred_delivery_date')
         ->where([
             ['order_status', '=','Delivered'],
             // ['delivery_date', '<=', $Date],
-            [\DB::raw('Year(`delivery_date`)'), '=', $year['year']],
-            [\DB::raw('Month(`delivery_date`)'), '=', $year['month']]
+            [\DB::raw('Year(`preferred_delivery_date`)'), '=', $year['year']],
+            [\DB::raw('Month(`preferred_delivery_date`)'), '=', $year['month']]
         ])
-        ->groupBy('delivery_date')
-        ->orderBy('delivery_date', 'ASC')
+        ->groupBy('preferred_delivery_date')
+        ->orderBy('preferred_delivery_date', 'ASC')
         ->get();
         // $Date = $Delivered[0]['delivery_date'];
         return response($Delivered);
@@ -32,8 +32,8 @@ class SalesController extends Controller
 
         /**Getting the first delivery of the year */
 
-        $firstDelivery = DeleveredOrder::select('delivery_date')
-        ->where(\DB::raw('Year(`delivery_date`)'), '=', $request['year'])
+        $firstDelivery = Order::select('preferred_delivery_date')
+        ->where(\DB::raw('Year(`preferred_delivery_date`)'), '=', $request['year'])
         ->first();
 
         /** Ends here */
@@ -42,12 +42,12 @@ class SalesController extends Controller
         $weekArray = $this->getStartAndEndWeek($weekNumber,$currentYear);
         $weeklyData =[];
         for($i = 0; $i < sizeof($weekArray); $i++){
-            \Log::info('Order::select sum(order_quantity)->where([[delivery_date, >=, ' . $weekArray[$i]['start'] . ' ], [delivery_date, <=, '. $weekArray[$i]['end'] .' ])');
+            \Log::info('Order::select sum(order_quantity)->where([[preferred_delivery_date, >=, ' . $weekArray[$i]['start'] . ' ], [preferred_delivery_date, <=, '. $weekArray[$i]['end'] .' ])');
 
-            $getWeeklySales = DeleveredOrder::select(\DB::raw("sum(`halayaJar_qty`) as totals"))
+            $getWeeklySales = Order::select(\DB::raw("sum(`ubeHalayaJar_qty`) as totals"))
             ->where([
-                ["delivery_date", ">=", $weekArray[$i]['start']],
-                ["delivery_date", "<=", $weekArray[$i]['end']]
+                ["preferred_delivery_date", ">=", $weekArray[$i]['start']],
+                ["preferred_delivery_date", "<=", $weekArray[$i]['end']]
             ])
             ->get();
 
@@ -77,22 +77,22 @@ class SalesController extends Controller
 }
     public function indexMonthly(Request $request){
         $year = $request->all();
-        $monthlySales = DeleveredOrder::select(\DB::raw("sum(`halayaJar_qty`) as `totals`")
-        , \DB::raw("Month(`delivery_date`) as `months`"))
-        ->whereYear('delivery_date', '=', $year['year'])
+        $monthlySales = Order::select(\DB::raw("sum(`ubeHalayaJar_qty`) as `totals`")
+        , \DB::raw("Month(`preferred_delivery_date`) as `months`"))
+        ->whereYear('preferred_delivery_date', '=', $year['year'])
         ->groupBy('months')
         ->get();
         return response()->json($monthlySales);
     }
     public function indexYearly(Request $request){
-        $yearlySales = DeleveredOrder::select(\DB::raw("sum(`order_quantity`) as `totals`"),
-        \DB::raw("Year(`delivery_date`) as `years`"))
+        $yearlySales = Order::select(\DB::raw("sum(`order_quantity`) as `totals`"),
+        \DB::raw("Year(`preferred_delivery_date`) as `years`"))
         ->groupBy('years')
         ->get();
         return response()->json($yearlySales);
     }
     public function selectYear(Request $request){
-        $selectingYear = DeleveredOrder::select(\DB::raw("Year(`delivery_date`) as `years`"))
+        $selectingYear = Order::select(\DB::raw("Year(`preferred_delivery_date`) as `years`"))
         ->groupBy('years')
         ->get();
         return response()->json($selectingYear);

@@ -39,7 +39,6 @@ class OrderController extends Controller
       return new OrderCollection(Order::where('order_status', 'On order')
       ->orWhere('order_status', 'Canceled')
       ->orderBy('preferred_delivery_date', 'asc')
-      ->orderBy('distance', 'asc')
       ->get());
     }
 
@@ -47,18 +46,23 @@ class OrderController extends Controller
     {
       return new OrderCollection(Order::where('order_status', 'Pending')
       ->orderBy('preferred_delivery_date', 'asc')
-      ->orderBy('distance', 'asc')
       ->get());
     }
 
     public function fetchDelivered()
     {
-      return new OrderCollection(Order::where('order_status', 'Delivered')->get());
+      return new OrderCollection(Order::where('order_status', 'Delivered')
+      ->orderBy('preferred_delivery_date', 'desc')
+      ->get());
     }
 
     public function fetchDelivery(Request $request){
       return new OrderCollection(Order::where('order_status', 'On order')
-      ->where('preferred_delivery_date', '2020-10-27')->get());
+      ->where('preferred_delivery_date', Carbon::today()->toDateString())
+      ->orderBy('distance', 'asc')
+      ->get());
+      
+      // ->where('preferred_delivery_date', '2020-10-27')->get());
       // ->orderBy('delivery_date', 'asc')->get());      
       // ->orderBy('delivery_date', 'asc')->get());
       // dd(Carbon::today()->toDateString());
@@ -100,6 +104,37 @@ class OrderController extends Controller
       return response()->json($data);
   }
 
+  public function toDeliver(){
+    $post = Order::where('order_status', 'On order')
+      ->where('preferred_delivery_date', Carbon::today()->toDateString())
+      ->orderBy('distance', 'asc')
+      ->get();
+      
+      $start = 0;
+      $stop = 5;
+      $data = [];
+      $break = false;
+      for($i = 0; $i < 5; $i++){
+        $z = 0;
+        $tempData = [];
+        if($break){
+          break;
+        }
+        for($x = $start; $x < $stop; $x++){
+          if($x < sizeof($order)){
+            $z = $x;
+            array_push($tempData, $order[$x]);
+          }else{
+            $break = true;
+            // \Log::info($x);
+            break;
+          }
+        }
+        array_push($data, $tempData);
+        $start = $z + 1;
+        $stop = $stop + 5;
+  }
+  }
     public function updateCancelledStatus(Request $request, $id)
     {
       $newItem =  $request->all();

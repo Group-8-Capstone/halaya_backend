@@ -91,6 +91,7 @@ Route::get('open', [DataController::class, 'open']);
     Route::get('/getAllIngredients', [IngredientsController::class, 'getAllIngredients']);
     Route::get('user', [UserController::class, 'getAuthenticatedUser']);
     Route::get('closed', [DataConroller::class, 'closed']);
+    Route::get('/posts/to-deliver', [OrderController::class, 'toDeliver']);
 
     //Product
     Route::post('/post/product',[ProductController::class,'addProduct']);
