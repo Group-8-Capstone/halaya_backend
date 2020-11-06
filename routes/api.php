@@ -79,5 +79,8 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('/getMonthYear', [IngredientsController::class, 'compareDate']);
     Route::get('/getAllIngredients', [IngredientsController::class, 'getAllIngredients']);
     Route::get('user', [UserController::class, 'getAuthenticatedUser']);
-    Route::get('closed', [DataConroller::class, 'closed']);
+    Route::get('closed', [DataConroller::class, 'closed']);\
+
+//Route Guard
+   Route::post('/verify_auth', [UserController::class, 'AuthenticationGuard']);
 });

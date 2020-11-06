@@ -20,7 +20,7 @@ class CreateOrderTable extends Migration
             // $table->string('customer_address');
             // $table->string('contact_number');
             $table->smallInteger('order_quantity');
-            // $table->date('delivery_date');
+            $table->date('delivery_date');
             // $table->double('longitude');
             // $table->double('latitude');
             $table->double('distance');
