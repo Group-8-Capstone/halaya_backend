@@ -88,4 +88,8 @@ class UserController extends Controller
 
     return response()->json(compact('user'));
   }
+
+  public function AuthenticationGuard(){
+    return response()->json(['status'=>"verified"]);
+  }
 }

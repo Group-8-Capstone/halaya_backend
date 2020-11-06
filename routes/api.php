@@ -33,7 +33,7 @@ Route::post('register', [UserController::class, 'register']);
 Route::post('login', [UserController::class, 'authenticate']);
 Route::get('open', [DataController::class, 'open']);
 
-// Route::group(['middleware' => ['jwt.verify']], function () {
+Route::group(['middleware' => ['jwt.verify']], function () {
     //Order Controller
     Route::post('/post/update', [OrderController::class, 'updateOrder']);
     Route::post('/post/createOrder', [OrderController::class, 'createOrder']);
@@ -53,6 +53,8 @@ Route::get('open', [DataController::class, 'open']);
     Route::get('/fetchDeliveredOrder/{id}', [OrderController::class, 'fetchDeliveredOrder']);
   
     Route::put('/post/confirm/{id}', [OrderController::class, 'updateConfirmStatus']);
+    Route::post('/totalTab', [OrderController::class, 'totalTab']);
+    Route::post('/totalJar', [OrderController::class, 'totalJar']);
 
 //Sales Controller
     Route::post('/sales/daily', [SalesController::class, 'index']);
@@ -107,4 +109,7 @@ Route::get('open', [DataController::class, 'open']);
 
     Route::post('/post/account',[ProfileController::class,'addProfile']);
     Route::get('/retrieveAccount',[ProfileController::class,'fetchAccount']);
-// });
+
+    Route::post('/verify_auth',[UserController::class,'AuthenticationGuard']);
+ 
+});
