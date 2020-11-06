@@ -53,6 +53,8 @@ Route::get('open', [DataController::class, 'open']);
     Route::get('/fetchDeliveredOrder/{id}', [OrderController::class, 'fetchDeliveredOrder']);
   
     Route::put('/post/confirm/{id}', [OrderController::class, 'updateConfirmStatus']);
+    Route::post('/totalTab', [OrderController::class, 'totalTab']);
+    Route::post('/totalJar', [OrderController::class, 'totalJar']);
 
 //Sales Controller
     Route::post('/sales/daily', [SalesController::class, 'index']);
