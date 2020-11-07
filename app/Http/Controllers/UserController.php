@@ -58,8 +58,10 @@ class UserController extends Controller
     ]);
 
     $token = JWTAuth::fromUser($user);
+    $message = [];
+    $message['message'] = 'success';
 
-    return response()->json(compact('user', 'token'), 201);
+    return response()->json(compact('user', 'token', 'message'), 200);
   }
 
   public function getAuthenticatedUser()
@@ -85,5 +87,9 @@ class UserController extends Controller
     }
 
     return response()->json(compact('user'));
+  }
+
+  public function AuthenticationGuard(){
+    return response()->json(['status'=>"verified"]);
   }
 }

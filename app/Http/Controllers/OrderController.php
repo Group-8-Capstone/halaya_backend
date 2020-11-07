@@ -39,7 +39,6 @@ class OrderController extends Controller
       return new OrderCollection(Order::where('order_status', 'On order')
       ->orWhere('order_status', 'Canceled')
       ->orderBy('preferred_delivery_date', 'asc')
-      ->orderBy('distance', 'asc')
       ->get());
     }
 
@@ -47,13 +46,14 @@ class OrderController extends Controller
     {
       return new OrderCollection(Order::where('order_status', 'Pending')
       ->orderBy('preferred_delivery_date', 'asc')
-      ->orderBy('distance', 'asc')
       ->get());
     }
 
     public function fetchDelivered()
     {
-      return new OrderCollection(Order::where('order_status', 'Delivered')->get());
+      return new OrderCollection(Order::where('order_status', 'Delivered')
+      ->orderBy('preferred_delivery_date', 'desc')
+      ->get());
     }
 
     public function totalTab(){
@@ -90,7 +90,11 @@ class OrderController extends Controller
 
     public function fetchDelivery(Request $request){
       return new OrderCollection(Order::where('order_status', 'On order')
-      ->where('preferred_delivery_date', '2020-10-27')->get());
+      ->where('preferred_delivery_date', Carbon::today()->toDateString())
+      ->orderBy('distance', 'asc')
+      ->get());
+      
+      // ->where('preferred_delivery_date', '2020-10-27')->get());
       // ->orderBy('delivery_date', 'asc')->get());      
       // ->orderBy('delivery_date', 'asc')->get());
       // dd(Carbon::today()->toDateString());
@@ -132,6 +136,37 @@ class OrderController extends Controller
       return response()->json($data);
   }
 
+  public function toDeliver(){
+    $post = Order::where('order_status', 'On order')
+      ->where('preferred_delivery_date', Carbon::today()->toDateString())
+      ->orderBy('distance', 'asc')
+      ->get();
+      
+      $start = 0;
+      $stop = 5;
+      $data = [];
+      $break = false;
+      for($i = 0; $i < 5; $i++){
+        $z = 0;
+        $tempData = [];
+        if($break){
+          break;
+        }
+        for($x = $start; $x < $stop; $x++){
+          if($x < sizeof($order)){
+            $z = $x;
+            array_push($tempData, $order[$x]);
+          }else{
+            $break = true;
+            // \Log::info($x);
+            break;
+          }
+        }
+        array_push($data, $tempData);
+        $start = $z + 1;
+        $stop = $stop + 5;
+  }
+  }
     public function updateCancelledStatus(Request $request, $id)
     {
       $newItem =  $request->all();
@@ -153,11 +188,12 @@ class OrderController extends Controller
     {
       $newItem =  $request->all();
       $post = Order::firstOrCreate(['id' => $request->id]);
-      $post->customer_name = $request['customer_name'];
+      $post->receiver_name = $request['receiver_name'];
       $post->customer_address = $request['customer_address'];
-      $post->contact_number = $request['contact_number'];
-      $post->delivery_date = $request['delivery_date'];
-      $post->order_quantity = $request['order_quantity'];
+      // $post->contact_number = $request['contact_number'];
+      $post->preferred_delivery_date = $request['preferred_delivery_date'];
+      $post->ubeHalayaJar_qty = $request['ubeHalayaJar_qty'];
+      $post->ubeHalayaTub_qty = $request['ubeHalayaTub_qty'];
       $post->save();
       return response()->json(compact('post'));
     }
@@ -167,7 +203,7 @@ class OrderController extends Controller
       $newItem =  $request->all();
       $post = Order::firstOrCreate(['id' => $id]);
       $post->order_status = 'Delivered';
-      $post->update();
+      $post->save();
       return response()->json(compact('post'));
     }
 
@@ -226,9 +262,13 @@ class OrderController extends Controller
 
     public function updateConfirmStatus(Request $request, $id){
       $newItem =  $request->all();
+      // $res = Ingredients::where('id', $id )
+      //               ->update([
+      //                   'order_status' => 'On order',
+      //               ]);
       $post = Order::firstOrCreate(['id' => $id]);
       $post->order_status = 'On order';
-      $post->update();
+      $post->save();
       return response()->json(compact('post'));
     }
 }

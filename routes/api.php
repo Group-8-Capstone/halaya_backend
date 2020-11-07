@@ -33,7 +33,7 @@ Route::post('register', [UserController::class, 'register']);
 Route::post('login', [UserController::class, 'authenticate']);
 Route::get('open', [DataController::class, 'open']);
 
-// Route::group(['middleware' => ['jwt.verify']], function () {
+Route::group(['middleware' => ['jwt.verify']], function () {
     //Order Controller
     Route::post('/post/update', [OrderController::class, 'updateOrder']);
     Route::post('/post/createOrder', [OrderController::class, 'createOrder']);
@@ -44,17 +44,17 @@ Route::get('open', [DataController::class, 'open']);
     Route::get('/posts/delivery', [OrderController::class, 'fetchDelivery']);
     Route::get('/post/edit/{id}', [OrderController::class, 'editOrder']);
     Route::post('/post/deliveredOrder/{id}', [OrderController::class, 'saveDeliveredOrder']);
-
+    
+    Route::post('/post/updateStat/{id}', [OrderController::class, 'updateStatus']);
     Route::delete('/post/delete/{id}', [OrderController::class, 'deleteOrder']);
 
-    Route::put('/post/updateStat/{id}', [OrderController::class, 'updateStatus']);
     Route::post('/post/updateCanceledStat/{id}', [OrderController::class, 'updateCancelledStatus']);
     Route::get('/fetchOnOrder/{id}', [OrderController::class, 'fetchOnOrder']);
     Route::get('/fetchDeliveredOrder/{id}', [OrderController::class, 'fetchDeliveredOrder']);
   
-    Route::put('/post/confirm/{id}', [OrderController::class, 'updateConfirmStatus']);
-    Route::post('/totalTab', [OrderController::class, 'totalTab']);
-    Route::post('/totalJar', [OrderController::class, 'totalJar']);
+    Route::post('/post/confirm/{id}', [OrderController::class, 'updateConfirmStatus']);
+    Route::get('/totalTab', [OrderController::class, 'totalTab']);
+    Route::get('/totalJar', [OrderController::class, 'totalJar']);
 
 //Sales Controller
     Route::post('/sales/daily', [SalesController::class, 'index']);
@@ -93,6 +93,7 @@ Route::get('open', [DataController::class, 'open']);
     Route::get('/getAllIngredients', [IngredientsController::class, 'getAllIngredients']);
     Route::get('user', [UserController::class, 'getAuthenticatedUser']);
     Route::get('closed', [DataConroller::class, 'closed']);
+    Route::get('/posts/to-deliver', [OrderController::class, 'toDeliver']);
 
     //Product
     Route::post('/post/product',[ProductController::class,'addProduct']);
@@ -108,4 +109,11 @@ Route::get('open', [DataController::class, 'open']);
 
     Route::post('/post/account',[ProfileController::class,'addProfile']);
     Route::get('/retrieveAccount',[ProfileController::class,'fetchAccount']);
-// });
+    Route::get('/fetchProfile/{id}',[ProfileController::class,'fetchProfile']);
+    Route::post('/ProfilePicUpdate/{id}',[ProfileController::class,'ProfilePicUpdate']);
+
+    Route::post('/verify_auth',[UserController::class,'AuthenticationGuard']);
+
+    
+ 
+});
