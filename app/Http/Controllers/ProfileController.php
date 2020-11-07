@@ -6,6 +6,7 @@ use App\Models\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\ProfileCollection;
+use App\Models\User;
 
 class ProfileController extends Controller
 {
@@ -96,14 +97,36 @@ class ProfileController extends Controller
          }
     }
 
+    public function ProfilePicUpdate(Request $request,$id){
+        $validator = Validator::make($request->all(), [
+       
+        ]);
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+        try { 
+        $imageName = time().'.'.$request->image->getClientOriginalExtension();
+        $request->image->move(public_path('images'), $imageName);
+       
+        $post = User::firstOrCreate(['id' => $id]);
+        $post->profile_url = 'images/'.$imageName;
+        $post->save();
+    } catch ( \Exception $e)  {
+        return response()->json($e);
+    }
+        // $post = new UserCollection(User::where('id', $id)
+        // ->get());
+        // return response()->json(compact('post'));
 
-    public function fetchAccount()
+
+    }
+
+
+    public function fetchProfile($id)
     {
-      
-        return new ProfileCollection(Profile::where('id', '1')->get());
-
-        // $result = DB::table('ingredients')
-        // ->select('ingredients_remaining')->where('ingredients_amount_id','=', $getID)->get();
+        $account=User::select('id','username','profile_url')->where('id', $id)->get();
+        return response()->json(compact('account'));
+   
         
     }
     /**
