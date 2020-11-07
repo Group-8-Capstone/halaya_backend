@@ -37,8 +37,8 @@ class SalesController extends Controller
         ->first();
 
         /** Ends here */
-        $weekNumber = date("W", strtotime($firstDelivery->delivery_date));
-        $currentYear = date("Y", strtotime($firstDelivery->delivery_date));
+        $weekNumber = date("W", strtotime($firstDelivery->preferred_delivery_date));
+        $currentYear = date("Y", strtotime($firstDelivery->preferred_delivery_date));
         $weekArray = $this->getStartAndEndWeek($weekNumber,$currentYear);
         $weeklyData =[];
         for($i = 0; $i < sizeof($weekArray); $i++){
@@ -85,7 +85,7 @@ class SalesController extends Controller
         return response()->json($monthlySales);
     }
     public function indexYearly(Request $request){
-        $yearlySales = Order::select(\DB::raw("sum(`order_quantity`) as `totals`"),
+        $yearlySales = Order::select(\DB::raw("sum(`ubeHalayaJar_qty`) as `totals`"),
         \DB::raw("Year(`preferred_delivery_date`) as `years`"))
         ->groupBy('years')
         ->get();
