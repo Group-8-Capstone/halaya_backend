@@ -137,7 +137,7 @@ class OrderController extends Controller
       $newItem =  $request->all();
       $post = Order::firstOrCreate(['id' => $request->id]);
       $post->order_status = 'Canceled';
-      $post->update();
+      $post->save();
       return response()->json(compact('post'));
     }
 

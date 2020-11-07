@@ -48,7 +48,7 @@ Route::get('open', [DataController::class, 'open']);
     Route::delete('/post/delete/{id}', [OrderController::class, 'deleteOrder']);
 
     Route::put('/post/updateStat/{id}', [OrderController::class, 'updateStatus']);
-    Route::put('/post/updateCanceledStat/{id}', [OrderController::class, 'updateCancelledStatus']);
+    Route::post('/post/updateCanceledStat/{id}', [OrderController::class, 'updateCancelledStatus']);
     Route::get('/fetchOnOrder/{id}', [OrderController::class, 'fetchOnOrder']);
     Route::get('/fetchDeliveredOrder/{id}', [OrderController::class, 'fetchDeliveredOrder']);
   
