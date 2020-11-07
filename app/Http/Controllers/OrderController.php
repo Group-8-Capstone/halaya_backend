@@ -20,7 +20,11 @@ class OrderController extends Controller
         $data=$request->all();
         $post->customer_id = $data['customer_id'];
         $post->receiver_name = $data['receiver_name'];
-        $post->customer_address = $data['address'];
+        // $post->customer_address = $data['address'];
+        $post->building_or_street = $data['building_street'];
+        $post->barangay = $data['barangay'];
+        $post->city_or_municipality = $data['city_municipality'];
+        $post->province = $data['province'];
         $post->contact_number = $data['contactNumber'];
         $post->ubeHalayaJar_qty = $data['jar_qty']; 
         $post->ubeHalayaTub_qty = $data['tub_qty']; 
@@ -136,37 +140,37 @@ class OrderController extends Controller
       return response()->json($data);
   }
 
-  public function toDeliver(){
-    $post = Order::where('order_status', 'On order')
-      ->where('preferred_delivery_date', Carbon::today()->toDateString())
-      ->orderBy('distance', 'asc')
-      ->get();
+  // public function toDeliver(){
+  //   $post = Order::where('order_status', 'On order')
+  //     ->where('preferred_delivery_date', Carbon::today()->toDateString())
+  //     ->orderBy('distance', 'asc')
+  //     ->get();
       
-      $start = 0;
-      $stop = 5;
-      $data = [];
-      $break = false;
-      for($i = 0; $i < 5; $i++){
-        $z = 0;
-        $tempData = [];
-        if($break){
-          break;
-        }
-        for($x = $start; $x < $stop; $x++){
-          if($x < sizeof($order)){
-            $z = $x;
-            array_push($tempData, $order[$x]);
-          }else{
-            $break = true;
-            // \Log::info($x);
-            break;
-          }
-        }
-        array_push($data, $tempData);
-        $start = $z + 1;
-        $stop = $stop + 5;
-  }
-  }
+  //     $start = 0;
+  //     $stop = 5;
+  //     $data = [];
+  //     $break = false;
+  //     for($i = 0; $i < 5; $i++){
+  //       $z = 0;
+  //       $tempData = [];
+  //       if($break){
+  //         break;
+  //       }
+  //       for($x = $start; $x < $stop; $x++){
+  //         if($x < sizeof($order)){
+  //           $z = $x;
+  //           array_push($tempData, $order[$x]);
+  //         }else{
+  //           $break = true;
+  //           // \Log::info($x);
+  //           break;
+  //         }
+  //       }
+  //       array_push($data, $tempData);
+  //       $start = $z + 1;
+  //       $stop = $stop + 5;
+  // }
+  // }                                         
     public function updateCancelledStatus(Request $request, $id)
     {
       $newItem =  $request->all();

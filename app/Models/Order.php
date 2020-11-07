@@ -12,7 +12,11 @@ class Order extends Model
     protected $fillable = [
         'customer_id',
         'receiver_name',
-        'customer_address',
+        // 'customer_address',
+        'building/street',
+        'barangay',
+        'city/municipality',
+        'province',
         'contact_number', 
         'ubeHalayaJar_qty',
         'ubeHalayaTub_qty',

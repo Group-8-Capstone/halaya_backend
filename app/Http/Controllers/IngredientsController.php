@@ -124,6 +124,7 @@ class IngredientsController extends Controller
                 'ingredients.ingredients_remaining',
                 'ingredients.ingredients_status',
             DB::raw('sum(used_ingredients.used_ingredients_amount)as total'))
+            ->where('ingredients.deleted_at', null)
             ->groupBy(
                 'ingredients_amount.id',
                 'used_ingredients.used_ingredients_amount',
@@ -134,7 +135,8 @@ class IngredientsController extends Controller
                 )
             ->get();
 
-            $i = 0;         foreach($posts as $item){
+            $i = 0;         
+            foreach($posts as $item){
                 if(array_key_exists('id', $posts->toArray())){
                     return response()->json([
                         'message' => 'New post created'
