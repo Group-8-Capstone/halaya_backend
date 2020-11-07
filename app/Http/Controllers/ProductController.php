@@ -26,7 +26,6 @@ class ProductController extends Controller
     }
     private function successfulMessage($code, $message, $status)
     {
-
         return [
             'code' => $code,
             'message' => $message,
