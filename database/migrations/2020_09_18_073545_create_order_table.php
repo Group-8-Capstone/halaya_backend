@@ -18,7 +18,11 @@ class CreateOrderTable extends Migration
             $table->integer('customer_id');
             $table->string('receiver_name');
             $table->bigInteger('contact_number');
-            $table->string('customer_address');
+            // $table->string('customer_address');
+            $table->string('building_or_street');
+            $table->string('barangay');
+            $table->string('city_or_municipality');
+            $table->string('province');
             $table->smallInteger('ubeHalayaJar_qty');
             $table->smallInteger('ubeHalayaTub_qty');
             $table->date('preferred_delivery_date');
