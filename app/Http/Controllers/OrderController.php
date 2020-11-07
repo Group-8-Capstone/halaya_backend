@@ -141,31 +141,6 @@ class OrderController extends Controller
       ->where('preferred_delivery_date', Carbon::today()->toDateString())
       ->orderBy('distance', 'asc')
       ->get();
-      
-      $start = 0;
-      $stop = 5;
-      $data = [];
-      $break = false;
-      for($i = 0; $i < 5; $i++){
-        $z = 0;
-        $tempData = [];
-        if($break){
-          break;
-        }
-        for($x = $start; $x < $stop; $x++){
-          if($x < sizeof($order)){
-            $z = $x;
-            array_push($tempData, $order[$x]);
-          }else{
-            $break = true;
-            // \Log::info($x);
-            break;
-          }
-        }
-        array_push($data, $tempData);
-        $start = $z + 1;
-        $stop = $stop + 5;
-  }
   }
     public function updateCancelledStatus(Request $request, $id)
     {
