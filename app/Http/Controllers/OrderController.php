@@ -172,7 +172,7 @@ class OrderController extends Controller
       $newItem =  $request->all();
       $post = Order::firstOrCreate(['id' => $request->id]);
       $post->order_status = 'Canceled';
-      $post->update();
+      $post->save();
       return response()->json(compact('post'));
     }
 
@@ -188,11 +188,12 @@ class OrderController extends Controller
     {
       $newItem =  $request->all();
       $post = Order::firstOrCreate(['id' => $request->id]);
-      $post->customer_name = $request['customer_name'];
+      $post->receiver_name = $request['receiver_name'];
       $post->customer_address = $request['customer_address'];
-      $post->contact_number = $request['contact_number'];
-      $post->delivery_date = $request['delivery_date'];
-      $post->order_quantity = $request['order_quantity'];
+      // $post->contact_number = $request['contact_number'];
+      $post->preferred_delivery_date = $request['preferred_delivery_date'];
+      $post->ubeHalayaJar_qty = $request['ubeHalayaJar_qty'];
+      $post->ubeHalayaTub_qty = $request['ubeHalayaTub_qty'];
       $post->save();
       return response()->json(compact('post'));
     }
@@ -202,7 +203,7 @@ class OrderController extends Controller
       $newItem =  $request->all();
       $post = Order::firstOrCreate(['id' => $id]);
       $post->order_status = 'Delivered';
-      $post->update();
+      $post->save();
       return response()->json(compact('post'));
     }
 
@@ -261,9 +262,13 @@ class OrderController extends Controller
 
     public function updateConfirmStatus(Request $request, $id){
       $newItem =  $request->all();
+      // $res = Ingredients::where('id', $id )
+      //               ->update([
+      //                   'order_status' => 'On order',
+      //               ]);
       $post = Order::firstOrCreate(['id' => $id]);
       $post->order_status = 'On order';
-      $post->update();
+      $post->save();
       return response()->json(compact('post'));
     }
 }
