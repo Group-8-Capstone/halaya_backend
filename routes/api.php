@@ -45,7 +45,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('/post/edit/{id}', [OrderController::class, 'editOrder']);
     Route::post('/post/deliveredOrder/{id}', [OrderController::class, 'saveDeliveredOrder']);
     
-Route::post('/post/updateStat/{id}', [OrderController::class, 'updateStatus']);
+    Route::post('/post/updateStat/{id}', [OrderController::class, 'updateStatus']);
     Route::delete('/post/delete/{id}', [OrderController::class, 'deleteOrder']);
 
     Route::post('/post/updateCanceledStat/{id}', [OrderController::class, 'updateCancelledStatus']);
@@ -109,7 +109,11 @@ Route::post('/post/updateStat/{id}', [OrderController::class, 'updateStatus']);
 
     Route::post('/post/account',[ProfileController::class,'addProfile']);
     Route::get('/retrieveAccount',[ProfileController::class,'fetchAccount']);
+    Route::get('/fetchProfile/{id}',[ProfileController::class,'fetchProfile']);
+    Route::post('/ProfilePicUpdate/{id}',[ProfileController::class,'ProfilePicUpdate']);
 
     Route::post('/verify_auth',[UserController::class,'AuthenticationGuard']);
+
+    
  
 });
