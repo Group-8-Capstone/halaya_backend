@@ -166,10 +166,14 @@ class OrderController extends Controller
     public function updateOrder(Request $request)
     {
       $newItem =  $request->all();
-      $post = Order::firstOrCreate(['id' => $request->id]);
+      $post = Order::firstOrCreate(['id' => $request->id]); 
       $post->receiver_name = $request['receiver_name'];
-      $post->customer_address = $request['customer_address'];
+      // $post->customer_address = $request['customer_address'];
       // $post->contact_number = $request['contact_number'];
+      $post->building_or_street = $request['building_or_street'];
+      $post->barangay = $request['barangay'];
+      $post->city_or_municipality = $request['city_or_municipality'];
+      $post->province = $request['province'];
       $post->preferred_delivery_date = $request['preferred_delivery_date'];
       $post->ubeHalayaJar_qty = $request['ubeHalayaJar_qty'];
       $post->ubeHalayaTub_qty = $request['ubeHalayaTub_qty'];
