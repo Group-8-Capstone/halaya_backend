@@ -140,46 +140,12 @@ class OrderController extends Controller
       return response()->json($data);
   }
 
-<<<<<<< HEAD
   public function toDeliver(){
     $post = Order::where('order_status', 'On order')
       ->where('preferred_delivery_date', Carbon::today()->toDateString())
       ->orderBy('distance', 'asc')
       ->get();
   }
-=======
-  // public function toDeliver(){
-  //   $post = Order::where('order_status', 'On order')
-  //     ->where('preferred_delivery_date', Carbon::today()->toDateString())
-  //     ->orderBy('distance', 'asc')
-  //     ->get();
-      
-  //     $start = 0;
-  //     $stop = 5;
-  //     $data = [];
-  //     $break = false;
-  //     for($i = 0; $i < 5; $i++){
-  //       $z = 0;
-  //       $tempData = [];
-  //       if($break){
-  //         break;
-  //       }
-  //       for($x = $start; $x < $stop; $x++){
-  //         if($x < sizeof($order)){
-  //           $z = $x;
-  //           array_push($tempData, $order[$x]);
-  //         }else{
-  //           $break = true;
-  //           // \Log::info($x);
-  //           break;
-  //         }
-  //       }
-  //       array_push($data, $tempData);
-  //       $start = $z + 1;
-  //       $stop = $stop + 5;
-  // }
-  // }                                         
->>>>>>> 2b131edf002cb4a8d96c375108947a6f1de63769
     public function updateCancelledStatus(Request $request, $id)
     {
       $newItem =  $request->all();
