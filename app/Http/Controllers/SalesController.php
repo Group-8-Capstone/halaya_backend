@@ -37,14 +37,14 @@ class SalesController extends Controller
         ->first();
 
         /** Ends here */
-        $weekNumber = date("W", strtotime($firstDelivery->preferred_delivery_date));
-        $currentYear = date("Y", strtotime($firstDelivery->preferred_delivery_date));
+        $weekNumber = date("W", strtotime($firstDelivery['preferred_delivery_date']));
+        $currentYear = date("Y", strtotime($firstDelivery['preferred_delivery_date']));
         $weekArray = $this->getStartAndEndWeek($weekNumber,$currentYear);
         $weeklyData =[];
         for($i = 0; $i < sizeof($weekArray); $i++){
-            \Log::info('Order::select sum(order_quantity)->where([[preferred_delivery_date, >=, ' . $weekArray[$i]['start'] . ' ], [preferred_delivery_date, <=, '. $weekArray[$i]['end'] .' ])');
+            \Log::info('Order::select sum(ubeHalayaJar_qty)->where([[preferred_delivery_date, >=, ' . $weekArray[$i]['start'] . ' ], [preferred_delivery_date, <=, '. $weekArray[$i]['end'] .' ])');
 
-            $getWeeklySales = Order::select(\DB::raw("sum(`ubeHalayaJar_qty`) as totals"))
+            $getWeeklySales =Order::select(\DB::raw("sum(`ubeHalayaJar_qty`) as totals"))
             ->where([
                 ["preferred_delivery_date", ">=", $weekArray[$i]['start']],
                 ["preferred_delivery_date", "<=", $weekArray[$i]['end']]
@@ -134,7 +134,7 @@ class SalesController extends Controller
         $weekArray = $this->getStartAndEndWeek($weekNumber,$currentYear);
         $weeklyData =[];
         for($i = 0; $i < sizeof($weekArray); $i++){
-            \Log::info('Order::select sum(order_quantity)->where([[preferred_delivery_date, >=, ' . $weekArray[$i]['start'] . ' ], [preferred_delivery_date, <=, '. $weekArray[$i]['end'] .' ])');
+            \Log::info('Order::select sum(ubeHalayaJar_qty)->where([[preferred_delivery_date, >=, ' . $weekArray[$i]['start'] . ' ], [preferred_delivery_date, <=, '. $weekArray[$i]['end'] .' ])');
 
             $getWeeklySales = Order::select(\DB::raw("sum(`ubeHalayaTub_qty`) as totals"))
             ->where([
