@@ -106,7 +106,7 @@ class OrderController extends Controller
       // ->orderBy('distance', 'asc')->get();
       // $order = DB::table('orders')->select('*')->where('order_status', 'On order' AND 'delivery_date', Carbon::today()->toDateString())->get();
       // $test = $order->delivery_date;
-      //$order = DB:: table('orders')
+      //$order = DB:: table('orders'h)
       //->whereColumn([
        // ['order_status', 'On order']
      // ]) 
