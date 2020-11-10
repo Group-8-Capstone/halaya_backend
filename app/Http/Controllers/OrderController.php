@@ -90,7 +90,7 @@ class OrderController extends Controller
     }
     return $total;
   
-}
+  }
 
     public function fetchDelivery(Request $request){
       return new OrderCollection(Order::where('order_status', 'On order')
