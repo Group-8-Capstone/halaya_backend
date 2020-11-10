@@ -66,12 +66,11 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
     //FOR TUB
 
-    Route::post('/sales/daily-tub', [SalesController::class, 'indexTub']);
-    Route::post('/sales/weekly-tub', [SalesController::class, 'indexWeeklyTub']);
-    Route::post('/sales/monthly-tub', [SalesController::class, 'indexMonthlyTub']);
+    Route::post('/sales/dailyTubs', [SalesController::class, 'indexTub']);
+    Route::post('/sales/weeklyTubs', [SalesController::class, 'indexWeeklyTub']);
+    Route::post('/sales/monthlyTubs', [SalesController::class, 'indexMonthlyTub']);
 
-    Route::get('/sales/filterYear-tub', [SalesController::class, 'selectYearTub']);
-    Route::get('/sales/yearly-tub', [SalesController::class, 'indexYearlyTub']);
+    Route::get('/sales/yearlyTubs', [SalesController::class, 'indexYearlyTub']);
 
 //Ingredients Controller
     Route::post('/post/updateStock', [IngredientsController::class, 'updateStockIngredients']);
