@@ -20,7 +20,6 @@ class OrderController extends Controller
         $data=$request->all();
         $post->customer_id = $data['customer_id'];
         $post->receiver_name = $data['receiver_name'];
-        // $post->customer_address = $data['address'];
         $post->building_or_street = $data['building_street'];
         $post->barangay = $data['barangay'];
         $post->city_or_municipality = $data['city_municipality'];
@@ -247,10 +246,6 @@ class OrderController extends Controller
 
     public function updateConfirmStatus(Request $request, $id){
       $newItem =  $request->all();
-      // $res = Ingredients::where('id', $id )
-      //               ->update([
-      //                   'order_status' => 'On order',
-      //               ]);
       $post = Order::firstOrCreate(['id' => $id]);
       $post->order_status = 'On order';
       $post->save();
