@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use App\Http\Resources\IngredientsCollection;
 use App\Models\Product;
 use App\Models\MakeProduct;
+use App\Models\RecordedProduct;
 use App\Models\Ingredients;
 use IngredientsController;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 
 use DB;
@@ -35,6 +37,131 @@ class ProductController extends Controller
 
     }
 
+    //New
+
+    public function fetchRecordedProduct(){
+   
+        $product = RecordedProduct::all();
+        return response()->json(compact('product'));
+    }
+
+
+    
+    public function fetchHalayaTub(){
+        $product = Product::select('id','product_name','product_price','product_availability')->where('product_name','Ube Halaya Tub')->get();
+        return response()->json(compact('product'));
+
+    }
+
+    public function fetchHalayaJar(){
+        $product = Product::select('id','product_name','product_price','product_availability')->where('product_name','Ube Halaya Jar')->get();
+        return response()->json(compact('product'));
+
+    }
+
+    public function editTub(Request $request,$id){
+        $product = Product::findOrFail($id);
+        $product->product_price = $request['product_price'];
+        $product->product_availability = $request['product_availability'];
+        $product->save();
+    }
+
+    public function editJar(Request $request,$id){
+        $product = Product::findOrFail($id);
+        $product->product_price = $request['product_price'];
+        $product->product_availability = $request['product_availability'];
+   
+        $product->save();
+    }
+
+//    public function recordJars(Request $request){
+//     try{
+//     $post = new RecordedProduct ;
+//     $data=$request->all();
+//     $post->product_name = $data['product_name'];
+//     $post->remaining_quantity = $data['remaining_quantity'];
+//     $post->total_ordered = $data['total_ordered'];
+//     $post->availability_status = $data['availability_status'];
+//     $post->save();
+//     return 'success';
+//         } catch (\Exception $e){
+//   return response()->json(['error'=>$e]);
+//     }
+
+//    }
+   
+
+   public function recordTubs(Request $request){
+    try{
+    $post = new RecordedProduct ;
+    $data=$request->all();
+    $post->product_name = $data['product_name'];
+    $post->remaining_quantity = $data['remaining_quantity'];
+    $post->total_ordered = $data['total_ordered'];
+    $post->availability_status = $data['availability_status'];
+    $post->save();
+    return 'success';
+        } catch (\Exception $e){
+  return response()->json(['error'=>$e]);
+    }
+
+   }
+
+
+   public function dailyRecords(Request $request){
+    $data=$request->all();
+    $productRecord = RecordedProduct::where('product_name', '=', $data['product_name'])
+    ->whereDate('created_at', '=', Carbon::today()->toDateString())->exists();
+    if($productRecord ==false){
+        try{
+            $post = new RecordedProduct ;
+            $data=$request->all();
+            $post->product_name = $data['product_name'];
+            $post->remaining_quantity = $data['remaining_quantity'];
+            $post->total_ordered = $data['total_ordered'];
+            $post->availability_status = $data['availability_status'];
+            $post->save();
+            return 'success';
+                } catch (\Exception $e){
+          return response()->json(['error'=>$e]);
+            }
+        }else{
+          return 'existed';
+    }
+   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Old
 
     public function addProduct(Request $request)
     {

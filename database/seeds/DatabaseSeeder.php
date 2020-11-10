@@ -1,5 +1,4 @@
 <?php
-
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -13,6 +12,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $this->call(ProductSeeder::class);
         // User::factory(10)->create();
         // DB::table('orders')->insert([
         //     'customer_name' => Str::random(10),
