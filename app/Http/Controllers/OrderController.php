@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\DeleveredOrder;
+use App\Models\DeliveryRangeQty;
 use DB;
 
 class OrderController extends Controller
@@ -95,6 +96,23 @@ class OrderController extends Controller
     public function fetchDelivery(Request $request){
       return new OrderCollection(Order::where('order_status', 'On order')
       ->where('preferred_delivery_date', Carbon::today()->toDateString())
+      ->groupBy(
+        'id',
+        'customer_id',
+        'receiver_name',
+        'building_or_street',
+        'barangay',
+        'city_or_municipality',
+        'province',
+        'contact_number', 
+        'ubeHalayaJar_qty',
+        'ubeHalayaTub_qty',
+        'preferred_delivery_date',
+        'distance',
+        'order_status',
+        'created_at',
+        'updated_at'
+        )
       ->orderBy('distance', 'asc')
       ->get());
       
@@ -266,19 +284,28 @@ class OrderController extends Controller
         }
       } catch (\Exception $e){
         return "failed";
-        return response()->json(['error'=>$e]);
+        return response()->json(['error'=>$e->getMessage()]);
       }
     }
 
     public function updateConfirmStatus(Request $request, $id){
-      $newItem =  $request->all();
-      // $res = Ingredients::where('id', $id )
-      //               ->update([
-      //                   'order_status' => 'On order',
-      //               ]);
-      $post = Order::firstOrCreate(['id' => $id]);
-      $post->order_status = 'On order';
-      $post->save();
-      return response()->json(compact('post'));
+      try {
+        $newItem =  $request->all();
+        $post = Order::firstOrCreate(['id' => $id]);
+        $post->order_status = 'On order';
+        $post->save();
+        return response()->json(compact('post'));
+      } catch (\Exception $e) {
+        return response()->json(['error'=>$e->getMessage()]);
+      }
+    }
+
+    public function getRange(){
+      try {
+        $range = DeliveryRangeQty::select('*')->get();
+        return response()->json(compact('range'));
+      } catch (\Excception $e) {
+        return response()->json(['error'=>$e->getMessage()]);
+      }
     }
 }

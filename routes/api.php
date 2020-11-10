@@ -103,6 +103,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('user', [UserController::class, 'getAuthenticatedUser']);
     Route::get('closed', [DataConroller::class, 'closed']);
     Route::get('/posts/to-deliver', [OrderController::class, 'toDeliver']);
+    Route::get('/fetch/delivery-range', [OrderController::class, 'getRange']);
 
     //Product
     Route::post('/post/product',[ProductController::class,'addProduct']);
