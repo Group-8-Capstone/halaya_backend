@@ -33,7 +33,7 @@ Route::post('register', [UserController::class, 'register']);
 Route::post('login', [UserController::class, 'authenticate']);
 Route::get('open', [DataController::class, 'open']);
 
-Route::group(['middleware' => ['jwt.verify']], function () {
+// Route::group(['middleware' => ['jwt.verify']], function () {
     //Order Controller
     Route::post('/post/update', [OrderController::class, 'updateOrder']);
     Route::post('/post/createOrder', [OrderController::class, 'createOrder']);
@@ -105,6 +105,13 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('/posts/to-deliver', [OrderController::class, 'toDeliver']);
 
     //Product
+    Route::post('/editTub/{id}',[ProductController::class,'editTub']);
+    Route::post('/editJar/{id}',[ProductController::class,'editJar']);
+    Route::get('/fetchRecordedProduct',[ProductController::class,'fetchRecordedProduct']);
+    Route::get('/fetchHalayaTub',[ProductController::class,'fetchHalayaTub']);
+    Route::get('/fetchHalayaJar',[ProductController::class,'fetchHalayaJar']);
+    Route::post('/dailyRecords',[ProductController::class,'dailyRecords']);
+
     Route::post('/post/product',[ProductController::class,'addProduct']);
     Route::get('/fetch/product',[ProductController::class,'retrieveProduct']);
     Route::post('/post/updateProduct',[ProductController::class,'updateProduct']);
@@ -125,4 +132,4 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
     
  
-});
+// });
