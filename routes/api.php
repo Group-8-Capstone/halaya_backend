@@ -33,7 +33,7 @@ Route::post('register', [UserController::class, 'register']);
 Route::post('login', [UserController::class, 'authenticate']);
 Route::get('open', [DataController::class, 'open']);
 
-Route::get('/posts/delivery', [OrderController::class, 'fetchDelivery']);
+// Route::get('/posts/delivery', [OrderController::class, 'fetchDelivery']);
 
 // Route::group(['middleware' => ['jwt.verify']], function () {
     //Order Controller
@@ -43,7 +43,7 @@ Route::get('/posts/delivery', [OrderController::class, 'fetchDelivery']);
 
     Route::get('/posts/order', [OrderController::class, 'fetchOrder']);
     Route::get('/posts/delivered', [OrderController::class, 'fetchDelivered']);
-    // Route::get('/posts/delivery', [OrderController::class, 'fetchDelivery']);
+    Route::get('/posts/delivery', [OrderController::class, 'fetchDelivery']);
     Route::get('/post/edit/{id}', [OrderController::class, 'editOrder']);
     Route::post('/post/deliveredOrder/{id}', [OrderController::class, 'saveDeliveredOrder']);
     
