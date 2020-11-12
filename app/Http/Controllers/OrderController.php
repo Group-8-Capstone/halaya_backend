@@ -92,71 +92,37 @@ class OrderController extends Controller
     return $total;
   
 }
+public function fetchDelivery(Request $request){
+  $data = Order::where('order_status', 'On order')
+  ->where('preferred_delivery_date', Carbon::today()->toDateString())
+  ->orderBy('distance', 'asc')
+  ->get();
+  \Log::info(Carbon::now()->toDateString());
+  // $barangay_array = [];
+  // $count = 1; 
+  // foreach($data as $item){
+  //   $bar = [];
+  //   if ($item->barangay == $data[$count]->barangay){
+  //     array_push($bar, $item);
+  //     // dd($bar);
+  //   } 
+  //   array_push($barangay_array,$bar);
+  //   $count++;
+    
+  //   // dd($bar);
+  // }
 
-    public function fetchDelivery(Request $request){
-      return new OrderCollection(Order::where('order_status', 'On order')
-      ->where('preferred_delivery_date', Carbon::today()->toDateString())
-      ->groupBy(
-        'id',
-        'customer_id',
-        'receiver_name',
-        'building_or_street',
-        'barangay',
-        'city_or_municipality',
-        'province',
-        'contact_number', 
-        'ubeHalayaJar_qty',
-        'ubeHalayaTub_qty',
-        'preferred_delivery_date',
-        'distance',
-        'order_status',
-        'created_at',
-        'updated_at'
-        )
-      ->orderBy('distance', 'asc')
-      ->get());
-      
-      // ->where('preferred_delivery_date', '2020-10-27')->get());
-      // ->orderBy('delivery_date', 'asc')->get());      
-      // ->orderBy('delivery_date', 'asc')->get());
-      // dd(Carbon::today()->toDateString());
-      // $order = Order::where('order_status', 'On order' AND 'delivery_date', Carbon::today()->toDateString())
-      // ->orderBy('distance', 'asc')->get();
-      // $order = DB::table('orders')->select('*')->where('order_status', 'On order' AND 'delivery_date', Carbon::today()->toDateString())->get();
-      // $test = $order->delivery_date;
-      //$order = DB:: table('orders')
-      //->whereColumn([
-       // ['order_status', 'On order']
-     // ]) 
-     
-    //  dd($order);
-    //   $start = 0;
-    //   $stop = 5;
-    //   $data = [];
-    //   $break = false;
-    //   for($i = 0; $i < 5; $i++){
-    //     $z = 0;
-    //     $tempData = [];
-    //     if($break){
-    //       break;
-    //     }
-    //     for($x = $start; $x < $stop; $x++){
-    //       if($x < sizeof($order)){
-    //         $z = $x;
-    //         array_push($tempData, $order[$x]);
-    //       }else{
-    //         $break = true;
-    //         // \Log::info($x);
-    //         break;
-    //       }
-    //     }
-    //     array_push($data, $tempData);
-    //     $start = $z + 1;
-    //     $stop = $stop + 5;
-    //     \Log::info($start);
-    //   }
-      return response()->json($data);
-  }
+  // dd($barangay_array);
+  return response()->json(compact('data'));
+}
+
+  //   public function fetchDelivery(Request $request){
+  //     return new OrderCollection(Order::where('order_status', 'On order')
+  //     ->where('preferred_delivery_date', Carbon::today()->toDateString())
+  //     ->orderBy('distance', 'asc')
+  //     ->get());
+  //     return response()->json(compact('data'));
+  // }
 
   // public function toDeliver(){
   //   $post = Order::where('order_status', 'On order')

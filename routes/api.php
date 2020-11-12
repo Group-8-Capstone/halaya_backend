@@ -33,7 +33,9 @@ Route::post('register', [UserController::class, 'register']);
 Route::post('login', [UserController::class, 'authenticate']);
 Route::get('open', [DataController::class, 'open']);
 
-Route::group(['middleware' => ['jwt.verify']], function () {
+Route::get('/posts/delivery', [OrderController::class, 'fetchDelivery']);
+
+// Route::group(['middleware' => ['jwt.verify']], function () {
     //Order Controller
     Route::post('/post/update', [OrderController::class, 'updateOrder']);
     Route::post('/post/createOrder', [OrderController::class, 'createOrder']);
@@ -41,7 +43,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
     Route::get('/posts/order', [OrderController::class, 'fetchOrder']);
     Route::get('/posts/delivered', [OrderController::class, 'fetchDelivered']);
-    Route::get('/posts/delivery', [OrderController::class, 'fetchDelivery']);
+    // Route::get('/posts/delivery', [OrderController::class, 'fetchDelivery']);
     Route::get('/post/edit/{id}', [OrderController::class, 'editOrder']);
     Route::post('/post/deliveredOrder/{id}', [OrderController::class, 'saveDeliveredOrder']);
     
@@ -106,6 +108,13 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('/fetch/delivery-range', [OrderController::class, 'getRange']);
 
     //Product
+    Route::post('/editTub/{id}',[ProductController::class,'editTub']);
+    Route::post('/editJar/{id}',[ProductController::class,'editJar']);
+    Route::get('/fetchRecordedProduct',[ProductController::class,'fetchRecordedProduct']);
+    Route::get('/fetchHalayaTub',[ProductController::class,'fetchHalayaTub']);
+    Route::get('/fetchHalayaJar',[ProductController::class,'fetchHalayaJar']);
+    Route::post('/dailyRecords',[ProductController::class,'dailyRecords']);
+
     Route::post('/post/product',[ProductController::class,'addProduct']);
     Route::get('/fetch/product',[ProductController::class,'retrieveProduct']);
     Route::post('/post/updateProduct',[ProductController::class,'updateProduct']);
@@ -126,4 +135,4 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
     
  
-});
+// });
