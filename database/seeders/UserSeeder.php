@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
                 ],
                 [
                     'username'=>'rider',
-                    'role'=> 'rider',
+                    'role'=> 'driver',
                     'phone'=> '09362680541',
                     'password'=> Hash::make('R1der_halaya'),
                     'remember_token'=>Str::random(10)
