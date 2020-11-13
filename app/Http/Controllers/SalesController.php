@@ -159,7 +159,7 @@ class SalesController extends Controller
         return response()->json($yearlySales);
     }
     public function selectYear(Request $request){
-        $selectingYear = Order::select(\DB::raw("Year(`preferred_delivery_date`) as `years`"))
+        $selectingYear = Order::select(\DB::raw('Year(`preferred_delivery_date`) as `years`'))
         ->groupBy('years')
         ->get();
         return response()->json($selectingYear);

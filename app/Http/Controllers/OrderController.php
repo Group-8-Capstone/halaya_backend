@@ -20,7 +20,6 @@ class OrderController extends Controller
         $data=$request->all();
         $post->customer_id = $data['customer_id'];
         $post->receiver_name = $data['receiver_name'];
-        // $post->customer_address = $data['address'];
         $post->building_or_street = $data['building_street'];
         $post->barangay = $data['barangay'];
         $post->city_or_municipality = $data['city_municipality'];
@@ -90,7 +89,7 @@ class OrderController extends Controller
     }
     return $total;
   
-}
+  }
 
     public function fetchDelivery(Request $request){
       return new OrderCollection(Order::where('order_status', 'On order')
@@ -106,7 +105,7 @@ class OrderController extends Controller
       // ->orderBy('distance', 'asc')->get();
       // $order = DB::table('orders')->select('*')->where('order_status', 'On order' AND 'delivery_date', Carbon::today()->toDateString())->get();
       // $test = $order->delivery_date;
-      //$order = DB:: table('orders')
+      //$order = DB:: table('orders'h)
       //->whereColumn([
        // ['order_status', 'On order']
      // ]) 
@@ -140,37 +139,12 @@ class OrderController extends Controller
       return response()->json($data);
   }
 
-  // public function toDeliver(){
-  //   $post = Order::where('order_status', 'On order')
-  //     ->where('preferred_delivery_date', Carbon::today()->toDateString())
-  //     ->orderBy('distance', 'asc')
-  //     ->get();
-      
-  //     $start = 0;
-  //     $stop = 5;
-  //     $data = [];
-  //     $break = false;
-  //     for($i = 0; $i < 5; $i++){
-  //       $z = 0;
-  //       $tempData = [];
-  //       if($break){
-  //         break;
-  //       }
-  //       for($x = $start; $x < $stop; $x++){
-  //         if($x < sizeof($order)){
-  //           $z = $x;
-  //           array_push($tempData, $order[$x]);
-  //         }else{
-  //           $break = true;
-  //           // \Log::info($x);
-  //           break;
-  //         }
-  //       }
-  //       array_push($data, $tempData);
-  //       $start = $z + 1;
-  //       $stop = $stop + 5;
-  // }
-  // }                                         
+  public function toDeliver(){
+    $post = Order::where('order_status', 'On order')
+      ->where('preferred_delivery_date', Carbon::today()->toDateString())
+      ->orderBy('distance', 'asc')
+      ->get();
+  }
     public function updateCancelledStatus(Request $request, $id)
     {
       $newItem =  $request->all();
@@ -272,10 +246,6 @@ class OrderController extends Controller
 
     public function updateConfirmStatus(Request $request, $id){
       $newItem =  $request->all();
-      // $res = Ingredients::where('id', $id )
-      //               ->update([
-      //                   'order_status' => 'On order',
-      //               ]);
       $post = Order::firstOrCreate(['id' => $id]);
       $post->order_status = 'On order';
       $post->save();
