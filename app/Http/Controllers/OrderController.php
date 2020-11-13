@@ -90,12 +90,22 @@ class OrderController extends Controller
     return $total;
   
   }
+  public function groupBrgy()
+  {
+    return new OrderCollection(Order::where('order_status', 'Delivered')
+    ->where('preferred_delivery_date', Carbon::today()->toDateString())
+    ->orderBy('distance', 'asc')
+    ->get());
 
-    public function fetchDelivery(Request $request){
-      return new OrderCollection(Order::where('order_status', 'On order')
-      ->where('preferred_delivery_date', Carbon::today()->toDateString())
-      ->orderBy('distance', 'asc')
-      ->get());
+    
+  }
+
+
+  public function fetchDelivery(Request $request){
+    return new OrderCollection(Order::where('order_status', 'On order')
+    ->where('preferred_delivery_date', Carbon::today()->toDateString())
+    ->orderBy('distance', 'asc')
+    ->get());
       
       // ->where('preferred_delivery_date', '2020-10-27')->get());
       // ->orderBy('delivery_date', 'asc')->get());      
