@@ -49,13 +49,18 @@ class UserController extends Controller
     if ($validator->fails()) {
       return response()->json($validator->errors()->toJson(), 400);
     }
-
-    $user = User::create([
-      'username' => $request->get('uName'),
-      'phone' => $request->get('phone'),
-      'role' => $request->get('role'),
-      'password' => Hash::make($request->get('pass')),
-    ]);
+    try{
+      $user = User::create([
+        'username' => $request->get('uName'),
+        'phone' => $request->get('phone'),
+        'role' => $request->get('role'),
+        'password' => Hash::make($request->get('pass')),
+      ]);
+    }catch(\PDOException $e){
+      if($e->errorInfo[1] == 1062){
+        return response()->json(["message"=>"invalid_username", "status"=>"409"]);
+      }
+    }
 
     $token = JWTAuth::fromUser($user);
     $message = [];
