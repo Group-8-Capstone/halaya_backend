@@ -10,24 +10,33 @@ use App\Models\DeleveredOrder;
 class SalesController extends Controller
 {
     public function index(Request $request){
-        $Date = date("Y-m-d"); //current date
-        $year = $request->all();
-        $Delivered = Order::select(\DB::raw('sum(ubeHalayaJar_qty)as total'), 'preferred_delivery_date')
-        ->where([
-            ['order_status', '=','Delivered'],
-            // ['delivery_date', '<=', $Date],
-            [\DB::raw('Year(`preferred_delivery_date`)'), '=', $year['year']],
-            [\DB::raw('Month(`preferred_delivery_date`)'), '=', $year['month']]
-        ])
-        ->groupBy('preferred_delivery_date')
-        ->orderBy('preferred_delivery_date', 'ASC')
-        ->get();
+        try{
+            $Date = date("Y-m-d"); //current date
+            $year = $request->all();
+            $Delivered = Order::select(\DB::raw('sum(ubeHalayaJar_qty)as total'), 'preferred_delivery_date')
+            ->where([
+                ['order_status', '=','Delivered'],
+                // ['delivery_date', '<=', $Date],
+                [\DB::raw('Year(`preferred_delivery_date`)'), '=', $year['year']],
+                [\DB::raw('Month(`preferred_delivery_date`)'), '=', $year['month']]
+            ])
+            ->groupBy('preferred_delivery_date')
+            ->orderBy('preferred_delivery_date', 'ASC')
+            ->get();
+        }catch(\Exception $e){
+            return response()->json(["message"=>"invalid", "data"=>$e]);
+        }
+        
         // $Date = $Delivered[0]['delivery_date'];
         return response($Delivered);
+    
+
+        
         // return response()->json($Delivered);
     }
     //Daily for Tubs
     public function indexTub(Request $request){
+        try{
         $Date = date("Y-m-d"); //current date
         $year = $request->all();
         $Delivered = Order::select(\DB::raw('sum(ubeHalayaTub_qty)as total'), 'preferred_delivery_date')
@@ -40,12 +49,16 @@ class SalesController extends Controller
         ->groupBy('preferred_delivery_date')
         ->orderBy('preferred_delivery_date', 'ASC')
         ->get();
+        }catch(\Exception $e){
+            return response()->json(["message"=>"invalid", "data"=>$e]);
         // $Date = $Delivered[0]['delivery_date'];
+        }
         return response($Delivered);
         // return response()->json($Delivered);
     }
 
     public function indexWeekly(Request $request){
+       try{
         $req = $request->all();
 
         /**Getting the first delivery of the year */
@@ -71,6 +84,9 @@ class SalesController extends Controller
 
             array_push($weeklyData,$getWeeklySales);
         }
+       }catch(\Exception $e){
+            return response()->json(["message"=>"invalid", "data"=>$e]);
+       }
             // array_push($name of array, $data)
         
         return response()->json($weeklyData);
@@ -79,6 +95,7 @@ class SalesController extends Controller
     
     }
     public function indexWeeklyTub(Request $request){
+       try{
         $req = $request->all();
 
         /**Getting the first delivery of the year */
@@ -106,62 +123,92 @@ class SalesController extends Controller
         }
             // array_push($name of array, $data)
         
+       }catch(\Exception $e){
+             return response()->json(["message"=>"invalid", "data"=>$e]);
+       }
         return response()->json($weeklyData);
-        
-        
-
     }
+
+
     public function getStartAndEndWeek($week, $year) 
 {
     //Below gives week from mon to sun
-    $range = date("W") - $week ; // first day the delivery to the present
-    $weeks = [];
-    $dto = new \DateTime();
-    $dto->setISODate($year, $week)->modify('-1 days');    
-    for($i = 0; $i <= $range; $i++) {               
+    try{
+        $range = date("W") - $week ; // first day the delivery to the present
+        $weeks = [];
+        $dto = new \DateTime();
+        $dto->setISODate($year, $week)->modify('-1 days');    
+        for($i = 0; $i <= $range; $i++) {               
         $weeks[$i]['start'] = $dto->format('Y-m-d');        
         $dto->modify('+6 days');        
         $weeks[$i]['end'] = $dto->format('Y-m-d');        
         $dto->modify('+1 days');
     }
+    }catch(\Exception $e){
+        return response()->json(["message"=>"invalid", "data"=>$e]);
+    }
     return $weeks;
 }
     public function indexMonthly(Request $request){
+        try{
         $year = $request->all();
         $monthlySales = Order::select(\DB::raw("sum(`ubeHalayaJar_qty`) as `totals`")
         , \DB::raw("Month(`preferred_delivery_date`) as `months`"))
         ->whereYear('preferred_delivery_date', '=', $year['year'])
         ->groupBy('months')
         ->get();
+        }catch(\Exception $e){
+            return response()->json(["message"=>"invalid", "data"=>$e]);
+        }
         return response()->json($monthlySales);
+        
     }
     public function indexMonthlyTub(Request $request){
+        try{
         $year = $request->all();
         $monthlySales = Order::select(\DB::raw("sum(`ubeHalayaTub_qty`) as `totals`")
         , \DB::raw("Month(`preferred_delivery_date`) as `months`"))
         ->whereYear('preferred_delivery_date', '=', $year['year'])
         ->groupBy('months')
         ->get();
+        }catch(\Exception $e){
+            return response()->json(["message"=>"invalid", "data"=>$e]);
+        }
         return response()->json($monthlySales);
+        
+    
     }
+
     public function indexYearly(Request $request){
+    try{
         $yearlySales = Order::select(\DB::raw("sum(`ubeHalayaJar_qty`) as `totals`"),
         \DB::raw("Year(`preferred_delivery_date`) as `years`"))
         ->groupBy('years')
         ->get();
+    }catch(\Exception $e){
+        return response()->json(["message"=>"invalid", "data"=>$e]);
+    }
         return response()->json($yearlySales);
     }
     public function indexYearlyTub(Request $request){
+        try{
         $yearlySales = Order::select(\DB::raw("sum(`ubeHalayaTub_qty`) as `totals`"),
         \DB::raw("Year(`preferred_delivery_date`) as `years`"))
         ->groupBy('years')
         ->get();
+        }catch(\Exception $e){
+            return response()->json(["message"=>"invalid", "data"=>$e]);
+        }
         return response()->json($yearlySales);
     }
     public function selectYear(Request $request){
+        try{
         $selectingYear = Order::select(\DB::raw('Year(`preferred_delivery_date`) as `years`'))
         ->groupBy('years')
         ->get();
+        }catch(\Exception $e){
+            return response()->json(["message"=>"invalid", "data"=>$e]);
+        }
         return response()->json($selectingYear);
     }
 
