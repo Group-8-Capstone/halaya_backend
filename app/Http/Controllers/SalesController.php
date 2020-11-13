@@ -13,12 +13,12 @@ class SalesController extends Controller
         try{
             $Date = date("Y-m-d"); //current date
             $year = $request->all();
-            $Delivered = Order::select(\DB::raw('sum(ubeHalayaJar_qty)as total'), 'preferred_delivery_date')
+            $Delivered = Order::select(\DB::raw("sum(ubeHalayaJar_qty)as total"), 'preferred_delivery_date')
             ->where([
                 ['order_status', '=','Delivered'],
                 // ['delivery_date', '<=', $Date],
-                [\DB::raw('Year(`preferred_delivery_date`)'), '=', $year['year']],
-                [\DB::raw('Month(`preferred_delivery_date`)'), '=', $year['month']]
+                [\DB::raw("EXTRACT(YEAR FROM preferred_delivery_date)"), '=', $year['year']],
+                [\DB::raw("EXTRACT(MONTH FROM preferred_delivery_date)"), '=', $year['month']]
             ])
             ->groupBy('preferred_delivery_date')
             ->orderBy('preferred_delivery_date', 'ASC')
@@ -39,12 +39,12 @@ class SalesController extends Controller
         try{
         $Date = date("Y-m-d"); //current date
         $year = $request->all();
-        $Delivered = Order::select(\DB::raw('sum(ubeHalayaTub_qty)as total'), 'preferred_delivery_date')
+        $Delivered = Order::select(\DB::raw("sum(ubeHalayaTub_qty)as total"), 'preferred_delivery_date')
         ->where([
             ['order_status', '=','Delivered'],
             // ['delivery_date', '<=', $Date],
-            [\DB::raw('Year(`preferred_delivery_date`)'), '=', $year['year']],
-            [\DB::raw('Month(`preferred_delivery_date`)'), '=', $year['month']]
+            [\DB::raw("EXTRACT(YEAR FROM preferred_delivery_date)"), '=', $year['year']],
+            [\DB::raw('EXTRACT(MONTH FROM preferred_delivery_date)'), '=', $year['month']]
         ])
         ->groupBy('preferred_delivery_date')
         ->orderBy('preferred_delivery_date', 'ASC')
@@ -64,7 +64,7 @@ class SalesController extends Controller
         /**Getting the first delivery of the year */
 
         $firstDelivery = Order::select('preferred_delivery_date')
-        ->where(\DB::raw('Year(`preferred_delivery_date`)'), '=', $request['year'])
+        ->where(\DB::raw('EXTRACT(YEAR FROM preferred_delivery_date)'), '=', $request['year'])
         ->first();
 
         /** Ends here */
@@ -75,7 +75,7 @@ class SalesController extends Controller
         for($i = 0; $i < sizeof($weekArray); $i++){
             \Log::info('Order::select sum(ubeHalayaJar_qty)->where([[preferred_delivery_date, >=, ' . $weekArray[$i]['start'] . ' ], [preferred_delivery_date, <=, '. $weekArray[$i]['end'] .' ])');
 
-            $getWeeklySales =Order::select(\DB::raw("sum(`ubeHalayaJar_qty`) as totals"))
+            $getWeeklySales =Order::select(\DB::raw("sum(ubeHalayaJar_qty) as totals"))
             ->where([
                 ["preferred_delivery_date", ">=", $weekArray[$i]['start']],
                 ["preferred_delivery_date", "<=", $weekArray[$i]['end']]
@@ -101,7 +101,7 @@ class SalesController extends Controller
         /**Getting the first delivery of the year */
 
         $firstDelivery = Order::select('preferred_delivery_date')
-        ->where(\DB::raw('Year(`preferred_delivery_date`)'), '=', $request['year'])
+        ->where(\DB::raw('EXTRACT(YEAR FROM preferred_delivery_date)'), '=', $request['year'])
         ->first();
 
         /** Ends here */
@@ -112,7 +112,7 @@ class SalesController extends Controller
         for($i = 0; $i < sizeof($weekArray); $i++){
             \Log::info('Order::select sum(ubeHalayaTub_qty)->where([[preferred_delivery_date, >=, ' . $weekArray[$i]['start'] . ' ], [preferred_delivery_date, <=, '. $weekArray[$i]['end'] .' ])');
 
-            $getWeeklySales =Order::select(\DB::raw("sum(`ubeHalayaTub_qty`) as totals"))
+            $getWeeklySales =Order::select(\DB::raw("sum(ubeHalayaTub_qty) as totals"))
             ->where([
                 ["preferred_delivery_date", ">=", $weekArray[$i]['start']],
                 ["preferred_delivery_date", "<=", $weekArray[$i]['end']]
@@ -152,8 +152,8 @@ class SalesController extends Controller
     public function indexMonthly(Request $request){
         try{
         $year = $request->all();
-        $monthlySales = Order::select(\DB::raw("sum(`ubeHalayaJar_qty`) as `totals`")
-        , \DB::raw("Month(`preferred_delivery_date`) as `months`"))
+        $monthlySales = Order::select(\DB::raw("sum(ubeHalayaJar_qty) as totals")
+        , \DB::raw("EXTRACT(MONTH FROM preferred_delivery_date) as months"))
         ->whereYear('preferred_delivery_date', '=', $year['year'])
         ->groupBy('months')
         ->get();
@@ -166,8 +166,8 @@ class SalesController extends Controller
     public function indexMonthlyTub(Request $request){
         try{
         $year = $request->all();
-        $monthlySales = Order::select(\DB::raw("sum(`ubeHalayaTub_qty`) as `totals`")
-        , \DB::raw("Month(`preferred_delivery_date`) as `months`"))
+        $monthlySales = Order::select(\DB::raw("sum(ubeHalayaTub_qty) as totals")
+        , \DB::raw("EXTRACT(MONTH FROM preferred_delivery_date) as months"))
         ->whereYear('preferred_delivery_date', '=', $year['year'])
         ->groupBy('months')
         ->get();
@@ -181,8 +181,8 @@ class SalesController extends Controller
 
     public function indexYearly(Request $request){
     try{
-        $yearlySales = Order::select(\DB::raw("sum(`ubeHalayaJar_qty`) as `totals`"),
-        \DB::raw("Year(`preferred_delivery_date`) as `years`"))
+        $yearlySales = Order::select(\DB::raw("sum(ubeHalayaJar_qty) as totals"),
+        \DB::raw("EXTRACT(YEAR FROM preferred_delivery_date) as years"))
         ->groupBy('years')
         ->get();
     }catch(\Exception $e){
@@ -192,8 +192,8 @@ class SalesController extends Controller
     }
     public function indexYearlyTub(Request $request){
         try{
-        $yearlySales = Order::select(\DB::raw("sum(`ubeHalayaTub_qty`) as `totals`"),
-        \DB::raw("Year(`preferred_delivery_date`) as `years`"))
+        $yearlySales = Order::select(\DB::raw("sum(ubeHalayaTub_qty) as totals"),
+        \DB::raw("EXTRACT(YEAR FROM preferred_delivery_date) as years"))
         ->groupBy('years')
         ->get();
         }catch(\Exception $e){
@@ -203,7 +203,7 @@ class SalesController extends Controller
     }
     public function selectYear(Request $request){
         try{
-        $selectingYear = Order::select(\DB::raw('Year(`preferred_delivery_date`) as `years`'))
+        $selectingYear = Order::select(\DB::raw('EXTRACT(YEAR FROM preferred_delivery_date) as years'))
         ->groupBy('years')
         ->get();
         }catch(\Exception $e){
