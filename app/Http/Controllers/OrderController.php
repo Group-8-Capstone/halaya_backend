@@ -125,37 +125,60 @@ public function fetchDelivery(Request $request){
   //     return response()->json(compact('data'));
   // }
 
-  // public function toDeliver(){
-  //   $post = Order::where('order_status', 'On order')
-  //     ->where('preferred_delivery_date', Carbon::today()->toDateString())
-  //     ->orderBy('distance', 'asc')
-  //     ->get();
+//     public function fetchDelivery(Request $request){
+//       return new OrderCollection(Order::where('order_status', 'On order')
+//       ->where('preferred_delivery_date', Carbon::today()->toDateString())
+//       ->orderBy('distance', 'asc')
+//       ->get());
       
-  //     $start = 0;
-  //     $stop = 5;
-  //     $data = [];
-  //     $break = false;
-  //     for($i = 0; $i < 5; $i++){
-  //       $z = 0;
-  //       $tempData = [];
-  //       if($break){
-  //         break;
-  //       }
-  //       for($x = $start; $x < $stop; $x++){
-  //         if($x < sizeof($order)){
-  //           $z = $x;
-  //           array_push($tempData, $order[$x]);
-  //         }else{
-  //           $break = true;
-  //           // \Log::info($x);
-  //           break;
-  //         }
-  //       }
-  //       array_push($data, $tempData);
-  //       $start = $z + 1;
-  //       $stop = $stop + 5;
-  // }
-  // }                                         
+      // ->where('preferred_delivery_date', '2020-10-27')->get());
+      // ->orderBy('delivery_date', 'asc')->get());      
+      // ->orderBy('delivery_date', 'asc')->get());
+      // dd(Carbon::today()->toDateString());
+      // $order = Order::where('order_status', 'On order' AND 'delivery_date', Carbon::today()->toDateString())
+      // ->orderBy('distance', 'asc')->get();
+      // $order = DB::table('orders')->select('*')->where('order_status', 'On order' AND 'delivery_date', Carbon::today()->toDateString())->get();
+      // $test = $order->delivery_date;
+      //$order = DB:: table('orders'h)
+      //->whereColumn([
+       // ['order_status', 'On order']
+     // ]) 
+     
+    //  dd($order);
+    //   $start = 0;
+    //   $stop = 5;
+    //   $data = [];
+    //   $break = false;
+    //   for($i = 0; $i < 5; $i++){
+    //     $z = 0;
+    //     $tempData = [];
+    //     if($break){
+    //       break;
+    //     }
+    //     for($x = $start; $x < $stop; $x++){
+    //       if($x < sizeof($order)){
+    //         $z = $x;
+    //         array_push($tempData, $order[$x]);
+    //       }else{
+    //         $break = true;
+    //         // \Log::info($x);
+    //         break;
+    //       }
+    //     }
+    //     array_push($data, $tempData);
+    //     $start = $z + 1;
+    //     $stop = $stop + 5;
+    //     \Log::info($start);
+    //   }
+//       return response()->json($data);
+//   }
+
+  public function toDeliver(){
+    $post = Order::where('order_status', 'On order')
+      ->where('preferred_delivery_date', Carbon::today()->toDateString())
+      ->orderBy('distance', 'asc')
+      ->get();
+  }
     public function updateCancelledStatus(Request $request, $id)
     {
       $newItem =  $request->all();
