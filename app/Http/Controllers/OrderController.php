@@ -94,10 +94,11 @@ class OrderController extends Controller
 }
 public function fetchDelivery(Request $request){
   $data = Order::where('order_status', 'On order')
+  ->orWhere('order_status', 'Canceled')
   ->where('preferred_delivery_date', Carbon::today()->toDateString())
   ->orderBy('distance', 'asc')
   ->get();
-  \Log::info(Carbon::now()->toDateString());
+  // \Log::info($data);
   // $barangay_array = [];
   // $count = 1; 
   // foreach($data as $item){
