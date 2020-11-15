@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-// use App\Http\Resources\DeliveryCollection;
 use App\Http\Resources\OrderCollection;
 use Carbon\Carbon;
 
@@ -21,7 +20,6 @@ class OrderController extends Controller
         $data=$request->all();
         $post->customer_id = $data['customer_id'];
         $post->receiver_name = $data['receiver_name'];
-        // $post->customer_address = $data['address'];
         $post->building_or_street = $data['building_street'];
         $post->barangay = $data['barangay'];
         $post->city_or_municipality = $data['city_municipality'];
@@ -92,93 +90,19 @@ class OrderController extends Controller
     return $total;
   
 }
+
 public function fetchDelivery(Request $request){
-  $data = Order::where('order_status', 'On order')
-  ->orWhere('order_status', 'Canceled')
-  ->where('preferred_delivery_date', Carbon::today()->toDateString())
+  $data = Order::where('preferred_delivery_date', Carbon::today()->toDateString())
+  ->where( function($query) {
+    $query->where('order_status', 'On order')
+    ->orWhere('order_status', 'Canceled')
+    ->orWhere('order_status', 'Delivered');
+  })
   ->orderBy('distance', 'asc')
   ->get();
-  // \Log::info($data);
-  // $barangay_array = [];
-  // $count = 1; 
-  // foreach($data as $item){
-  //   $bar = [];
-  //   if ($item->barangay == $data[$count]->barangay){
-  //     array_push($bar, $item);
-  //     // dd($bar);
-  //   } 
-  //   array_push($barangay_array,$bar);
-  //   $count++;
-    
-  //   // dd($bar);
-  // }
-
-  // dd($barangay_array);
   return response()->json(compact('data'));
 }
 
-  //   public function fetchDelivery(Request $request){
-  //     return new OrderCollection(Order::where('order_status', 'On order')
-  //     ->where('preferred_delivery_date', Carbon::today()->toDateString())
-  //     ->orderBy('distance', 'asc')
-  //     ->get());
-  //     return response()->json(compact('data'));
-  // }
-
-//     public function fetchDelivery(Request $request){
-//       return new OrderCollection(Order::where('order_status', 'On order')
-//       ->where('preferred_delivery_date', Carbon::today()->toDateString())
-//       ->orderBy('distance', 'asc')
-//       ->get());
-      
-      // ->where('preferred_delivery_date', '2020-10-27')->get());
-      // ->orderBy('delivery_date', 'asc')->get());      
-      // ->orderBy('delivery_date', 'asc')->get());
-      // dd(Carbon::today()->toDateString());
-      // $order = Order::where('order_status', 'On order' AND 'delivery_date', Carbon::today()->toDateString())
-      // ->orderBy('distance', 'asc')->get();
-      // $order = DB::table('orders')->select('*')->where('order_status', 'On order' AND 'delivery_date', Carbon::today()->toDateString())->get();
-      // $test = $order->delivery_date;
-      //$order = DB:: table('orders'h)
-      //->whereColumn([
-       // ['order_status', 'On order']
-     // ]) 
-     
-    //  dd($order);
-    //   $start = 0;
-    //   $stop = 5;
-    //   $data = [];
-    //   $break = false;
-    //   for($i = 0; $i < 5; $i++){
-    //     $z = 0;
-    //     $tempData = [];
-    //     if($break){
-    //       break;
-    //     }
-    //     for($x = $start; $x < $stop; $x++){
-    //       if($x < sizeof($order)){
-    //         $z = $x;
-    //         array_push($tempData, $order[$x]);
-    //       }else{
-    //         $break = true;
-    //         // \Log::info($x);
-    //         break;
-    //       }
-    //     }
-    //     array_push($data, $tempData);
-    //     $start = $z + 1;
-    //     $stop = $stop + 5;
-    //     \Log::info($start);
-    //   }
-//       return response()->json($data);
-//   }
-
-  public function toDeliver(){
-    $post = Order::where('order_status', 'On order')
-      ->where('preferred_delivery_date', Carbon::today()->toDateString())
-      ->orderBy('distance', 'asc')
-      ->get();
-  }
     public function updateCancelledStatus(Request $request, $id)
     {
       $newItem =  $request->all();
@@ -201,8 +125,6 @@ public function fetchDelivery(Request $request){
       $newItem =  $request->all();
       $post = Order::firstOrCreate(['id' => $request->id]); 
       $post->receiver_name = $request['receiver_name'];
-      // $post->customer_address = $request['customer_address'];
-      // $post->contact_number = $request['contact_number'];
       $post->building_or_street = $request['building_or_street'];
       $post->barangay = $request['barangay'];
       $post->city_or_municipality = $request['city_or_municipality'];
@@ -248,36 +170,6 @@ public function fetchDelivery(Request $request){
       return response()->json('successfully deleted');
     }
 
-    public function saveDeliveredOrder(Request $request, $id){
-      try{
-        $test = DB::table('delivered_order')
-            ->select('*')
-            ->where('order_id', '=', $id)
-            ->get();
-        
-        if(sizeof($test) == 0){
-          $post = new Order;
-          $data=$request->all();
-          $post->order_id = $data['order_id'];
-          $post->customer_name = $data['name'];
-          $post->delivery_address = $data['address'];
-          $post->halayaJar_qty = $data['halaya_qty']; 
-          $post->ubechi_qty = $data['ubechi_qty']; 
-          $post->delivery_date = $data['deliveryDate'];
-          $post->order_status = $data['orderStatus'];
-          $post->distance = $data['distance'];
-          $post->save();
-          DB::disconnect('wawenshalaya');
-          return 'success';
-        }else {
-          return 'already exist';
-        }
-      } catch (\Exception $e){
-        return "failed";
-        return response()->json(['error'=>$e->getMessage()]);
-      }
-    }
-
     public function updateConfirmStatus(Request $request, $id){
       try {
         $newItem =  $request->all();
@@ -286,15 +178,6 @@ public function fetchDelivery(Request $request){
         $post->save();
         return response()->json(compact('post'));
       } catch (\Exception $e) {
-        return response()->json(['error'=>$e->getMessage()]);
-      }
-    }
-
-    public function getRange(){
-      try {
-        $range = DeliveryRangeQty::select('*')->get();
-        return response()->json(compact('range'));
-      } catch (\Excception $e) {
         return response()->json(['error'=>$e->getMessage()]);
       }
     }

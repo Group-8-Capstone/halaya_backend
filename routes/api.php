@@ -44,7 +44,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('/posts/delivered', [OrderController::class, 'fetchDelivered']);
     Route::get('/posts/delivery', [OrderController::class, 'fetchDelivery']);
     Route::get('/post/edit/{id}', [OrderController::class, 'editOrder']);
-    Route::post('/post/deliveredOrder/{id}', [OrderController::class, 'saveDeliveredOrder']);
+    // Route::post('/post/deliveredOrder/{id}', [OrderController::class, 'saveDeliveredOrder']);
     
     Route::post('/post/updateStat/{id}', [OrderController::class, 'updateStatus']);
     Route::delete('/post/delete/{id}', [OrderController::class, 'deleteOrder']);
@@ -102,8 +102,8 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('/getAllIngredients', [IngredientsController::class, 'getAllIngredients']);
     Route::get('user', [UserController::class, 'getAuthenticatedUser']);
     Route::get('closed', [DataConroller::class, 'closed']);
-    Route::get('/posts/to-deliver', [OrderController::class, 'toDeliver']);
-    Route::get('/fetch/delivery-range', [OrderController::class, 'getRange']);
+    // Route::get('/posts/to-deliver', [OrderController::class, 'toDeliver']);
+    // Route::get('/fetch/delivery-range', [OrderController::class, 'getRange']);
 
     //Product
     Route::post('/editTub/{id}',[ProductController::class,'editTub']);
