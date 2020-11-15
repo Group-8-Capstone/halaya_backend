@@ -33,7 +33,8 @@ Route::post('register', [UserController::class, 'register']);
 Route::post('login', [UserController::class, 'authenticate']);
 Route::get('open', [DataController::class, 'open']);
 
-// Route::group(['middleware' => ['jwt.verify']], function () {
+
+Route::group(['middleware' => ['jwt.verify']], function () {
     //Order Controller
     Route::post('/post/update', [OrderController::class, 'updateOrder']);
     Route::post('/post/createOrder', [OrderController::class, 'createOrder']);
@@ -102,6 +103,7 @@ Route::get('open', [DataController::class, 'open']);
     Route::get('user', [UserController::class, 'getAuthenticatedUser']);
     Route::get('closed', [DataConroller::class, 'closed']);
     Route::get('/posts/to-deliver', [OrderController::class, 'toDeliver']);
+    Route::get('/fetch/delivery-range', [OrderController::class, 'getRange']);
 
     //Product
     Route::post('/editTub/{id}',[ProductController::class,'editTub']);
@@ -131,4 +133,4 @@ Route::get('open', [DataController::class, 'open']);
 
     
  
-// });
+});
