@@ -12,6 +12,6 @@ class IngredientsAmount extends Model
     protected $table = 'ingredients_amount';
     use SoftDeletes;
     protected $fillable = [
-        'ingredients_name', 'ingredients_need_amount', 'ingredients_category'
+        'ingredients_name', 'ingredients_need_amount','ingredients_unit', 'ingredients_category'
     ]; 
 }
