@@ -33,7 +33,6 @@ Route::post('register', [UserController::class, 'register']);
 Route::post('login', [UserController::class, 'authenticate']);
 Route::get('open', [DataController::class, 'open']);
 
-
 Route::group(['middleware' => ['jwt.verify']], function () {
     //Order Controller
     Route::post('/post/update', [OrderController::class, 'updateOrder']);
