@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Order extends Model
 {
@@ -24,6 +25,15 @@ class Order extends Model
         'distance',
         'order_status',
     ];
+
+    protected $casts = [
+        'preferred_delivery_date' => 'date'
+    ];
+
+    // public function getPreferredDeliveryDateAttribute($date)
+    // {
+    //     return Carbon::parse($date);
+    // }
 }
 
 
