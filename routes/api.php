@@ -142,3 +142,4 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
 //test
 Route::post('/sales/testing', [SalesController::class, 'test']);
+
