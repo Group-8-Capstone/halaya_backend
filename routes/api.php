@@ -83,14 +83,15 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::post('/post/saveRealNumbers', [IngredientsController::class, 'saveRealAmount']);
     Route::post('/post/neededValue', [IngredientsController::class, 'addEstimatedAmount']);
     Route::post('/post/updateNewEstimatedValue', [IngredientsController::class, 'updateEstimatedValue']);
+    Route::get('/fetchUsedIng', [IngredientsController::class, 'fetchUsedIng']);
 
     Route::get('/fetch/estimatedValue', [IngredientsController::class, 'fetchEstimatedValue']);
     Route::get('/post/updateEstimatedValue/{id}', [IngredientsController::class, 'editEstimatedValue']);
     Route::get('/post/editStock/{id}', [IngredientsController::class, 'editStockIngredients']);
     Route::get('/fetch/stock', [IngredientsController::class, 'fetchStock']);
     Route::get('/getHalayaIngredients', [IngredientsController::class, 'getHalayaIngredients']);
-    Route::get('/getButchiIngredients', [IngredientsController::class, 'getButchiIngredients']);
-    Route::get('/getIceCreamIngredients', [IngredientsController::class, 'getIceCreamIngredients']);
+    // Route::get('/getButchiIngredients', [IngredientsController::class, 'getButchiIngredients']);
+    // Route::get('/getIceCreamIngredients', [IngredientsController::class, 'getIceCreamIngredients']);
     Route::get('/fetch/ingredientsName', [IngredientsController::class, 'fetchIngredientsName']);
     Route::delete('/softDeleteIngredients/{id}', [IngredientsController::class, 'softDeleteIngredients']);
     Route::delete('/softDeleteStockIngredients/{id}', [IngredientsController::class, 'softDeleteStockIngredients']);
@@ -130,6 +131,8 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('/retrieveAccount',[ProfileController::class,'fetchAccount']);
     Route::get('/fetchProfile/{id}',[ProfileController::class,'fetchProfile']);
     Route::post('/ProfilePicUpdate/{id}',[ProfileController::class,'ProfilePicUpdate']);
+    Route::post('/passwordUpdate/{id}',[ProfileController::class,'passwordUpdate']);
+
 
     Route::post('/verify_auth',[UserController::class,'AuthenticationGuard']);
 
