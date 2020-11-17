@@ -47,6 +47,7 @@ class IngredientsController extends Controller
         try {
             $ing->ingredients_id = $getID;
             $ing->used_ingredients_amount = $data['usedIngredientsAmount'];
+            $ing->ingredients_unit=$data['ingredientsUnit'];
             $ing->ingredients_name = $data['availableIngredients'];
             $ing->save();
 

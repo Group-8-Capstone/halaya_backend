@@ -17,6 +17,7 @@ class CreateUsedIngredientsTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('ingredients_id');
             $table->float('used_ingredients_amount');
+            $table->string('ingredients_unit');
             $table->string('ingredients_name');
             $table->timestamps();
         });
