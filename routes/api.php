@@ -33,6 +33,8 @@ Route::post('register', [UserController::class, 'register']);
 Route::post('login', [UserController::class, 'authenticate']);
 Route::get('open', [DataController::class, 'open']);
 
+Route::post('/sales/daily', [SalesController::class, 'index']);
+
 Route::group(['middleware' => ['jwt.verify']], function () {
     //Order Controller
     Route::post('/post/update', [OrderController::class, 'updateOrder']);
@@ -57,7 +59,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('/totalJar', [OrderController::class, 'totalJar']);
 
 //Sales Controller
-    Route::post('/sales/daily', [SalesController::class, 'index']);
+    // Route::post('/sales/daily', [SalesController::class, 'index']);
     Route::post('/sales/weekly', [SalesController::class, 'indexWeekly']);
     Route::post('/sales/monthly', [SalesController::class, 'indexMonthly']);
 
@@ -103,6 +105,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('closed', [DataConroller::class, 'closed']);
     // Route::get('/posts/to-deliver', [OrderController::class, 'toDeliver']);
     // Route::get('/fetch/delivery-range', [OrderController::class, 'getRange']);
+    
 
     //Product
     Route::post('/editTub/{id}',[ProductController::class,'editTub']);
@@ -133,3 +136,6 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     
  
 });
+
+//test
+Route::post('/sales/testing', [SalesController::class, 'test']);
