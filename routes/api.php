@@ -131,6 +131,8 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('/retrieveAccount',[ProfileController::class,'fetchAccount']);
     Route::get('/fetchProfile/{id}',[ProfileController::class,'fetchProfile']);
     Route::post('/ProfilePicUpdate/{id}',[ProfileController::class,'ProfilePicUpdate']);
+    Route::post('/passwordUpdate/{id}',[ProfileController::class,'passwordUpdate']);
+
 
     Route::post('/verify_auth',[UserController::class,'AuthenticationGuard']);
 
