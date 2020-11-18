@@ -9,56 +9,48 @@ use App\Models\DeleveredOrder;
 
 class SalesController extends Controller
 {
-    // public function test(Request $request){
-    //     try{
-    //         // $currentDate = date("Y-m-d"); //current date
-    //         $year = $request->all();
-    //         // dd($year);
-    //         // date('Y', strtotime($dateString))
-    //         $Delivered = Order::all()
-    //             ->filter(function($order){
-    //                 $currentDate = date("Y-m-d");
-    //                 $query1 = date('Y', strtotime($order->preferred_delivery_date)) == date('Y', strtotime($currentDate));
+    public function test(Request $request){
+        try{
+            $year = $request->all();
+            $Delivered = Order::all()
+                ->filter(function($order){
+                    $currentDate = date("Y-m-d");
+                    $query1 = date('Y', strtotime($order->preferred_delivery_date)) == date('Y', strtotime($currentDate));                   
+                    
+                    return $query1;
+                })
+                ->mapToGroups(function($order) use ($request){
+                    $query2 = [
+                        date('Y', strtotime($order->preferred_delivery_date)) => $order,
+                        date('M', strtotime($order->preferred_delivery_date)) => $order    
 
-    //                 return $query1;
-    //             })
-    //             ->mapToGroups(function($order) use ($request){
-    //                 // dd($order);
-    //                 $query2 = [
-    //                     date('Y', strtotime($order->preferred_delivery_date)) => $order
-    //                     date('M', strtotime($order->preferred_delivery_date)) => $order    
-
-    //             ];
-    //             // dd($query2);
-    //             return $query2;
-    //             //     return [
-    //             //         $order['preferred_delivery_date']->format($request) => $order      
-    //             // ];
-    //             })
-    //             ->mapToGroups(function($order,$choosenFilter){
-    //                 // dd($choosenFilter);
-    //                 return [
-    //                     $choosenFilter => $order->sum('ubeHalayaJar_qty')
-    //                 ];
+                    ];
+                // dd($query2['ubeHalayaJar_qty']);
+                return $query2;
+                })
+                ->mapToGroups(function($order,$choosenFilter){
+                    return [
+                        $choosenFilter => $order->sum('ubeHalayaJar_qty')
+                    ];
+                // dd($order);
+                })
+                ->map(function($order,$choosenFilter){
+                    return $order->first() ;  
+                })
+                ->sortKeys();
             
-    //             })
-    //             ->map(function($order,$choosenFilter){
-    //                 return $order->first() ;  
-    //             })
-    //             ->sortKeys();
-            
-    //             return response($Delivered);
-    //     } catch (\Exception $e){
-    //         return response()->json(["message"=>"invalid", "data"=>$e->getMessage()]);
-    //     }
-    // }
+                return response($Delivered);
+        } catch (\Exception $e){
+            return response()->json(["message"=>"invalid", "data"=>$e->getMessage()]);
+        }
+    }
     
     public function index(Request $request){
         try{
             $Date = date("Y-m-d"); //current date
             $year = $request->all();
 
-            $Delivered = Order::select(\DB::raw("sum(orders.ubeHalayaJar_qty)as total"), 'preferred_delivery_date')
+            $Delivered = Order::select(\DB::raw("sum(ubeHalayaJar_qty)as total"), 'preferred_delivery_date')
             ->where([
                 ['order_status', '=','Delivered'],
                 // ['delivery_date', '<=', $Date],
@@ -68,7 +60,8 @@ class SalesController extends Controller
             ->groupBy('preferred_delivery_date')
             ->orderBy('preferred_delivery_date', 'ASC')
             ->get();
-            
+
+            return response($Delivered);
         }catch(\Exception $e){
             return response()->json(["message"=>"invalid", "data"=>$e]);
         }
@@ -235,7 +228,7 @@ class SalesController extends Controller
         return response()->json(["message"=>"invalid", "data"=>$e]);
     }
         return response()->json($yearlySales);
-    }
+    }   
     public function indexYearlyTub(Request $request){
         try{
         $yearlySales = Order::select(\DB::raw("sum(ubeHalayaTub_qty) as totals"),
