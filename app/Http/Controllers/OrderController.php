@@ -189,11 +189,11 @@ class OrderController extends Controller
       return response()->json(compact('post'));
     }
 
-    public function fetchOnOrder($id){
+    public function fetchOnOrderStat($id){
       $post = new OrderCollection(Order::where('order_status', 'On order')
-      ->where('order_status', 'Pending')
-      ->orWhere('customer_id','=', $id)
-      
+      ->orWhere('order_status', 'Pending')
+      ->where('customer_id','=', $id)
+      ->orderBy('preferred_delivery_date')
       ->get());
       return response()->json(compact('post'));
     }
@@ -201,7 +201,7 @@ class OrderController extends Controller
     public function fetchDeliveredOrder($id){
       $post = new OrderCollection(Order::where('order_status', 'Delivered')
       ->where('customer_id','=', $id)
-      ->orderBy('preferred_deivery_date')
+      ->orderBy('preferred_delivery_date')
       ->get());
       return response()->json(compact('post'));
     }
