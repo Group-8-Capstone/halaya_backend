@@ -15,8 +15,8 @@ class CreateDeliveryRangeQty extends Migration
     {
         Schema::create('delivery_range_qty', function (Blueprint $table) {
             $table->id();
-            $table->integer('ubeHalayaTub');
-            $table->integer('ubeHalayaJar');
+            $table->integer('ubehalayatub');
+            $table->integer('ubehalayajar');
             $table->timestamps();
         });
     }

@@ -10,7 +10,7 @@ class DeliveryRangeQty extends Model
     protected $guarded = [];
     protected $table = 'delivery_range_qty';
     protected $fillable = [
-        'ubeHalayaTub',
-        'ubeHalayaJar'
+        'ubehalayatub',
+        'ubehalayajar'
     ];
 }
