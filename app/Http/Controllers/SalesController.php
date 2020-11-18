@@ -9,41 +9,6 @@ use App\Models\DeleveredOrder;
 
 class SalesController extends Controller
 {
-    // public function test(Request $request){
-    //     try{
-    //         $year = $request->all();
-    //         $Delivered = Order::all()
-    //             ->filter(function($order){
-    //                 $currentDate = date("Y-m-d");
-    //                 $query1 = date('Y', strtotime($order->preferred_delivery_date)) == date('Y', strtotime($currentDate));                   
-                    
-    //                 return $query1;
-    //             })
-    //             ->mapToGroups(function($order) use ($request){
-    //                 $query2 = [
-    //                     date('Y', strtotime($order->preferred_delivery_date)) => $order,
-    //                     date('M', strtotime($order->preferred_delivery_date)) => $order    
-
-    //                 ];
-    //             // dd($query2['ubeHalayaJar_qty']);
-    //             return $query2;
-    //             })
-    //             ->mapToGroups(function($order,$choosenFilter){
-    //                 return [
-    //                     $choosenFilter => $order->sum('ubeHalayaJar_qty')
-    //                 ];
-    //             // dd($order);
-    //             })
-    //             ->map(function($order,$choosenFilter){
-    //                 return $order->first() ;  
-    //             })
-    //             ->sortKeys();
-            
-    //             return response($Delivered);
-    //     } catch (\Exception $e){
-    //         return response()->json(["message"=>"invalid", "data"=>$e->getMessage()]);
-    //     }
-    // }
     
     public function index(Request $request){
         try{
@@ -54,8 +19,8 @@ class SalesController extends Controller
             ->where([
                 ['order_status', '=','Delivered'],
                 // ['delivery_date', '<=', $Date],
-                [\DB::raw("YEAR(preferred_delivery_date)"), '=', $year['year']],
-                [\DB::raw("MONTH (preferred_delivery_date)"), '=', $year['month']]
+                [\DB::raw("EXTRACT(YEAR FROM preferred_delivery_date)"), '=', $year['year']],
+                [\DB::raw("EXTRACT(MONTH FROM preferred_delivery_date)"), '=', $year['month']]
             ])
             ->groupBy('preferred_delivery_date')
             ->orderBy('preferred_delivery_date', 'ASC')

@@ -141,5 +141,5 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 });
 
 //test
-Route::post('/sales/testing', [SalesController::class, 'test']);
-
+// Route::post('/sales/testing', [SalesController::class, 'test']);
+// Route::get('/posts/delivery', [OrderController::class, 'fetchDelivery']);
