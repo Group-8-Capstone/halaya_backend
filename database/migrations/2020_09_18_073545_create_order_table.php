@@ -23,8 +23,8 @@ class CreateOrderTable extends Migration
             $table->string('barangay');
             $table->string('city_or_municipality');
             $table->string('province');
-            $table->smallInteger('ubeHalayaJar_qty');
-            $table->smallInteger('ubeHalayaTub_qty');
+            $table->smallInteger('ubehalayajar_qty');
+            $table->smallInteger('ubehalayatub_qty');
             $table->date('preferred_delivery_date');
             $table->double('distance');
             $table->string('order_status');
