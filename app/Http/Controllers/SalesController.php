@@ -11,36 +11,28 @@ class SalesController extends Controller
 {
     // public function test(Request $request){
     //     try{
-    //         // $currentDate = date("Y-m-d"); //current date
     //         $year = $request->all();
-    //         // dd($year);
-    //         // date('Y', strtotime($dateString))
     //         $Delivered = Order::all()
     //             ->filter(function($order){
     //                 $currentDate = date("Y-m-d");
-    //                 $query1 = date('Y', strtotime($order->preferred_delivery_date)) == date('Y', strtotime($currentDate));
-
+    //                 $query1 = date('Y', strtotime($order->preferred_delivery_date)) == date('Y', strtotime($currentDate));                   
+                    
     //                 return $query1;
     //             })
     //             ->mapToGroups(function($order) use ($request){
-    //                 // dd($order);
     //                 $query2 = [
-    //                     date('Y', strtotime($order->preferred_delivery_date)) => $order
+    //                     date('Y', strtotime($order->preferred_delivery_date)) => $order,
     //                     date('M', strtotime($order->preferred_delivery_date)) => $order    
 
-    //             ];
-    //             // dd($query2);
+    //                 ];
+    //             // dd($query2['ubeHalayaJar_qty']);
     //             return $query2;
-    //             //     return [
-    //             //         $order['preferred_delivery_date']->format($request) => $order      
-    //             // ];
     //             })
     //             ->mapToGroups(function($order,$choosenFilter){
-    //                 // dd($choosenFilter);
     //                 return [
     //                     $choosenFilter => $order->sum('ubeHalayaJar_qty')
     //                 ];
-            
+    //             // dd($order);
     //             })
     //             ->map(function($order,$choosenFilter){
     //                 return $order->first() ;  
@@ -58,7 +50,7 @@ class SalesController extends Controller
             $Date = date("Y-m-d"); //current date
             $year = $request->all();
 
-            $Delivered = Order::select(\DB::raw("sum(orders.ubeHalayaJar_qty)as total"), 'preferred_delivery_date')
+            $Delivered = Order::select(\DB::raw("sum(ubehalayajar_qty)as total"), 'preferred_delivery_date')
             ->where([
                 ['order_status', '=','Delivered'],
                 // ['delivery_date', '<=', $Date],
@@ -68,7 +60,8 @@ class SalesController extends Controller
             ->groupBy('preferred_delivery_date')
             ->orderBy('preferred_delivery_date', 'ASC')
             ->get();
-            
+
+            return response($Delivered);
         }catch(\Exception $e){
             return response()->json(["message"=>"invalid", "data"=>$e]);
         }
@@ -85,7 +78,7 @@ class SalesController extends Controller
         try{
         $Date = date("Y-m-d"); //current date
         $year = $request->all();
-        $Delivered = Order::select(\DB::raw("sum(ubeHalayaTub_qty)as total"), 'preferred_delivery_date')
+        $Delivered = Order::select(\DB::raw("sum(ubehalayatub_qty)as total"), 'preferred_delivery_date')
         ->where([
             ['order_status', '=','Delivered'],
             // ['delivery_date', '<=', $Date],
@@ -119,9 +112,9 @@ class SalesController extends Controller
         $weekArray = $this->getStartAndEndWeek($weekNumber,$currentYear);
         $weeklyData =[];
         for($i = 0; $i < sizeof($weekArray); $i++){
-            \Log::info('Order::select sum(ubeHalayaJar_qty)->where([[preferred_delivery_date, >=, ' . $weekArray[$i]['start'] . ' ], [preferred_delivery_date, <=, '. $weekArray[$i]['end'] .' ])');
+            \Log::info('Order::select sum(ubehalayajar_qty)->where([[preferred_delivery_date, >=, ' . $weekArray[$i]['start'] . ' ], [preferred_delivery_date, <=, '. $weekArray[$i]['end'] .' ])');
 
-            $getWeeklySales =Order::select(\DB::raw("sum(orders.ubeHalayaJar_qty) as totals"))
+            $getWeeklySales =Order::select(\DB::raw("sum(orders.ubehalayajar_qty) as totals"))
             ->where([
                 ["preferred_delivery_date", ">=", $weekArray[$i]['start']],
                 ["preferred_delivery_date", "<=", $weekArray[$i]['end']]
@@ -156,9 +149,9 @@ class SalesController extends Controller
         $weekArray = $this->getStartAndEndWeek($weekNumber,$currentYear);
         $weeklyData =[];
         for($i = 0; $i < sizeof($weekArray); $i++){
-            \Log::info('Order::select sum(ubeHalayaTub_qty)->where([[preferred_delivery_date, >=, ' . $weekArray[$i]['start'] . ' ], [preferred_delivery_date, <=, '. $weekArray[$i]['end'] .' ])');
+            \Log::info('Order::select sum(ubehalayatub_qty)->where([[preferred_delivery_date, >=, ' . $weekArray[$i]['start'] . ' ], [preferred_delivery_date, <=, '. $weekArray[$i]['end'] .' ])');
 
-            $getWeeklySales =Order::select(\DB::raw("sum(orders.ubeHalayaTub_qty) as totals"))
+            $getWeeklySales =Order::select(\DB::raw("sum(orders.ubehalayatub_qty) as totals"))
             ->where([
                 ["preferred_delivery_date", ">=", $weekArray[$i]['start']],
                 ["preferred_delivery_date", "<=", $weekArray[$i]['end']]
@@ -198,7 +191,7 @@ class SalesController extends Controller
     public function indexMonthly(Request $request){
         try{
         $year = $request->all();
-        $monthlySales = Order::select(\DB::raw("sum(orders.ubeHalayaJar_qty) as totals")
+        $monthlySales = Order::select(\DB::raw("sum(orders.ubehalayajar_qty) as totals")
         , \DB::raw("EXTRACT(MONTH FROM preferred_delivery_date) as months"))
         ->whereYear('preferred_delivery_date', '=', $year['year'])
         ->groupBy('months')
@@ -212,7 +205,7 @@ class SalesController extends Controller
     public function indexMonthlyTub(Request $request){
         try{
         $year = $request->all();
-        $monthlySales = Order::select(\DB::raw("sum(ubeHalayaTub_qty) as totals")
+        $monthlySales = Order::select(\DB::raw("sum(ubehalayatub_qty) as totals")
         , \DB::raw("EXTRACT(MONTH FROM preferred_delivery_date) as months"))
         ->whereYear('preferred_delivery_date', '=', $year['year'])
         ->groupBy('months')
@@ -227,7 +220,7 @@ class SalesController extends Controller
 
     public function indexYearly(Request $request){
     try{
-        $yearlySales = Order::select(\DB::raw("sum(orders.ubeHalayaJar_qty) as totals"),
+        $yearlySales = Order::select(\DB::raw("sum(orders.ubehalayajar_qty) as totals"),
         \DB::raw("EXTRACT(YEAR FROM preferred_delivery_date) as years"))
         ->groupBy('years')
         ->get();
@@ -235,10 +228,10 @@ class SalesController extends Controller
         return response()->json(["message"=>"invalid", "data"=>$e]);
     }
         return response()->json($yearlySales);
-    }
+    }   
     public function indexYearlyTub(Request $request){
         try{
-        $yearlySales = Order::select(\DB::raw("sum(ubeHalayaTub_qty) as totals"),
+        $yearlySales = Order::select(\DB::raw("sum(ubehalayatub_qty) as totals"),
         \DB::raw("EXTRACT(YEAR FROM preferred_delivery_date) as years"))
         ->groupBy('years')
         ->get();

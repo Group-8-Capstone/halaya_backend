@@ -25,8 +25,8 @@ class OrderController extends Controller
         $post->city_or_municipality = $data['city_municipality'];
         $post->province = $data['province'];
         $post->contact_number = $data['contactNumber'];
-        $post->ubeHalayaJar_qty = $data['jar_qty']; 
-        $post->ubeHalayaTub_qty = $data['tub_qty']; 
+        $post->ubehalayajar_qty = $data['jar_qty']; 
+        $post->ubehalayatub_qty = $data['tub_qty']; 
         $post->preferred_delivery_date = $data['deliveryDate'];
         $post->order_status = $data['orderStatus'];
         $post->distance = $data['distance'];
@@ -69,7 +69,7 @@ class OrderController extends Controller
       $i = 0;
       $total = 0;
       foreach($data as $item){
-          $total += $item->ubeHalayaTub_qty;
+          $total += $item->ubehalayatub_qty;
           $i++;
       }
       return $total;
@@ -84,7 +84,7 @@ class OrderController extends Controller
     $i = 0;
     $total = 0;
     foreach($data as $item){
-        $total += $item->ubeHalayaJar_qty;
+        $total += $item->ubehalayajar_qty;
         $i++;
     }
     return $total;
@@ -130,8 +130,8 @@ public function fetchDelivery(Request $request){
       $post->city_or_municipality = $request['city_or_municipality'];
       $post->province = $request['province'];
       $post->preferred_delivery_date = $request['preferred_delivery_date'];
-      $post->ubeHalayaJar_qty = $request['ubeHalayaJar_qty'];
-      $post->ubeHalayaTub_qty = $request['ubeHalayaTub_qty'];
+      $post->ubehalayajar_qty = $request['ubehalayajar_qty'];
+      $post->ubehalayatub_qty = $request['ubehalayatub_qty'];
       $post->save();
       return response()->json(compact('post'));
     }
