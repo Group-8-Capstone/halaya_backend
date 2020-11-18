@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\ProfileCollection;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -118,6 +119,18 @@ class ProfileController extends Controller
         // ->get());
         // return response()->json(compact('post'));
 
+
+    }
+
+    public function passwordUpdate(Request $request, $id){
+        try { 
+            $data = $request->all();
+            $post = User::firstOrCreate(['id' => $id]);
+            $post->password = Hash::make($data['confirmPassword']);
+            $post->save();
+        } catch ( \Exception $e)  {
+            return response()->json($e);
+        }
 
     }
 
