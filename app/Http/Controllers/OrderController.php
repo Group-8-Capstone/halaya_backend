@@ -17,7 +17,7 @@ class OrderController extends Controller
     {
       try{
         $post = new Order;
-        $data=$request->all();
+        $data = $request->all();
         $post->customer_id = $data['customer_id'];
         $post->receiver_name = $data['receiver_name'];
         $post->building_or_street = $data['building_street'];
@@ -33,142 +33,196 @@ class OrderController extends Controller
         $post->save();
         return 'success';
       } catch (\Exception $e){
-        return response()->json(['error'=>$e]);
+        return response()->json(['error'=>$e->getMessage()]);
       }
     }
   
    public function fetchOrder()
     {
-      return new OrderCollection(Order::where('order_status', 'On order')
-      ->orWhere('order_status', 'Canceled')
-      ->orderBy('preferred_delivery_date', 'asc')
-      ->get());
+      try {
+        return new OrderCollection(Order::where('order_status', 'On order')
+          ->orWhere('order_status', 'Canceled')
+          ->orderBy('preferred_delivery_date', 'asc')
+          ->get());
+      } catch (\Exception $e) {
+        return response()->json(['error'=>$e->getMessage()]);
+      }
     }
 
     public function fetchPendingOrder()
     {
-      return new OrderCollection(Order::where('order_status', 'Pending')
-      ->orderBy('preferred_delivery_date', 'asc')
-      ->get());
+      try {
+        return new OrderCollection(Order::where('order_status', 'Pending')
+        ->orderBy('preferred_delivery_date', 'asc')
+        ->get());
+      } catch (\Exception $e) {
+        return response()->json(['error'=>$e->getMessage()]);
+      }
+      
     }
 
     public function fetchDelivered()
     {
-      return new OrderCollection(Order::where('order_status', 'Delivered')
-      ->orderBy('preferred_delivery_date', 'desc')
-      ->get());
+      try {
+        return new OrderCollection(Order::where('order_status', 'Delivered')
+        ->orderBy('preferred_delivery_date', 'desc')
+        ->get());
+      } catch (\Exception $e) {
+        return response()->json(['error'=>$e->getMessage()]);
+      }
     }
 
     public function totalTab(){
+      try {
+        $date = Carbon::today();
+        $data = DB::table('orders')
+        ->where('preferred_delivery_date',$date)
+        ->where('order_status', 'On order' )
+        ->get();
+        
+        $i = 0;
+        $total = 0;
+        foreach($data as $item){
+            $total += $item->ubehalayatub_qty;
+            $i++;
+        }
+        return $total;
+      } catch (\Exception $e){
+        return response()->json(['error'=>$e->getMessage()]);
+      }
+  }
+
+  public function totalJar(){
+    try {
       $date = Carbon::today();
       $data = DB::table('orders')
       ->where('preferred_delivery_date',$date)
       ->where('order_status', 'On order' )
       ->get();
-      
       $i = 0;
       $total = 0;
       foreach($data as $item){
-          $total += $item->ubehalayatub_qty;
+          $total += $item->ubehalayajar_qty;
           $i++;
       }
       return $total;
-  }
-
-  public function totalJar(){
-    $date = Carbon::today();
-    $data = DB::table('orders')
-    ->where('preferred_delivery_date',$date)
-    ->where('order_status', 'On order' )
-    ->get();
-    $i = 0;
-    $total = 0;
-    foreach($data as $item){
-        $total += $item->ubehalayajar_qty;
-        $i++;
+    } catch (\Exception $e){
+      return response()->json(['error'=>$e->getMessage()]);
     }
-    return $total;
-  
 }
 
 public function fetchDelivery(Request $request){
-  $data = Order::where('preferred_delivery_date', Carbon::today()->toDateString())
-  ->where( function($query) {
-    $query->where('order_status', 'On order')
-    ->orWhere('order_status', 'Canceled')
-    ->orWhere('order_status', 'Delivered');
-  })
-  ->orderBy('distance', 'asc')
-  ->get();
-  return response()->json(compact('data'));
+  try {
+    $data = Order::where('preferred_delivery_date', Carbon::today()->toDateString())
+    ->where( function($query) {
+      $query->where('order_status', 'On order')
+      ->orWhere('order_status', 'Canceled')
+      ->orWhere('order_status', 'Delivered');
+    })
+    ->orderBy('distance', 'asc')
+    ->get();
+    return response()->json(compact('data'));
+  } catch (\Exception $e){
+    return response()->json(['error'=>$e->getMessage()]);
+  }
 }
 
     public function updateCancelledStatus(Request $request, $id)
     {
-      $newItem =  $request->all();
-      $post = Order::firstOrCreate(['id' => $request->id]);
-      $post->order_status = 'Canceled';
-      $post->save();
-      return response()->json(compact('post'));
+      try {
+        $newItem =  $request->all();
+        $post = Order::firstOrCreate(['id' => $request->id]);
+        $post->order_status = 'Canceled';
+        $post->save();
+        return response()->json(compact('post'));
+      } catch (\Exception $e){
+        return response()->json(['error'=>$e->getMessage()]);
+      }
+      
     }
 
 
     public function editOrder($id)
     {
-      $post = Order::find($id);
-      return response()->json($post);
+      try {
+        $post = Order::find($id);
+        return response()->json($post);
+      } catch (\Exception $e){
+        return response()->json(['error'=>$e->getMessage()]);
+      }
     }
 
 
     public function updateOrder(Request $request)
     {
-      $newItem =  $request->all();
-      $post = Order::firstOrCreate(['id' => $request->id]); 
-      $post->receiver_name = $request['receiver_name'];
-      $post->building_or_street = $request['building_or_street'];
-      $post->barangay = $request['barangay'];
-      $post->city_or_municipality = $request['city_or_municipality'];
-      $post->province = $request['province'];
-      $post->preferred_delivery_date = $request['preferred_delivery_date'];
-      $post->ubehalayajar_qty = $request['ubehalayajar_qty'];
-      $post->ubehalayatub_qty = $request['ubehalayatub_qty'];
-      $post->distance = $request['distance'];
-      $post->save();
-      return response()->json(compact('post'));
+       try {
+        $newItem =  $request->all();
+        $post = Order::firstOrCreate(['id' => $request->id]); 
+        $post->receiver_name = $request['receiver_name'];
+        $post->building_or_street = $request['building_or_street'];
+        $post->barangay = $request['barangay'];
+        $post->city_or_municipality = $request['city_or_municipality'];
+        $post->province = $request['province'];
+        $post->preferred_delivery_date = $request['preferred_delivery_date'];
+        $post->ubehalayajar_qty = $request['ubehalayajar_qty'];
+        $post->ubehalayatub_qty = $request['ubehalayatub_qty'];
+        $post->distance = $request['distance'];
+        $post->save();
+        return response()->json(compact('post'));
+       } catch (\Exception $e){
+        return response()->json(['error'=>$e->getMessage()]);
+      }
+     
     }
 
     public function updateStatus(Request $request, $id)
     {
-      $newItem =  $request->all();
-      $post = Order::firstOrCreate(['id' => $id]);
-      $post->order_status = 'Delivered';
-      $post->save();
-      return response()->json(compact('post'));
+      try {
+        $newItem =  $request->all();
+        $post = Order::firstOrCreate(['id' => $id]);
+        $post->order_status = 'Delivered';
+        $post->save();
+        return response()->json(compact('post'));
+      } catch (\Exception $e){
+        return response()->json(['error'=>$e->getMessage()]);
+      }
     }
 
     public function fetchOnOrderStat($id){
-      $post = new OrderCollection(Order::where('order_status', 'On order')
-      ->orWhere('order_status', 'Pending')
-      ->where('customer_id','=', $id)
-      ->orderBy('preferred_delivery_date')
-      ->get());
-      return response()->json(compact('post'));
+      try {
+        $post = new OrderCollection(Order::where('order_status', 'On order')
+        ->orWhere('order_status', 'Pending')
+        ->where('customer_id','=', $id)
+        ->orderBy('preferred_delivery_date')
+        ->get());
+        return response()->json(compact('post'));
+      } catch (\Exception $e){
+        return response()->json(['error'=>$e->getMessage()]);
+      }
     }
 
     public function fetchDeliveredOrder($id){
-      $post = new OrderCollection(Order::where('order_status', 'Delivered')
-      ->where('customer_id','=', $id)
-      ->orderBy('preferred_delivery_date')
-      ->get());
-      return response()->json(compact('post'));
+      try {
+        $post = new OrderCollection(Order::where('order_status', 'Delivered')
+        ->where('customer_id','=', $id)
+        ->orderBy('preferred_delivery_date')
+        ->get());
+        return response()->json(compact('post'));
+      } catch (\Exception $e){
+        return response()->json(['error'=>$e->getMessage()]);
+      }
     }
     
   
     public function deleteOrder($id)
     {
-      $post = Order::find($id);
-      $post->delete();
+      try {
+        $post = Order::find($id);
+        $post->delete();
       return response()->json('successfully deleted');
+      } catch (\Exception $e){
+        return response()->json(['error'=>$e->getMessage()]);
+      }
     }
 
     public function updateConfirmStatus(Request $request, $id){

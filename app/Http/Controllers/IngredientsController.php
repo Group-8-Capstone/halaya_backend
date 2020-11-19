@@ -37,14 +37,14 @@ class IngredientsController extends Controller
 
    
     public function saveUsedIngredients(Request $request){
-        $data = $request->all();
-        $ing = new UsedIngredients;
-        $getID = DB::table('ingredients_amount')
+        try {
+            $data = $request->all();
+            $ing = new UsedIngredients;
+            $getID = DB::table('ingredients_amount')
             ->select('id')
             ->where('ingredients_name', '=', $data['availableIngredients'])
             ->first()->id;
 
-        try {
             $ing->ingredients_id = $getID;
             $ing->used_ingredients_amount = $data['usedIngredientsAmount'];
             $ing->ingredients_unit=$data['ingredientsUnit'];
@@ -63,43 +63,28 @@ class IngredientsController extends Controller
             }
             $this->checkStatus($getID); 
         } catch(\Excetion $e){
-            return response()->json($e);
+            return response()->json(['error'=>$e->getMessage()]);
         }
         return 'sucess';
     }
 
     public function fetchUsedIng(){
-        $entireTable = UsedIngredients::all();
-        return $entireTable;
+        try {
+            $entireTable = UsedIngredients::all();
+            return $entireTable;
+        } catch(\Excetion $e){
+            return response()->json(['error'=>$e->getMessage()]);
+        }
     }
 
     public function editStockIngredients($id)
     {
-
-        //   $post = IngredientsView::find(1);
-        // $post = DB::table('ingredients')
-        //     ->join('ingredients_amount', 'ingredients_amount.id', '=', 'ingredients.ingredients_amount_id')
-        //     ->select(
-        //         'ingredients_amount.id',
-        //         'ingredients.ingredients_remaining',
-        //         'ingredients.ingredients_status',
-        //         'ingredients_amount.ingredients_name'
-        //     )
-        //     ->where('ingredients_amount.id', $id)
-        //     ->get();
-        // $obj = {};
-        // foreach($post as $item){
-        //     $obj['id'] = $item->id;
-        //     $obj['ingredients_remaining'] = $item->ingredients_remaining;
-        //     $obj['ingredients_status'] = $item->ingredients_status;
-        //     $obj['ingredients_name'] = $item->ingredients_name;
-        // }
-        // dd($post);
-        // return response()->json($post);
-
-      $post = Ingredients::find($id);
-      return response()->json($post);
-
+        try {
+            $post = Ingredients::find($id);
+            return response()->json($post);
+        } catch(\Excetion $e){
+            return response()->json(['error'=>$e->getMessage()]);
+        }
     }
 
     public function updateStockIngredients(Request $request)
@@ -112,79 +97,91 @@ class IngredientsController extends Controller
                 ]);
             $this->checkStatus($data['id']);
         } catch (\Exception $e) {
-            return 'failed';
-            return response()->json($e);
+            return response()->json(['error'=>$e->getMessage()]);
         }
         return 'success';
     }
 
     public function fetchStock(Request $request)
     {
-        $posts = DB::table('ingredients_amount')
-            ->leftjoin('used_ingredients', 'ingredients_amount.id', '=', 'used_ingredients.ingredients_id')
-            ->join('ingredients','ingredients_amount.id', '=','ingredients.ingredients_amount_id')
-            ->select(
-                'ingredients_amount.id',
-                'ingredients_amount.ingredients_name',
-                'ingredients_amount.ingredients_need_amount',
-                'used_ingredients.used_ingredients_amount',
-                'ingredients.ingredients_remaining',
-                'ingredients.ingredients_status',
-            DB::raw('sum(used_ingredients.used_ingredients_amount)as total'))
-            ->where('ingredients.deleted_at', null)
-            ->groupBy(
-                'ingredients_amount.id',
-                'used_ingredients.used_ingredients_amount',
-                'ingredients_amount.ingredients_name',
-                'ingredients_amount.ingredients_need_amount',
-                'ingredients.ingredients_remaining',
-                'ingredients.ingredients_status'
-                )
-            ->get();
+        try {
+            $posts = DB::table('ingredients_amount')
+                ->leftjoin('used_ingredients', 'ingredients_amount.id', '=', 'used_ingredients.ingredients_id')
+                ->join('ingredients','ingredients_amount.id', '=','ingredients.ingredients_amount_id')
+                ->select(
+                    'ingredients_amount.id',
+                    'ingredients_amount.ingredients_name',
+                    'ingredients_amount.ingredients_need_amount',
+                    'used_ingredients.used_ingredients_amount',
+                    'ingredients.ingredients_remaining',
+                    'ingredients.ingredients_status',
+                DB::raw('sum(used_ingredients.used_ingredients_amount)as total'))
+                ->where('ingredients.deleted_at', null)
+                ->groupBy(
+                    'ingredients_amount.id',
+                    'used_ingredients.used_ingredients_amount',
+                    'ingredients_amount.ingredients_name',
+                    'ingredients_amount.ingredients_need_amount',
+                    'ingredients.ingredients_remaining',
+                    'ingredients.ingredients_status'
+                    )
+                ->get();
 
-            $i = 0;         
-            foreach($posts as $item){
-                if(array_key_exists('id', $posts->toArray())){
-                    return response()->json([
-                        'message' => 'New post created'
-                    ]);
-                } else{
-                    $item->total = $this->total($item->id);
+                $i = 0;         
+                foreach($posts as $item){
+                    if(array_key_exists('id', $posts->toArray())){
+                        return response()->json([
+                            'message' => 'New post created'
+                        ]);
+                    } else{
+                        $item->total = $this->total($item->id);
+                    }
+                    
+                    continue;
+                    $i++;
                 }
-                
-                continue;
-                $i++;
-            }
-        return response()->json($posts);
-        return response()->json([
-            'message' => 'New post created'
-        ]);
-        
+            return response()->json($posts);
+            return response()->json([
+                'message' => 'New post created'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error'=>$e->getMessage()]);
+        }
     }
 
 
 
     public function softDeleteIngredients($id)
     {
-      $post = IngredientsAmount::destroy($id);
-      if ($post) {
-          $response = $this->successfulMessage(200, 'Successfully deleted', true);
-      } else {
-          $response = $this->notFoundMessage();
-      }
-      return response($response);
+        try {
+            $post = IngredientsAmount::destroy($id);
+            if ($post) {
+                $response = $this->successfulMessage(200, 'Successfully deleted', true);
+            } else {
+                $response = $this->notFoundMessage();
+            }
+            return response($response);
+        } catch (\Exception $e) {
+            return response()->json(['error'=>$e->getMessage()]);
+        }
+      
     }
 
     public function softDeleteStockIngredients(Request $request, $id)
     {
-      $ing = Ingredients::find(['id' => $request->ingredients_amount_id]);
-      $ing = Ingredients::destroy($id);
-      if ($ing) {
-          $response = $this->successfulMessage(200, 'Successfully deleted', true);
-      } else {
-          $response = $this->notFoundMessage();
-      }
-      return response($response);
+        try {
+            $ing = Ingredients::find(['id' => $request->ingredients_amount_id]);
+            $ing = Ingredients::destroy($id);
+            if ($ing) {
+                $response = $this->successfulMessage(200, 'Successfully deleted', true);
+            } else {
+                $response = $this->notFoundMessage();
+            }
+            return response($response);
+        } catch (\Exception $e) {
+            return response()->json(['error'=>$e->getMessage()]);
+        }
+      
     }
 
     public function getHalayaIngredients(){
@@ -230,7 +227,7 @@ class IngredientsController extends Controller
             }
             return $post;
         } catch (\Exception $e) {
-            return response()->json($e);
+            return response()->json(['error'=>$e->getMessage()]);
         }
     }
 
@@ -242,7 +239,7 @@ class IngredientsController extends Controller
             ->get();
             return $post;
         } catch (\Exception $e) {
-            return response()->json($e);
+            return response()->json(['error'=>$e->getMessage()]);
         }
     }
 
@@ -261,8 +258,8 @@ class IngredientsController extends Controller
                 $data->ingredients_category = $item->ingredients_category;
                 $data->save();
             }
-        } catch ( \Exception $e) {
-            return response()->json($e);
+        } catch (\Exception $e) {
+            return response()->json(['error'=>$e->getMessage()]);
         }
     }
 
@@ -276,27 +273,32 @@ class IngredientsController extends Controller
             $posts->ingredients_category=$data['ingredientsCategory'];
             $posts->save();
             $this->getAllIngredients($data['ingredientsName']);
-        } catch ( \Exception $e)  {
-            return response()->json($e);
+        } catch (\Exception $e) {
+            return response()->json(['error'=>$e->getMessage()]);
         }
     }
 
 
     public function total($id) {
-        $monthYear = Carbon::now();
-        $data = DB::table('used_ingredients')
-            ->where('ingredients_id', $id )
-            ->whereMonth('created_at',$monthYear->month)
-            ->whereYear('created_at',$monthYear->year)
-            ->get();
-            
-        $i = 0;
-        $total = 0;
-        foreach($data as $item){
-            $total += $item->used_ingredients_amount;
-            $i++;
+        try {
+            $monthYear = Carbon::now();
+            $data = DB::table('used_ingredients')
+                ->where('ingredients_id', $id )
+                ->whereMonth('created_at',$monthYear->month)
+                ->whereYear('created_at',$monthYear->year)
+                ->get();
+                
+            $i = 0;
+            $total = 0;
+            foreach($data as $item){
+                $total += $item->used_ingredients_amount;
+                $i++;
+            }
+            return $total;
+        } catch (\Exception $e) {
+            return response()->json(['error'=>$e->getMessage()]);
         }
-        return $total;
+        
     }
 
     public function checkStatus($id){
@@ -336,22 +338,22 @@ class IngredientsController extends Controller
                     ]);
             }
         }
-            }catch(Exception $e){
-                $message = 'failed';
-                return response()->json(['error'=>$e]);
-
+            }catch (\Exception $e) {
+                return response()->json(['error'=>$e->getMessage()]);
             }
      return $data;
     }
 
     public function newIngredients(Request $request){
-        $data = $request->all();
-        $message = '';
-        $getID = DB::table('ingredients_amount')
-            ->select('id')
-            ->where('ingredients_amount.ingredients_name', '=', $data['ingredientsName'])
-            ->first()->id;
+        
         try {
+            $data = $request->all();
+            $message = '';
+            $getID = DB::table('ingredients_amount')
+                ->select('id')
+                ->where('ingredients_amount.ingredients_name', '=', $data['ingredientsName'])
+                ->first()->id;
+
             $test = DB::table('ingredients')
             ->select('*')
             ->where('ingredients_amount_id', '=', $getID)
@@ -369,36 +371,54 @@ class IngredientsController extends Controller
             } elseif(sizeof($test) > 0){
                 $message = 'existed';
             }
-        }catch(\Exception $e){
-            return response()->json(['error'=>$e]);
+        }catch (\Exception $e) {
+            return response()->json(['error'=>$e->getMessage()]);
         }
         return response()->json($message);
     }
 
     public function fetchEstimatedValue(){
-        $entireTable = ingredientsAmount::all();
-        return $entireTable;
+        try {
+            $entireTable = ingredientsAmount::all();
+            return $entireTable;
+        } catch (\Exception $e) {
+            return response()->json(['error'=>$e->getMessage()]);
+        }
     }
 
     public function editEstimatedValue($id){
-        $post = ingredientsAmount::find($id);
-        return response()->json($post);
+        try {
+            $post = ingredientsAmount::find($id);
+            return response()->json($post);
+        } catch (\Exception $e) {
+            return response()->json(['error'=>$e->getMessage()]);
+        }
     }
 
     public function updateEstimatedValue(Request $request){
-      $post = ingredientsAmount::firstOrCreate(['id' => $request->id]);
-      $post->ingredients_name= $request['ingredients_name'];
-      $post->ingredients_need_amount= $request['ingredients_need_amount'];
-      $post->ingredients_unit= $request['ingredients_unit'];
-      $post->ingredients_category= $request['ingredients_category'];
-      $post->save();
-      return response()->json(compact('post'));
+        try{
+            $post = ingredientsAmount::firstOrCreate(['id' => $request->id]);
+            $post->ingredients_name= $request['ingredients_name'];
+            $post->ingredients_need_amount= $request['ingredients_need_amount'];
+            $post->ingredients_unit= $request['ingredients_unit'];
+            $post->ingredients_category= $request['ingredients_category'];
+            $post->save();
+            return response()->json(compact('post'));
+        } catch (\Exception $e) {
+            return response()->json(['error'=>$e->getMessage()]);
+        }
+      
     }
 
     public function deleteIngredients($id){
-        $res = Ingredients::where('ingredients_amount_id', $id )
-                    ->update([
-                        'ingredients_status' => 'Deleted',
-                    ]);
+        try {
+            $res = Ingredients::where('ingredients_amount_id', $id )
+            ->update([
+                'ingredients_status' => 'Deleted',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error'=>$e->getMessage()]);
+        }
+       
     }
 }
