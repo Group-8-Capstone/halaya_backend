@@ -18,7 +18,6 @@ class SalesController extends Controller
             $Delivered = Order::select(\DB::raw("sum(ubehalayajar_qty)as total"), 'preferred_delivery_date')
             ->where([
                 ['order_status', '=','Delivered'],
-                // ['delivery_date', '<=', $Date],
                 [\DB::raw("EXTRACT(YEAR FROM preferred_delivery_date)"), '=', $year['year']],
                 [\DB::raw("EXTRACT(MONTH FROM preferred_delivery_date)"), '=', $year['month']]
             ])
@@ -28,16 +27,11 @@ class SalesController extends Controller
 
             return response($Delivered);
         }catch(\Exception $e){
-            return response()->json(["message"=>"invalid", "data"=>$e]);
+            return response()->json(["message"=>"invalid", "data"=>$e->getMessage()]);
         }
-        
-        // $Date = $Delivered[0]['delivery_date'];
         return response($Delivered);
-    
-
-        
-        // return response()->json($Delivered);
     }
+
     //Daily for Tubs
     public function indexTub(Request $request){
         try{
@@ -46,7 +40,6 @@ class SalesController extends Controller
         $Delivered = Order::select(\DB::raw("sum(ubehalayatub_qty)as total"), 'preferred_delivery_date')
         ->where([
             ['order_status', '=','Delivered'],
-            // ['delivery_date', '<=', $Date],
             [\DB::raw("EXTRACT(YEAR FROM preferred_delivery_date)"), '=', $year['year']],
             [\DB::raw('EXTRACT(MONTH FROM preferred_delivery_date)'), '=', $year['month']]
         ])
@@ -54,11 +47,9 @@ class SalesController extends Controller
         ->orderBy('preferred_delivery_date', 'ASC')
         ->get();
         }catch(\Exception $e){
-            return response()->json(["message"=>"invalid", "data"=>$e]);
-        // $Date = $Delivered[0]['delivery_date'];
+            return response()->json(["message"=>"invalid", "data"=>$e->getMessage()]);
         }
         return response($Delivered);
-        // return response()->json($Delivered);
     }
 
     public function indexWeekly(Request $request){
@@ -89,7 +80,7 @@ class SalesController extends Controller
             array_push($weeklyData,$getWeeklySales);
         }
        }catch(\Exception $e){
-            return response()->json(["message"=>"invalid", "data"=>$e]);
+            return response()->json(["message"=>"invalid", "data"=>$e->getMessage()]);
        }
             // array_push($name of array, $data)
         
@@ -128,7 +119,7 @@ class SalesController extends Controller
             // array_push($name of array, $data)
         
        }catch(\Exception $e){
-             return response()->json(["message"=>"invalid", "data"=>$e]);
+             return response()->json(["message"=>"invalid", "data"=>$e->getMessage()]);
        }
         return response()->json($weeklyData);
     }
@@ -162,7 +153,7 @@ class SalesController extends Controller
         ->groupBy('months')
         ->get();
         }catch(\Exception $e){
-            return response()->json(["message"=>"invalid", "data"=>$e]);
+            return response()->json(["message"=>"invalid", "data"=>$e->getMessage()]);
         }
         return response()->json($monthlySales);
         
@@ -176,7 +167,7 @@ class SalesController extends Controller
         ->groupBy('months')
         ->get();
         }catch(\Exception $e){
-            return response()->json(["message"=>"invalid", "data"=>$e]);
+            return response()->json(["message"=>"invalid", "data"=>$e->getMessage()]);
         }
         return response()->json($monthlySales);
         
@@ -190,7 +181,7 @@ class SalesController extends Controller
         ->groupBy('years')
         ->get();
     }catch(\Exception $e){
-        return response()->json(["message"=>"invalid", "data"=>$e]);
+        return response()->json(["message"=>"invalid", "data"=>$e->getMessage()]);
     }
         return response()->json($yearlySales);
     }   
@@ -201,7 +192,7 @@ class SalesController extends Controller
         ->groupBy('years')
         ->get();
         }catch(\Exception $e){
-            return response()->json(["message"=>"invalid", "data"=>$e]);
+            return response()->json(["message"=>"invalid", "data"=>$e->getMessage()]);
         }
         return response()->json($yearlySales);
     }
@@ -211,7 +202,7 @@ class SalesController extends Controller
         ->groupBy('years')
         ->get();
         }catch(\Exception $e){
-            return response()->json(["message"=>"invalid", "data"=>$e]);
+            return response()->json(["message"=>"invalid", "data"=>$e->getMessage()]);
         }
         return response()->json($selectingYear);
     }
