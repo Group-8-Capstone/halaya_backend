@@ -188,6 +188,7 @@ public function fetchDelivery(Request $request){
       }
     }
 
+
     public function fetchOnOrderStat($id){
       try {
         $post = new OrderCollection(Order::where('order_status', 'On order')
@@ -199,6 +200,16 @@ public function fetchDelivery(Request $request){
       } catch (\Exception $e){
         return response()->json(['error'=>$e->getMessage()]);
       }
+      
+    public function fetchOngoingOrder($id){
+      $post = new OrderCollection(Order::where('customer_id', $id)
+      ->where(function($q) {
+          $q->where('order_status', 'On order')
+            ->orWhere('order_status', 'Pending');
+      })
+      ->orderBy('preferred_delivery_date')
+      ->get());
+      return response()->json(compact('post'));
     }
 
     public function fetchDeliveredOrder($id){
