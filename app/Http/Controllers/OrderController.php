@@ -132,6 +132,7 @@ public function fetchDelivery(Request $request){
       $post->preferred_delivery_date = $request['preferred_delivery_date'];
       $post->ubehalayajar_qty = $request['ubehalayajar_qty'];
       $post->ubehalayatub_qty = $request['ubehalayatub_qty'];
+      $post->distance = $request['distance'];
       $post->save();
       return response()->json(compact('post'));
     }
@@ -145,10 +146,12 @@ public function fetchDelivery(Request $request){
       return response()->json(compact('post'));
     }
 
-    public function fetchOnOrderStat($id){
-      $post = new OrderCollection(Order::where('order_status', 'On order')
-      ->orWhere('order_status', 'Pending')
-      ->where('customer_id','=', $id)
+    public function fetchOngoingOrder($id){
+      $post = new OrderCollection(Order::where('customer_id', $id)
+      ->where(function($q) {
+          $q->where('order_status', 'On order')
+            ->orWhere('order_status', 'Pending');
+      })
       ->orderBy('preferred_delivery_date')
       ->get());
       return response()->json(compact('post'));

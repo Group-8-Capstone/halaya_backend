@@ -54,7 +54,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::delete('/post/delete/{id}', [OrderController::class, 'deleteOrder']);
 
     Route::post('/post/updateCanceledStat/{id}', [OrderController::class, 'updateCancelledStatus']);
-    Route::get('/fetchOnOrderStat/{id}', [OrderController::class, 'fetchOnOrderStat']);
+    Route::get('/fetchOngoingOrder/{id}', [OrderController::class, 'fetchOngoingOrder']);
     Route::get('/fetchDeliveredOrder/{id}', [OrderController::class, 'fetchDeliveredOrder']);
   
     Route::post('/post/confirm/{id}', [OrderController::class, 'updateConfirmStatus']);
