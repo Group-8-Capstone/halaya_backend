@@ -132,6 +132,7 @@ public function fetchDelivery(Request $request){
       $post->preferred_delivery_date = $request['preferred_delivery_date'];
       $post->ubehalayajar_qty = $request['ubehalayajar_qty'];
       $post->ubehalayatub_qty = $request['ubehalayatub_qty'];
+      $post->distance = $request['distance'];
       $post->save();
       return response()->json(compact('post'));
     }
