@@ -32,6 +32,9 @@ use App\Http\Controllers\ProfileController;
 Route::post('register', [UserController::class, 'register']);
 Route::post('login', [UserController::class, 'authenticate']);
 Route::get('open', [DataController::class, 'open']);
+Route::get('/fetchHalayaTubLanding',[ProductController::class,'fetchHalayaTub']);
+Route::get('/fetchHalayaJarLanding',[ProductController::class,'fetchHalayaJar']);
+
 
 Route::get('/fetchHalayaTubLanding',[ProductController::class,'fetchHalayaTub']);
 Route::get('/fetchHalayaJarLanding',[ProductController::class,'fetchHalayaJar']);
