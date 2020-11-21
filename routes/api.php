@@ -11,6 +11,7 @@ use App\Http\Controllers\DataController;
 use App\Http\Controllers\ProfileController;
 
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -31,9 +32,17 @@ use App\Http\Controllers\ProfileController;
 
 Route::post('register', [UserController::class, 'register']);
 Route::post('login', [UserController::class, 'authenticate']);
+Route::post('forgotPassword',[UserController::class,'forgotPassword']);
+Route::post('forgotPassword/code',[UserController::class,'phoneCode']);
+Route::post('forgotPassword/newPassword',[UserController::class,'newPassword']);
 Route::get('open', [DataController::class, 'open']);
+Route::get('/fetchHalayaTubLanding',[ProductController::class,'fetchHalayaTub']);
+Route::get('/fetchHalayaJarLanding',[ProductController::class,'fetchHalayaJar']);
 
-Route::post('/sales/daily', [SalesController::class, 'index']);
+
+Route::get('/fetchHalayaTubLanding',[ProductController::class,'fetchHalayaTub']);
+Route::get('/fetchHalayaJarLanding',[ProductController::class,'fetchHalayaJar']);
+
 
 Route::group(['middleware' => ['jwt.verify']], function () {
     //Order Controller
@@ -45,7 +54,6 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('/posts/delivered', [OrderController::class, 'fetchDelivered']);
     Route::get('/posts/delivery', [OrderController::class, 'fetchDelivery']);
     Route::get('/post/edit/{id}', [OrderController::class, 'editOrder']);
-    // Route::post('/post/deliveredOrder/{id}', [OrderController::class, 'saveDeliveredOrder']);
     
     Route::post('/post/updateStat/{id}', [OrderController::class, 'updateStatus']);
     Route::delete('/post/delete/{id}', [OrderController::class, 'deleteOrder']);
@@ -58,8 +66,8 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('/totalTab', [OrderController::class, 'totalTab']);
     Route::get('/totalJar', [OrderController::class, 'totalJar']);
 
-//Sales Controller
-    // Route::post('/sales/daily', [SalesController::class, 'index']);
+    //Sales Controller
+    Route::post('/sales/daily', [SalesController::class, 'index']);
     Route::post('/sales/weekly', [SalesController::class, 'indexWeekly']);
     Route::post('/sales/monthly', [SalesController::class, 'indexMonthly']);
 
@@ -67,14 +75,12 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('/sales/yearly', [SalesController::class, 'indexYearly']);
 
     //FOR TUB
-
     Route::post('/sales/dailyTubs', [SalesController::class, 'indexTub']);
     Route::post('/sales/weeklyTubs', [SalesController::class, 'indexWeeklyTub']);
     Route::post('/sales/monthlyTubs', [SalesController::class, 'indexMonthlyTub']);
-
     Route::get('/sales/yearlyTubs', [SalesController::class, 'indexYearlyTub']);
 
-//Ingredients Controller
+    //Ingredients Controller
     Route::post('/post/updateStock', [IngredientsController::class, 'updateStockIngredients']);
     Route::post('/post/addStockAmount', [IngredientsController::class, 'updateStockAmount']);
     Route::post('/post/usedIngredients', [IngredientsController::class, 'saveUsedIngredients']);
@@ -90,24 +96,12 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('/post/editStock/{id}', [IngredientsController::class, 'editStockIngredients']);
     Route::get('/fetch/stock', [IngredientsController::class, 'fetchStock']);
     Route::get('/getHalayaIngredients', [IngredientsController::class, 'getHalayaIngredients']);
-    // Route::get('/getButchiIngredients', [IngredientsController::class, 'getButchiIngredients']);
-    // Route::get('/getIceCreamIngredients', [IngredientsController::class, 'getIceCreamIngredients']);
     Route::get('/fetch/ingredientsName', [IngredientsController::class, 'fetchIngredientsName']);
     Route::delete('/softDeleteIngredients/{id}', [IngredientsController::class, 'softDeleteIngredients']);
     Route::delete('/softDeleteStockIngredients/{id}', [IngredientsController::class, 'softDeleteStockIngredients']);
-
-
-
-//for testing only
     Route::get('/fetch/checkStatus', [IngredientsController::class, 'checkStatus']);
-    Route::get('/getMonthYear', [IngredientsController::class, 'compareDate']);
     Route::get('/getAllIngredients', [IngredientsController::class, 'getAllIngredients']);
-    Route::get('user', [UserController::class, 'getAuthenticatedUser']);
-    Route::get('closed', [DataConroller::class, 'closed']);
-    // Route::get('/posts/to-deliver', [OrderController::class, 'toDeliver']);
-    // Route::get('/fetch/delivery-range', [OrderController::class, 'getRange']);
     
-
     //Product
     Route::post('/editTub/{id}',[ProductController::class,'editTub']);
     Route::post('/editJar/{id}',[ProductController::class,'editJar']);
@@ -115,31 +109,19 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('/fetchHalayaTub',[ProductController::class,'fetchHalayaTub']);
     Route::get('/fetchHalayaJar',[ProductController::class,'fetchHalayaJar']);
     Route::post('/dailyRecords',[ProductController::class,'dailyRecords']);
-
-    Route::post('/post/product',[ProductController::class,'addProduct']);
-    Route::get('/fetch/product',[ProductController::class,'retrieveProduct']);
-    Route::post('/post/updateProduct',[ProductController::class,'updateProduct']);
-    Route::get('/fetch/postProduct',[ProductController::class,'postStockProduct']);
-    Route::get('/fetch/allProduct',[ProductController::class,'getAllProduct']);
-    Route::post('/post/updateStockProduct',[ProductController::class,'updateStockProduct']);
-    Route::delete('/softDeleteProduct/{id}',[ProductController::class,'softDeleteProduct']);
     Route::delete('/softDeleteStockProduct/{id}',[ProductController::class,'softDeleteStockProducts']);
 
     //Profile
-
     Route::post('/post/account',[ProfileController::class,'addProfile']);
     Route::get('/retrieveAccount',[ProfileController::class,'fetchAccount']);
     Route::get('/fetchProfile/{id}',[ProfileController::class,'fetchProfile']);
     Route::post('/ProfilePicUpdate/{id}',[ProfileController::class,'ProfilePicUpdate']);
     Route::post('/passwordUpdate/{id}',[ProfileController::class,'passwordUpdate']);
 
-
+    //UserController
+    Route::get('user', [UserController::class, 'getAuthenticatedUser']);
     Route::post('/verify_auth',[UserController::class,'AuthenticationGuard']);
 
-    
- 
+    //Data Controller
+    Route::get('closed', [DataConroller::class, 'closed']);
 });
-
-//test
-// Route::post('/sales/testing', [SalesController::class, 'test']);
-// Route::get('/posts/delivery', [OrderController::class, 'fetchDelivery']);

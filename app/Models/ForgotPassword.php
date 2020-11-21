@@ -5,12 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DeliveryRangeQty extends Model
+class ForgotPassword extends Model
 {
-    protected $guarded = [];
-    protected $table = 'delivery_range_qty';
+    use HasFactory;
+    protected $table = 'forgotPassword';
     protected $fillable = [
-        'ubehalayatub',
-        'ubehalayajar'
+        'account_id', 'phone', 'code', 'is_Valid'
     ];
 }

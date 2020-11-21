@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDeliveryRangeQty extends Migration
+class ForgotPassword extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,13 @@ class CreateDeliveryRangeQty extends Migration
      */
     public function up()
     {
-        Schema::create('delivery_range_qty', function (Blueprint $table) {
-            $table->id();
-            $table->integer('ubehalayatub');
-            $table->integer('ubehalayajar');
+        //
+        Schema::create('forgotPassword', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('account_id');
+            $table->string('code')->unique();
+            $table->string('phone');
+            $table->boolean("is_Valid");
             $table->timestamps();
         });
     }
@@ -28,6 +31,6 @@ class CreateDeliveryRangeQty extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('delivery_range_qty');
+        Schema::dropIfExists('forgotPassword');
     }
 }
