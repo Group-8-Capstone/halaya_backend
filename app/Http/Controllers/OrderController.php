@@ -200,7 +200,7 @@ public function fetchDelivery(Request $request){
       } catch (\Exception $e){
         return response()->json(['error'=>$e->getMessage()]);
       }
-      
+    }
     public function fetchOngoingOrder($id){
       $post = new OrderCollection(Order::where('customer_id', $id)
       ->where(function($q) {
