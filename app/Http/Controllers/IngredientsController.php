@@ -65,7 +65,7 @@ class IngredientsController extends Controller
         } catch(\Excetion $e){
             return response()->json(['error'=>$e->getMessage()]);
         }
-        return 'sucess';
+        return 'success';
     }
 
     public function fetchUsedIng(){

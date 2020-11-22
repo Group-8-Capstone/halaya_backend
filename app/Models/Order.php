@@ -21,6 +21,7 @@ class Order extends Model
         'contact_number', 
         'ubehalayajar_qty',
         'ubehalayatub_qty',
+        'total_payment',
         'preferred_delivery_date',
         'distance',
         'order_status',
