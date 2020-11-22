@@ -25,6 +25,7 @@ class CreateOrderTable extends Migration
             $table->string('province');
             $table->smallInteger('ubehalayajar_qty');
             $table->smallInteger('ubehalayatub_qty');
+            $table->double('total_payment');
             $table->date('preferred_delivery_date');
             $table->double('distance');
             $table->string('order_status');
