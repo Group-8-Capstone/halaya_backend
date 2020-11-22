@@ -66,9 +66,9 @@ class UserController extends Controller
       $send->send($to, $code);
 
       $response = $store;
-
     }catch(\Exception $e){
-      return response()->json(['message' => 'server_error', 'status'=>500, 'data'=> $e]);
+      return response()->json(['message' => 'server_error', 'status'=>500, 'data'=> $response]);
+      
     }
    return response()->json(['message' => 'inserted successfully ', 'status'=>200, 'data'=> $response]);
   }
