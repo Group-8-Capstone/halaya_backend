@@ -11,6 +11,7 @@ use App\Http\Controllers\DataController;
 use App\Http\Controllers\ProfileController;
 
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -31,7 +32,13 @@ use App\Http\Controllers\ProfileController;
 
 Route::post('register', [UserController::class, 'register']);
 Route::post('login', [UserController::class, 'authenticate']);
+Route::post('forgotPassword',[UserController::class,'forgotPassword']);
+Route::post('forgotPassword/code',[UserController::class,'phoneCode']);
+Route::post('forgotPassword/newPassword',[UserController::class,'newPassword']);
 Route::get('open', [DataController::class, 'open']);
+Route::get('/fetchHalayaTubLanding',[ProductController::class,'fetchHalayaTub']);
+Route::get('/fetchHalayaJarLanding',[ProductController::class,'fetchHalayaJar']);
+
 
 Route::get('/fetchHalayaTubLanding',[ProductController::class,'fetchHalayaTub']);
 Route::get('/fetchHalayaJarLanding',[ProductController::class,'fetchHalayaJar']);
