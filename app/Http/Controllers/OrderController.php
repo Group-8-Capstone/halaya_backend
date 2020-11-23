@@ -27,6 +27,7 @@ class OrderController extends Controller
         $post->contact_number = $data['contactNumber'];
         $post->ubehalayajar_qty = $data['jar_qty']; 
         $post->ubehalayatub_qty = $data['tub_qty']; 
+        $post->total_payment = $data['total_payment'];
         $post->preferred_delivery_date = $data['deliveryDate'];
         $post->order_status = $data['orderStatus'];
         $post->distance = $data['distance'];
@@ -200,7 +201,7 @@ public function fetchDelivery(Request $request){
       } catch (\Exception $e){
         return response()->json(['error'=>$e->getMessage()]);
       }
-      
+    }
     public function fetchOngoingOrder($id){
       $post = new OrderCollection(Order::where('customer_id', $id)
       ->where(function($q) {
