@@ -36,10 +36,6 @@ Route::get('/fetchHalayaTubLanding',[ProductController::class,'fetchHalayaTub'])
 Route::get('/fetchHalayaJarLanding',[ProductController::class,'fetchHalayaJar']);
 
 
-Route::get('/fetchHalayaTubLanding',[ProductController::class,'fetchHalayaTub']);
-Route::get('/fetchHalayaJarLanding',[ProductController::class,'fetchHalayaJar']);
-
-
 Route::group(['middleware' => ['jwt.verify']], function () {
     //Order Controller
     Route::post('/post/update', [OrderController::class, 'updateOrder']);
