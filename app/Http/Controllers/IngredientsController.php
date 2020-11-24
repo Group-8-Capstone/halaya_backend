@@ -191,6 +191,7 @@ class IngredientsController extends Controller
 
     public function getHalayaIngredients(){
         try {
+            $today = Carbon::now();
             $post = DB::table('ingredients_amount')
                 ->join('ingredients', 'ingredients.ingredients_amount_id', '=', 'ingredients_amount.id')
                 ->leftjoin('used_ingredients', 'ingredients_amount.id', '=', 'used_ingredients.ingredients_id')
@@ -215,7 +216,6 @@ class IngredientsController extends Controller
                     'ingredients_amount.deleted_at'
                     )
                 ->get();
-
                 $i = 0; 
         
             foreach($post as $item){
@@ -303,8 +303,9 @@ class IngredientsController extends Controller
             $monthYear = Carbon::now();
             $data = DB::table('used_ingredients')
                 ->where('ingredients_id', $id )
-                ->whereMonth('created_at',$monthYear->month)
-                ->whereYear('created_at',$monthYear->year)
+                ->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
+                // ->whereMonth('created_at',$monthYear->month)
+                // ->whereYear('created_at',$monthYear->year)
                 ->get();
                 
             $i = 0;
