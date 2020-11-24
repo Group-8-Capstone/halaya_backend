@@ -9,6 +9,7 @@ use App\Models\Ingredients;
 use App\Models\UsedIngredients;
 use App\Models\IngredientsAmount;
 use Carbon\Carbon;
+
 use DB;
 
 class IngredientsController extends Controller
@@ -114,16 +115,20 @@ class IngredientsController extends Controller
                     'ingredients_amount.ingredients_need_amount',
                     'used_ingredients.used_ingredients_amount',
                     'ingredients.ingredients_remaining',
+                    'ingredients_amount.ingredients_unit',
                     'ingredients.ingredients_status',
+                    'ingredients_amount.deleted_at',
                 DB::raw('sum(used_ingredients.used_ingredients_amount)as total'))
-                ->where('ingredients.deleted_at', null)
+                ->where('ingredients_amount.deleted_at', null)
                 ->groupBy(
                     'ingredients_amount.id',
                     'used_ingredients.used_ingredients_amount',
                     'ingredients_amount.ingredients_name',
                     'ingredients_amount.ingredients_need_amount',
                     'ingredients.ingredients_remaining',
-                    'ingredients.ingredients_status'
+                    'ingredients_amount.ingredients_unit',
+                    'ingredients.ingredients_status',
+                    'ingredients_amount.deleted_at',
                     )
                 ->get();
 
@@ -197,10 +202,10 @@ class IngredientsController extends Controller
                     'ingredients_amount.ingredients_name',
                     'ingredients_amount.ingredients_unit',
                     'used_ingredients.used_ingredients_amount',
-                    'ingredients.deleted_at',
+                    'ingredients_amount.deleted_at',
                     DB::raw('sum(used_ingredients.used_ingredients_amount)as total'))
                 ->where('ingredients_amount.ingredients_category', 'Ube Halaya')
-                ->where('ingredients.deleted_at','=', null)
+                ->where('ingredients_amount.deleted_at','=', null)
                 ->groupBy(
                     'ingredients_amount.id',
                     'ingredients.ingredients_remaining',
@@ -208,7 +213,7 @@ class IngredientsController extends Controller
                     'ingredients_amount.ingredients_name',
                     'ingredients_amount.ingredients_unit',
                     'used_ingredients.used_ingredients_amount',
-                    'ingredients.deleted_at'
+                    'ingredients_amount.deleted_at'
                     )
                 ->get();
                 $i = 0; 
@@ -264,9 +269,22 @@ class IngredientsController extends Controller
     }
 
     public function addEstimatedAmount(Request $request){
+        $data = $request->all();
+        if (IngredientsAmount::where('ingredients_name', '=', $data['ingredientsName'])
+            ->where('deleted_at' ,'!=', null)->exists()
+        ) {
+            return response()->json([
+                'message' => 'existed!'
+            ]);
+        }else if(IngredientsAmount::where('ingredients_name', '=',$data['ingredientsName'])
+        ->where('deleted_at' ,'=', null)->exists()
+        ){
+            $post = IngredientsAmount::firstOrCreate(['ingredients_name' => $data['ingredientsName']]);
+            $post->deleted_at = null;
+            $post->save();
+        }else{
         try {
             $posts = new  IngredientsAmount;   
-            $data = $request->all();
             $posts->ingredients_name=$data['ingredientsName'];
             $posts->ingredients_need_amount=$data['ingredientsEstimatedAmount'];
             $posts->ingredients_unit=$data['ingredientsUnit'];
@@ -276,6 +294,7 @@ class IngredientsController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error'=>$e->getMessage()]);
         }
+         }
     }
 
 
