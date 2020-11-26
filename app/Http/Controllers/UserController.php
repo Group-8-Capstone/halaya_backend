@@ -120,13 +120,13 @@ class UserController extends Controller
   {
     $validator = Validator::make($request->all(), [
       'uName' => 'required',
-      'phone' => 'required',
+      'phone' => 'required|unique:users',
       'pass' => 'required',
       'role' => 'required',
     ]);
 
     if ($validator->fails()) {
-      return response()->json($validator->errors()->toJson(), 400);
+      return response()->json($validator->errors()->toJson());
     }
     try{
       $user = User::create([
@@ -137,13 +137,14 @@ class UserController extends Controller
       ]);
     }catch(\PDOException $e){
       if($e->errorInfo[1] == 1062){
-        return response()->json(["message"=>"invalid_username", "status"=>"409"]);
+        return response()->json(["message"=>"invalid_username", "status"=>"409", "details"=>$e->getMessage()]);
       }
     }
 
     $token = JWTAuth::fromUser($user);
-    $message = [];
-    $message['message'] = 'success';
+    // $message = [];
+    // $message['message'] = 'success';
+    $message = "success";
 
     return response()->json(compact('user', 'token', 'message'), 200);
   }
