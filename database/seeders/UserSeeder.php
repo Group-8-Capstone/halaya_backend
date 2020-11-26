@@ -21,14 +21,14 @@ class UserSeeder extends Seeder
                 [
                     'username'=>'admin',
                     'role'=> 'admin',
-                    'phone'=>'09362680541',
+                    'phone'=>'09079077210',
                     'password'=>Hash::make('Cl@rk_adm1n'),
                     'remember_token'=>Str::random(10)
                 ],
                 [
                     'username'=>'rider',
                     'role'=> 'driver',
-                    'phone'=> '09362680541',
+                    'phone'=> '09554527035',
                     'password'=> Hash::make('R1der_halaya'),
                     'remember_token'=>Str::random(10)
                 ],

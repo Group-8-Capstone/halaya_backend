@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Http\Resources\OrderCollection;
 use Carbon\Carbon;
+use App\Events\OrderEvent;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
@@ -32,8 +33,11 @@ class OrderController extends Controller
         $post->order_status = $data['orderStatus'];
         $post->distance = $data['distance'];
         $post->save();
+        event(new OrderEvent($post));
         return 'success';
       } catch (\Exception $e){
+        // event(new OrderEvent({'bolbol': 'ate jess'}));
+        event(new OrderEvent('good'));
         return response()->json(['error'=>$e->getMessage()]);
       }
     }
