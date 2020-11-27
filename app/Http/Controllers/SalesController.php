@@ -170,8 +170,6 @@ class SalesController extends Controller
             return response()->json(["message"=>"invalid", "data"=>$e->getMessage()]);
         }
         return response()->json($monthlySales);
-        
-    
     }
 
     public function indexYearly(Request $request){

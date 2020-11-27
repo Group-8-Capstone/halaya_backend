@@ -17,7 +17,6 @@ class UserController extends Controller
   {
     $credentials = $request->only('username', 'password');
     
-    // dd($credentials);
     $info = "";
     try {
       if (!$token = JWTAuth::attempt($credentials)) {
@@ -26,8 +25,7 @@ class UserController extends Controller
     } catch (JWTException $e) {
       return response()->json(['message' => 'could_not_create_token', 'status'=> 500]);
     }
-    // return response()->json(['status'=>200, 'token'=>$token, 'message'=> 'successfully_login', 'username'=>$credentials['username']]);
-
+  
     try{
       $info = User::select("role", "username", "id")
       ->where("username", "=", $request->get('username'))
@@ -42,7 +40,7 @@ class UserController extends Controller
     $response = [];
     try{
       $forgot = User::select("id","phone")
-      ->where("phone","=", $request->get('contacts'))
+      ->where("username","=", $request->get('username'))
       ->get();
 
       $id = $forgot[0]["id"];
@@ -120,7 +118,7 @@ class UserController extends Controller
   {
     $validator = Validator::make($request->all(), [
       'uName' => 'required',
-      'phone' => 'required|unique:users',
+      'phone' => 'required',
       'pass' => 'required',
       'role' => 'required',
     ]);
