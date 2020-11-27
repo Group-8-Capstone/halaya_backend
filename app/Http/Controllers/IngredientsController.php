@@ -269,32 +269,44 @@ class IngredientsController extends Controller
     }
 
     public function addEstimatedAmount(Request $request){
-        $data = $request->all();
-        if (IngredientsAmount::where('ingredients_name', '=', $data['ingredientsName'])
-            ->where('deleted_at' ,'!=', null)->exists()
-        ) {
-            return response()->json([
-                'message' => 'existed!'
-            ]);
-        }else if(IngredientsAmount::where('ingredients_name', '=',$data['ingredientsName'])
-        ->where('deleted_at' ,'=', null)->exists()
-        ){
-            $post = IngredientsAmount::firstOrCreate(['ingredients_name' => $data['ingredientsName']]);
-            $post->deleted_at = null;
-            $post->save();
-        }else{
         try {
-            $posts = new  IngredientsAmount;   
-            $posts->ingredients_name=$data['ingredientsName'];
-            $posts->ingredients_need_amount=$data['ingredientsEstimatedAmount'];
-            $posts->ingredients_unit=$data['ingredientsUnit'];
-            $posts->ingredients_category=$data['ingredientsCategory'];
-            $posts->save();
-            $this->getAllIngredients($data['ingredientsName']);
+            $data = $request->all();
+
+            $deleted_at_null = IngredientsAmount::where('ingredients_name', '=',$data['ingredientsName'])
+            ->where('deleted_at' ,'=', null)->exists();
+
+            $deleted_at_not_null = DB::table('ingredients_amount')
+            ->where('ingredients_name', '=',$data['ingredientsName'])
+            ->whereNotNull('deleted_at')
+            ->get();
+
+            if ($deleted_at_null) {
+                return 'existed';
+            }else {
+                if(sizeof($deleted_at_not_null) == 0){
+                    $posts = new  IngredientsAmount;   
+                    $posts->ingredients_name=$data['ingredientsName'];
+                    $posts->ingredients_need_amount=$data['ingredientsEstimatedAmount'];
+                    $posts->ingredients_unit=$data['ingredientsUnit'];
+                    $posts->ingredients_category=$data['ingredientsCategory'];
+                    $posts->save();
+                    $this->getAllIngredients($data['ingredientsName']);
+                    return 'success';
+                } else {
+                    $query = DB::table('ingredients_amount')
+                    ->where('ingredients_name', '=',$data['ingredientsName'])
+                    ->whereNotNull('deleted_at')
+                    ->update([
+                        'deleted_at' => null,
+                        'ingredients_need_amount' => $data['ingredientsEstimatedAmount'],
+                        'ingredients_unit' => $data['ingredientsUnit']
+                    ]);
+                    return 'succes';
+                }
+            }
         } catch (\Exception $e) {
             return response()->json(['error'=>$e->getMessage()]);
         }
-         }
     }
 
 
