@@ -40,7 +40,7 @@ class UserController extends Controller
     $response = [];
     try{
       $forgot = User::select("id","phone")
-      ->where("phone","=", $request->get('contacts'))
+      ->where("username","=", $request->get('username'))
       ->get();
 
       $id = $forgot[0]["id"];
@@ -118,7 +118,7 @@ class UserController extends Controller
   {
     $validator = Validator::make($request->all(), [
       'uName' => 'required',
-      'phone' => 'required|unique:users',
+      'phone' => 'required',
       'pass' => 'required',
       'role' => 'required',
     ]);
