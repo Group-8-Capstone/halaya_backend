@@ -123,10 +123,13 @@ class UserController extends Controller
       'role' => 'required',
     ]);
     $user = null;
+    $token=null;
     if ($validator->fails()) {
       return response()->json($validator->errors()->toJson());
     }
     try{
+
+      
       $user = User::create([
         'username' => $request->get('uName'),
         'phone' => $request->get('phone'),
@@ -139,6 +142,9 @@ class UserController extends Controller
         return response()->json(["message"=>"invalid_username", "status"=>"409", "details"=>$e->getMessage()]);
       }
     }
+
+
+ 
     // $message = [];
     // $message['message'] = 'success';
     $message = "success";
