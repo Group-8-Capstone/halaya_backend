@@ -133,13 +133,12 @@ class UserController extends Controller
         'role' => $request->get('role'),
         'password' => Hash::make($request->get('pass')),
       ]);
+      $token = JWTAuth::fromUser($user);
     }catch(\PDOException $e){
       if($e->errorInfo[1] == 1062){
         return response()->json(["message"=>"invalid_username", "status"=>"409", "details"=>$e->getMessage()]);
       }
     }
-
-    $token = JWTAuth::fromUser($user);
     // $message = [];
     // $message['message'] = 'success';
     $message = "success";
