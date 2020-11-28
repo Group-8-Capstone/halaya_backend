@@ -122,7 +122,7 @@ class UserController extends Controller
       'pass' => 'required',
       'role' => 'required',
     ]);
-    $user= "";
+    $user = null;
 
     if ($validator->fails()) {
       return response()->json($validator->errors()->toJson());
@@ -137,14 +137,14 @@ class UserController extends Controller
     }catch(\PDOException $e){
       if($e->errorInfo[1] == 1062){
         return response()->json(["message"=>"invalid_username", "status"=>"409", "details"=>$e]);
+      }else{
+        return response()->json(["message"=>"server_error", "status"=>"500", "details"=>$e]);
       }
     }catch(\Exception $e){
       return response()->json(["message"=>"server_error", "status"=>"500", "details"=>$e]);
     }
 
     $token = JWTAuth::fromUser($user);
-    // $message = [];
-    // $message['message'] = 'success';
     $message = "success";
 
     return response()->json(compact('user', 'token', 'message'), 200);
