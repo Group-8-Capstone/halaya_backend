@@ -137,16 +137,16 @@ class UserController extends Controller
       if($e->errorInfo[1] == 1062){
         return response()->json(["message"=>"invalid_username", "status"=>"409", "details"=>$e->getMessage()]);
       }
+    }catch(\Exception $e){
+      return response()->json(["message"=>"server_error", "status"=>"500", "details"=>$e->getMessage()]);
     }
-
-    $account = $user;
-
+    
     $token = JWTAuth::fromUser($user);
     // $message = [];
     // $message['message'] = 'success';
     $message = "success";
-
-    return response()->json(compact('account', 'token', 'message'), 200);
+    
+    return response()->json(compact('user', 'token', 'message'), 200);
   }
   public function getAuthenticatedUser()
   {
