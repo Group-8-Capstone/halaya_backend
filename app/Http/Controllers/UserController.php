@@ -123,28 +123,29 @@ class UserController extends Controller
       'role' => 'required',
     ]);
     if ($validator->fails()) {
-      return response()->json($validator->errors()->toJson());
+      return response()->json(['message'=>'invalid_username', 'status'=>'409', 'details'=>$validator->errors()->toJson()]);
     }
     $user = null;
+    $token = null;
+    $message = '';
     try{
       $user = User::create([
         'username' => $request->get('uName'),
         'phone' => $request->get('phone'),
         'role' => $request->get('role'),
         'password' => Hash::make($request->get('pass')),
-      ]);
-    }catch(\PDOException $e){
-      if($e->errorInfo[1] == 1062){
+        ]);
+        $token = JWTAuth::fromUser($user);
+        $message = "success";
+    }catch(\Illuminate\Database\QueryException $e){
+      if($e->getCode() == '23505'){
         return response()->json(["message"=>"invalid_username", "status"=>"409", "details"=>$e->getMessage()]);
       }
     }catch(\Exception $e){
       return response()->json(["message"=>"server_error", "status"=>"500", "details"=>$e->getMessage()]);
     }
-    
-    $token = JWTAuth::fromUser($user);
     // $message = [];
     // $message['message'] = 'success';
-    $message = "success";
     
     return response()->json(compact('user', 'token', 'message'), 200);
   }
