@@ -126,8 +126,6 @@ class UserController extends Controller
       return response()->json($validator->errors()->toJson());
     }
     try{
-
-      
       $user = User::create([
         'username' => $request->get('uName'),
         'phone' => $request->get('phone'),
@@ -140,12 +138,14 @@ class UserController extends Controller
       }
     }
 
+    $account = $user;
+
     $token = JWTAuth::fromUser($user);
     // $message = [];
     // $message['message'] = 'success';
     $message = "success";
 
-    return response()->json(compact('user', 'token', 'message'), 200);
+    return response()->json(compact('account', 'token', 'message'), 200);
   }
   public function getAuthenticatedUser()
   {
