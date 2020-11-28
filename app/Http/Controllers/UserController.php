@@ -125,6 +125,7 @@ class UserController extends Controller
     if ($validator->fails()) {
       return response()->json($validator->errors()->toJson());
     }
+    $user = null;
     try{
       $user = User::create([
         'username' => $request->get('uName'),
