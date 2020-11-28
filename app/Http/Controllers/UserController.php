@@ -122,6 +122,7 @@ class UserController extends Controller
       'pass' => 'required',
       'role' => 'required',
     ]);
+    $user= null;
 
     if ($validator->fails()) {
       return response()->json($validator->errors()->toJson());
