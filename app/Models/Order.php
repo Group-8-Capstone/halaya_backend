@@ -25,6 +25,8 @@ class Order extends Model
         'preferred_delivery_date',
         'distance',
         'order_status',
+        'mark_status',
+        'mark_adminstatus',
     ];
 
     protected $casts = [

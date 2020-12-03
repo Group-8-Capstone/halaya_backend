@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\OrderCollection;
 use Carbon\Carbon;
 use App\Events\OrderEvent;
+use App\Events\StatusOnOrder;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
@@ -31,6 +32,8 @@ class OrderController extends Controller
         $post->total_payment = $data['total_payment'];
         $post->preferred_delivery_date = $data['deliveryDate'];
         $post->order_status = $data['orderStatus'];
+        $post->mark_status = 'Unread';
+        $post->mark_adminstatus = 'Unread';
         $post->distance = $data['distance'];
         $post->save();
         event(new OrderEvent($post));
@@ -187,6 +190,7 @@ public function fetchDelivery(Request $request){
         $post = Order::firstOrCreate(['id' => $id]);
         $post->order_status = 'Delivered';
         $post->save();
+        event(new OrderEvent($post));
         return response()->json(compact('post'));
       } catch (\Exception $e){
         return response()->json(['error'=>$e->getMessage()]);
@@ -212,7 +216,7 @@ public function fetchDelivery(Request $request){
           $q->where('order_status', 'On order')
             ->orWhere('order_status', 'Pending');
       })
-      ->orderBy('preferred_delivery_date')
+      ->orderBy('id', 'DESC')
       ->get());
       return response()->json(compact('post'));
     }
@@ -241,15 +245,84 @@ public function fetchDelivery(Request $request){
       }
     }
 
+
+
     public function updateConfirmStatus(Request $request, $id){
       try {
         $newItem =  $request->all();
         $post = Order::firstOrCreate(['id' => $id]);
         $post->order_status = 'On order';
+       
         $post->save();
-        return response()->json(compact('post'));
+         event(new StatusOnOrder($post));
+        return response()->json($post);
       } catch (\Exception $e) {
         return response()->json(['error'=>$e->getMessage()]);
       }
     }
+
+    public function fetchProcessOrder()
+    {
+      try {
+        return new OrderCollection(Order::where('order_status', 'On order')
+          ->orWhere('order_status', 'Pending')
+          ->orderBy('id', 'DESC')
+          ->get());
+      } catch (\Exception $e) {
+        return response()->json(['error'=>$e->getMessage()]);
+      }
+    }
+
+    public function unReadOrder($id){
+      $post = new OrderCollection(Order::where('customer_id', $id)
+      ->where('mark_status','Unread')
+      ->where(function($q) {
+          $q->where('order_status', 'On order')
+            ->orWhere('order_status', 'Pending');
+      })
+      ->orderBy('preferred_delivery_date')
+      ->get());
+      return response()->json(compact('post'));
+    }
+
+    public function unreadAdminOrder()
+    {
+      $post = new OrderCollection(Order::where('mark_adminstatus', 'Unread')
+      ->where(function($q) {
+          $q->where('order_status', 'On order')
+            ->orWhere('order_status', 'Pending');
+      })
+      ->orderBy('id', 'asc')
+      ->get());
+      return response()->json(compact('post'));
+      }
+    
+
+    public function updateMarkStatus(Request $request, $id){
+      try {
+        $newItem =  $request->all();
+        $post = Order::firstOrCreate(['id' => $id]);
+        $post->mark_status = 'Read';
+        $post->save();
+        event(new OrderEvent($post));
+        return response()->json($post);
+      } catch (\Exception $e) {
+        return response()->json(['error'=>$e->getMessage()]);
+      }
+    }
+
+    public function updateadminStatus(Request $request, $id){
+      try {
+        $newItem =  $request->all();
+        $post = Order::firstOrCreate(['id' => $id]);
+        $post->mark_adminstatus = 'Read';
+        $post->save();
+        event(new OrderEvent($post));
+        return response()->json($post);
+      } catch (\Exception $e) {
+        return response()->json(['error'=>$e->getMessage()]);
+      }
+    }
+
+   
 }
