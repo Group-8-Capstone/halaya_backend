@@ -19,14 +19,14 @@ class UserSeeder extends Seeder
         if(!User::count()) {
             $data = [
                 [
-                    'username'=>'admin',
+                    'username'=>'Admin',
                     'role'=> 'admin',
                     'phone'=>'09079077210',
                     'password'=>Hash::make('Cl@rk_adm1n'),
                     'remember_token'=>Str::random(10)
                 ],
                 [
-                    'username'=>'rider',
+                    'username'=>'Rider',
                     'role'=> 'driver',
                     'phone'=> '09554527035',
                     'password'=> Hash::make('R1der_halaya'),
