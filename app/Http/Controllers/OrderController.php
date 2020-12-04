@@ -35,6 +35,9 @@ class OrderController extends Controller
         $post->mark_status = 'Unread';
         $post->mark_adminstatus = 'Unread';
         $post->distance = $data['distance'];
+        $post->longitude = $data['longitude'];
+        $post->latitude = $data['latitude'];
+        $post->postcode = $dat['postcode'];
         $post->save();
         event(new OrderEvent($post));
         return 'success';
