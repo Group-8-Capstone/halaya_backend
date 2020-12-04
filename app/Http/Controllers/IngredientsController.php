@@ -71,8 +71,17 @@ class IngredientsController extends Controller
 
     public function fetchUsedIng(){
         try {
-            $entireTable = UsedIngredients::all();
-            return $entireTable;
+            // $entireTable = UsedIngredients::all();
+            // return $entireTable;
+            $query = DB::table('used_ingredients')
+            ->join('ingredients', 'ingredients.ingredients_amount_id', '=', 'used_ingredients.ingredients_id')
+            ->select( 'used_ingredients.*',
+                    // 'used_ingredients.ingredients_name',
+                    // 'used_ingredients.used_ingredients_amount',
+                    // 'used_ingredients.ingredients_unit',
+                    'ingredients.ingredients_remaining')
+            ->get();
+            return response()->json($query);
         } catch(\Excetion $e){
             return response()->json(['error'=>$e->getMessage()]);
         }
@@ -91,6 +100,7 @@ class IngredientsController extends Controller
     public function updateStockIngredients(Request $request)
     {
         $data = $request->all();
+        // dd($data);
         try {
             $res = Ingredients::where('ingredients_amount_id', $data['id'] )
                 ->update([
@@ -272,6 +282,11 @@ class IngredientsController extends Controller
         try {
             $data = $request->all();
 
+            $getID = DB::table('ingredients_amount')
+            ->select('id')
+            ->where('ingredients_name', '=',$data['ingredientsName'])
+            ->first();
+
             $deleted_at_null = IngredientsAmount::where('ingredients_name', '=',$data['ingredientsName'])
             ->where('deleted_at' ,'=', null)->exists();
 
@@ -300,6 +315,15 @@ class IngredientsController extends Controller
                         'deleted_at' => null,
                         'ingredients_need_amount' => $data['ingredientsEstimatedAmount'],
                         'ingredients_unit' => $data['ingredientsUnit']
+                    ]);
+                    
+                    $query2 = DB::table('ingredients')
+                    ->where('ingredients_amount_id', '=',$getID->id)
+                    ->whereNotNull('deleted_at')
+                    ->update([
+                        'deleted_at' => null,
+                        'ingredients_remaining' => 0,
+                        'ingredients_status' => "Calculating..."
                     ]);
                     return 'succes';
                 }

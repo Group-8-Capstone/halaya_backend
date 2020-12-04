@@ -59,7 +59,9 @@ class SalesController extends Controller
         /**Getting the first delivery of the year */
 
         $firstDelivery = Order::select('preferred_delivery_date')
-        ->where(\DB::raw('EXTRACT(YEAR FROM preferred_delivery_date)'), '=', $request['year'])
+        ->where([
+            [\DB::raw('EXTRACT(YEAR FROM preferred_delivery_date)'), '=', $request['year']]
+            ])
         ->first();
 
         /** Ends here */
@@ -73,7 +75,8 @@ class SalesController extends Controller
             $getWeeklySales =Order::select(\DB::raw("sum(orders.ubehalayajar_qty) as totals"))
             ->where([
                 ["preferred_delivery_date", ">=", $weekArray[$i]['start']],
-                ["preferred_delivery_date", "<=", $weekArray[$i]['end']]
+                ["preferred_delivery_date", "<=", $weekArray[$i]['end']],
+                ['order_status', '=','Delivered'],
             ])
             ->get();
 

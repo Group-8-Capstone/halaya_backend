@@ -10,17 +10,20 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class ProfileEvent implements ShouldBroadcast
+class StatusOnOrder implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    public $onorder;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($onorder)
     {
+        $this->onorder=$onorder;
         //
     }
 
@@ -31,11 +34,10 @@ class ProfileEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('profile-channel');
+        return new Channel('onorder-channel');
     }
-
     public function broadcastAs()
     {
-        return 'newProfile';
+        return 'confirmOrder';
     }
 }
