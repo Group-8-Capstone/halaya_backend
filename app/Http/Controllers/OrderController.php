@@ -20,6 +20,7 @@ class OrderController extends Controller
       try{
         $post = new Order;
         $data = $request->all();
+        // dd($data);
         $post->customer_id = $data['customer_id'];
         $post->receiver_name = $data['receiver_name'];
         $post->building_or_street = $data['building_street'];
@@ -35,6 +36,9 @@ class OrderController extends Controller
         $post->mark_status = 'Unread';
         $post->mark_adminstatus = 'Unread';
         $post->distance = $data['distance'];
+        $post->longitude = $data['longitude'];
+        $post->latitude = $data['latitude'];
+        $post->postcode = $data['postcode'];
         $post->save();
         event(new OrderEvent($post));
         return 'success';

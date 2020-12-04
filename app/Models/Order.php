@@ -30,6 +30,9 @@ class Order extends Model
         'order_status',
         'mark_status',
         'mark_adminstatus',
+        'latitude',
+        'longitude',
+        'postcode'
     ];
 
     protected $casts = [
