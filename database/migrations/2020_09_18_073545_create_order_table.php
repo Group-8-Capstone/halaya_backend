@@ -28,9 +28,6 @@ class CreateOrderTable extends Migration
             $table->double('total_payment');
             $table->date('preferred_delivery_date');
             $table->double('distance');
-            $table->double('latitude');
-            $table->double('longitude');
-            $table->integer('postcode');
             $table->string('order_status');
             $table->string('mark_status');
             $table->string('mark_adminstatus');
