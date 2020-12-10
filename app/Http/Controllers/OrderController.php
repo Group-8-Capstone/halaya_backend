@@ -77,9 +77,18 @@ class OrderController extends Controller
     public function fetchDelivered()
     {
       try {
-        return new OrderCollection(Order::where('order_status', 'Delivered')
-        ->orderBy('preferred_delivery_date', 'desc')
-        ->get());
+        // return new OrderCollection(Order::where('order_status', 'Delivered')
+        // ->orderBy('preferred_delivery_date', 'desc')
+        // ->get());
+       $data = DB::table('orders')
+        ->select('receiver_name', 'building_or_street', 
+          'barangay','city_or_municipality', 'province', 
+          'contact_number','distance','preferred_delivery_date',
+          'ubehalayajar_qty','ubehalayatub_qty', 'total_payment',
+          'order_status' )
+          ->where("order_status", "=", "Delivered")
+          ->get();
+          return response()->json(compact('data'));
       } catch (\Exception $e) {
         return response()->json(['error'=>$e->getMessage()]);
       }
