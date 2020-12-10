@@ -66,6 +66,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::post('/post/confirm/{id}', [OrderController::class, 'updateConfirmStatus']);
     Route::get('/totalTab', [OrderController::class, 'totalTab']);
     Route::get('/totalJar', [OrderController::class, 'totalJar']);
+    Route::post('/filter/{month}/{year}', [OrderController::class, 'filter']);
 
     //Sales Controller
     Route::post('/sales/daily', [SalesController::class, 'index']);
