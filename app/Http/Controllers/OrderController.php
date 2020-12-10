@@ -329,15 +329,18 @@ public function fetchDelivery(Request $request){
       }
     }
 
-    public function filter($month,$year){
+    public function filter(Request $request,$month,$year){
       try{
-        $data = Order::whereMonth("created_at", (int)$month)
+        $data = DB::table('orders')
+        ->select('receiver_name', 'building_or_street', 
+          'barangay','city_or_municipality', 'province', 
+          'contact_number','distance','preferred_delivery_date',
+          'ubehalayajar_qty','ubehalayatub_qty', 'total_payment',
+          'order_status' )
+          ->whereMonth("created_at", (int)$month)
           ->whereYear("created_at", (int)$year)
           ->where("order_status", "=", "Delivered")
           ->get();
-          // if (sizeof($data) == 0){
-          //   return response()->json(['data' => "empty"]);
-          // }
           return response()->json(compact('data'));
       } catch (Exception $e){
         return response()->json($e->getMessage());
