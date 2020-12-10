@@ -144,6 +144,20 @@ class ProductController extends Controller
           return 'existed';
     }
    }
+
+   public function filter($month,$year){
+    try{
+      $data = RecordedProduct::whereMonth("created_at", (int)$month)
+        ->whereYear("created_at", (int)$year)
+        ->get();
+        // if (sizeof($data) == 0){
+        //   return response()->json(['data' => "empty"]);
+        // }
+        return response()->json(compact('data'));
+    } catch (Exception $e){
+      return response()->json($e->getMessage());
+    }
+  }
 }
 
 
