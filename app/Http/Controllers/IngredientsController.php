@@ -477,4 +477,21 @@ class IngredientsController extends Controller
         }
        
     }
+
+    public function filterIngredients(Request $request,$month,$year){
+        try{
+          $data = DB::table('used_ingredients')
+            ->join('ingredients', 'ingredients.ingredients_amount_id', '=', 'used_ingredients.ingredients_id')
+            ->select( 'used_ingredients.ingredients_name',
+                    'ingredients.ingredients_remaining',
+                    'used_ingredients.used_ingredients_amount',)
+            ->whereMonth("created_at", (int)$month)
+            ->whereYear("created_at", (int)$year)
+            ->where("order_status", "=", "Delivered")
+            ->get();
+            return response()->json(compact('data'));
+        } catch (Exception $e){
+          return response()->json($e->getMessage());
+        }
+      }
 }
