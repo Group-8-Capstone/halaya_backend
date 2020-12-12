@@ -104,7 +104,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::delete('/softDeleteStockIngredients/{id}', [IngredientsController::class, 'softDeleteStockIngredients']);
     Route::get('/fetch/checkStatus', [IngredientsController::class, 'checkStatus']);
     Route::get('/getAllIngredients', [IngredientsController::class, 'getAllIngredients']);
-    Route::get('/filterIngredientsLog/{month}/{year}', [IngredientsController::class, 'filterIngredients']);
+    Route::post('/filterIngredientsLog/{month}/{year}', [IngredientsController::class, 'filterIngredients']);
     
     //Product
     Route::post('/editTub/{id}',[ProductController::class,'editTub']);
