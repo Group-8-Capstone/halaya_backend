@@ -70,21 +70,18 @@ class IngredientsController extends Controller
     }
 
     public function fetchUsedIng(){
-        try {
-            // $entireTable = UsedIngredients::all();
-            // return $entireTable;
-            $query = DB::table('used_ingredients')
-            ->join('ingredients', 'ingredients.ingredients_amount_id', '=', 'used_ingredients.ingredients_id')
-            ->select( 'used_ingredients.*',
-                    // 'used_ingredients.ingredients_name',
-                    // 'used_ingredients.used_ingredients_amount',
-                    // 'used_ingredients.ingredients_unit',
-                    'ingredients.ingredients_remaining')
-            ->get();
-            return response()->json($query);
-        } catch(\Excetion $e){
-            return response()->json(['error'=>$e->getMessage()]);
-        }
+        try{
+            $data = DB::table('used_ingredients')
+              ->join('ingredients', 'ingredients.ingredients_amount_id', '=', 'used_ingredients.ingredients_id')
+              ->select( 'used_ingredients.ingredients_name',
+                      'ingredients.ingredients_remaining',  
+                      'used_ingredients.used_ingredients_amount',
+                      'used_ingredients.updated_at')
+              ->get();
+              return response()->json(compact('data'));
+          } catch (Exception $e){
+            return response()->json($e->getMessage());
+          }
     }
 
     public function editStockIngredients($id)
@@ -484,10 +481,10 @@ class IngredientsController extends Controller
             ->join('ingredients', 'ingredients.ingredients_amount_id', '=', 'used_ingredients.ingredients_id')
             ->select( 'used_ingredients.ingredients_name',
                     'ingredients.ingredients_remaining',
-                    'used_ingredients.used_ingredients_amount',)
-            ->whereMonth("created_at", (int)$month)
-            ->whereYear("created_at", (int)$year)
-            ->where("order_status", "=", "Delivered")
+                    'used_ingredients.used_ingredients_amount',
+                    'used_ingredients.updated_at')
+            ->whereMonth("used_ingredients.updated_at", (int)$month)
+            ->whereYear("used_ingredients.updated_at", (int)$year)
             ->get();
             return response()->json(compact('data'));
         } catch (Exception $e){
