@@ -150,7 +150,7 @@ class ProductController extends Controller
 
    public function filterProducts(Request $request,$month,$year){
     try{
-      $query = DB::table('recorded_products')
+      $data = DB::table('recorded_products')
       ->select('product_name', 'remaining_quantity', 
         'total_ordered','created_at')
         ->whereMonth("created_at", (int)$month)
