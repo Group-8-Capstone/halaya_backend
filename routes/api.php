@@ -40,10 +40,6 @@ Route::get('/fetchHalayaTubLanding',[ProductController::class,'fetchHalayaTub'])
 Route::get('/fetchHalayaJarLanding',[ProductController::class,'fetchHalayaJar']);
 
 
-Route::get('/fetchHalayaTubLanding',[ProductController::class,'fetchHalayaTub']);
-Route::get('/fetchHalayaJarLanding',[ProductController::class,'fetchHalayaJar']);
-
-
 Route::group(['middleware' => ['jwt.verify']], function () {
     //Order Controller
     Route::post('/post/update', [OrderController::class, 'updateOrder']);
@@ -60,6 +56,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
     Route::post('/post/updateCanceledStat/{id}', [OrderController::class, 'updateCancelledStatus']);
     Route::get('/fetchOngoingOrder/{id}', [OrderController::class, 'fetchOngoingOrder']);
+    // Route::get('/getDeliveries', [OrderController::class, 'fetchDeliveries']);
     Route::get('/fetchDeliveredOrder/{id}', [OrderController::class, 'fetchDeliveredOrder']);
     Route::get('/fetchProcessOrder', [OrderController::class, 'fetchProcessOrder']);
     Route::get('/unReadOrder/{id}', [OrderController::class, 'unReadOrder']);
@@ -107,6 +104,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::delete('/softDeleteStockIngredients/{id}', [IngredientsController::class, 'softDeleteStockIngredients']);
     Route::get('/fetch/checkStatus', [IngredientsController::class, 'checkStatus']);
     Route::get('/getAllIngredients', [IngredientsController::class, 'getAllIngredients']);
+    Route::get('/filterIngredientsLog/{month}/{year}', [IngredientsController::class, 'filterIngredients']);
     
     //Product
     Route::post('/editTub/{id}',[ProductController::class,'editTub']);
@@ -116,6 +114,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('/fetchHalayaJar',[ProductController::class,'fetchHalayaJar']);
     Route::post('/dailyRecords',[ProductController::class,'dailyRecords']);
     Route::delete('/softDeleteStockProduct/{id}',[ProductController::class,'softDeleteStockProducts']);
+    Route::post('/filterProductsLog/{month}/{year}', [ProductController::class, 'filterProducts']);
 
     //Profile
     Route::post('/post/account',[ProfileController::class,'addProfile']);

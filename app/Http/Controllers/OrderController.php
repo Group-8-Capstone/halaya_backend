@@ -149,6 +149,22 @@ public function fetchDelivery(Request $request){
   }
 }
 
+// public function fetchDeliveries(Request $request){
+//   try {
+//     $data = Order::select('receiver_name','customer_address','contact_number','distance','preferred_delivery_date','ubehalayajar_qty','ubehalayatub_qty','total_item','total_payment','order_status')->where('preferred_delivery_date', Carbon::today()->toDateString())
+//     ->orWhere( function($query) {
+//       $query->where('order_status', 'On order')
+//       ->orWhere('order_status', 'Canceled')
+//       ->orWhere('order_status', 'Delivered');
+//     })
+//     ->orderBy('distance', 'asc')
+//     ->get();
+//     return response()->json(compact('data'));
+//   } catch (\Exception $e){
+//     return response()->json(['error'=>$e->getMessage()]);
+//   }
+// }
+
     public function updateCancelledStatus(Request $request, $id)
     {
       try {
@@ -224,6 +240,7 @@ public function fetchDelivery(Request $request){
         return response()->json(['error'=>$e->getMessage()]);
       }
     }
+    
     public function fetchOngoingOrder($id){
       $post = new OrderCollection(Order::where('customer_id', $id)
       ->where(function($q) {

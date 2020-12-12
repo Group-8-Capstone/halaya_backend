@@ -40,12 +40,15 @@ class ProductController extends Controller
     //New
 
     public function fetchRecordedProduct(){
-        try {
-            $product = RecordedProduct::all();
-            return response()->json(compact('product'));    
-        } catch (\Exception $e) {
-            return response()->json(['error'=>$e->getMessage()]);
-        }
+        try{
+            $data = DB::table('recorded_products')
+            ->select('product_name', 'remaining_quantity', 
+              'total_ordered', 'created_at')
+              ->get();
+              return response()->json(compact('data'));
+          } catch (Exception $e){
+            return response()->json($e->getMessage());
+          }
     }
 
     public function fetchHalayaTub(){
@@ -144,6 +147,20 @@ class ProductController extends Controller
           return 'existed';
     }
    }
+
+   public function filterProducts(Request $request,$month,$year){
+    try{
+      $query = DB::table('recorded_products')
+      ->select('product_name', 'remaining_quantity', 
+        'total_ordered','created_at')
+        ->whereMonth("created_at", (int)$month)
+        ->whereYear("created_at", (int)$year)
+        ->get();
+        return response()->json(compact('data'));
+    } catch (Exception $e){
+      return response()->json($e->getMessage());
+    }
+  }
 }
 
 
